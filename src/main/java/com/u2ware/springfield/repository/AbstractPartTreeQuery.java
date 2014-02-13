@@ -17,12 +17,13 @@ public abstract class AbstractPartTreeQuery<S> {
 	protected final Log logger = LogFactory.getLog(getClass());
 
 
-	private PartTree partTree ;
-	private BeanWrapper paramWrapper ;
+	protected PartTree partTree ;
+	protected BeanWrapper paramWrapper ;
 	
 	public AbstractPartTreeQuery(Class<?> entityClass, Object param){
 		this.partTree = new PartTree(quessQueryMethodName(param), entityClass);
 		this.paramWrapper = PropertyAccessorFactory.forBeanPropertyAccess(param);
+		
 	}
 	
 	public Sort createSort() {
@@ -33,24 +34,6 @@ public abstract class AbstractPartTreeQuery<S> {
 		return createCriteria(partTree, paramWrapper);
 	}
 	
-	//Jpa
-	protected String quessQueryMethodName(Object query){
-
-		Class<?> beanClass = query.getClass();
-		String queryMethodName = ClassUtils.getShortNameAsProperty(beanClass);
-		QueryMethod queryMethod = AnnotationUtils.findAnnotation(beanClass, QueryMethod.class);
-
-		if(queryMethod != null && StringUtils.hasText(queryMethod.value())){
-			queryMethodName = queryMethod.value();
-		}
-
-		if(! queryMethodName.toLowerCase().startsWith("findby")){
-			queryMethodName = "findBy";
-		}
-
-		logger.info(query.getClass() +" quessQueryMethodName is "+queryMethodName);
-		return queryMethodName;
-	}
 	
 	protected S createCriteria(PartTree tree, BeanWrapper paramWrapper) {
 		
@@ -84,6 +67,26 @@ public abstract class AbstractPartTreeQuery<S> {
 	protected abstract S or(S base, S criteria, BeanWrapper paramWrapper);
 	
 	
+	//Jpa
+	protected String quessQueryMethodName(Object query){
+
+		Class<?> beanClass = query.getClass();
+		String queryMethodName = ClassUtils.getShortNameAsProperty(beanClass);
+		QueryMethod queryMethod = AnnotationUtils.findAnnotation(beanClass, QueryMethod.class);
+
+		if(queryMethod != null && StringUtils.hasText(queryMethod.value())){
+			queryMethodName = queryMethod.value();
+		}
+
+		
+		if(! queryMethodName.toLowerCase().startsWith("find")){
+			queryMethodName = "findBy";
+		}
+		
+
+		logger.info(query.getClass() +" quessQueryMethodName is "+queryMethodName);
+		return queryMethodName;
+	}
 
 }
 

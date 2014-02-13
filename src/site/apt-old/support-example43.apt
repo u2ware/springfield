@@ -1,0 +1,170 @@
+ -----
+ Support
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+Support
+~~~~~~~~~~~~~~~~~~~~
+
+  
+
+* SetterBean / SetterBeanService
+~~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part4.step3;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import com.u2ware.springfield.config.Springfield;
+import com.u2ware.springfield.config.Springfield.Strategy;
+
+@Springfield(
+	strategy=Strategy.JPA,
+	topLevelMapping="/part4/setter"
+)
+@Entity
+public class SetterBean {
+
+	@Id
+	@Getter @Setter private @NotNull Integer code;	
+	@Getter @Setter private @NotNull String name;
+}
++------------------------------------------------------------------------+
+
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part4.step3;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.u2ware.springfield.repository.EntityRepository;
+import com.u2ware.springfield.service.EntityServiceImpl;
+import com.u2ware.springfield.support.context.ContextBroker;
+
+@Service
+public class SetterBeanService extends EntityServiceImpl<SetterBean, SetterBean>{
+
+	@Autowired @Qualifier("sessionContextBroker")
+	private ContextBroker sessionContextBroker;
+	
+	@Autowired
+	public SetterBeanService(
+		@Qualifier("setterBeanRepository")EntityRepository<SetterBean, ?> r) {
+		super("setterBeanRepository" , r);
+	}
+	
+	@Override
+	@Transactional
+	public SetterBean create(SetterBean entity) {
+		sessionContextBroker.put(entity);
+		return super.create(entity);
+	}
+}
++------------------------------------------------------------------------+
+
+
+
+
+* GetterBean / GetterBeanService
+~~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part4.step3;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import com.u2ware.springfield.config.Springfield;
+import com.u2ware.springfield.config.Springfield.Strategy;
+
+@Springfield(
+	strategy=Strategy.JPA,
+	topLevelMapping="/part4/getter"
+)
+@Entity
+public class GetterBean {
+
+	@Id
+	@Getter @Setter private @NotNull Integer code;	
+	@Getter @Setter private @NotNull String name;
+}
++------------------------------------------------------------------------+
+
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part4.step3;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.u2ware.springfield.repository.EntityRepository;
+import com.u2ware.springfield.service.EntityServiceImpl;
+import com.u2ware.springfield.support.context.ContextBroker;
+
+@Service
+public class GetterBeanService extends EntityServiceImpl<GetterBean, SetterBean>{
+
+	@Autowired @Qualifier("sessionContextBroker")
+	private ContextBroker sessionContextBroker;	
+	
+	@Autowired
+	public GetterBeanService(
+		@Qualifier("getterBeanRepository")EntityRepository<GetterBean, ?> r) {
+		super("getterBeanRepository", r);
+	}
+
+	@Override
+	@Transactional
+	public GetterBean createForm(GetterBean entity) {
+		SetterBean setterBean = sessionContextBroker.get(SetterBean.class);
+		if(setterBean != null){
+			entity.setCode(setterBean.getCode());
+			entity.setName(setterBean.getName());
+		}
+		return super.createForm(entity);
+	}	
+}
++------------------------------------------------------------------------+
+
+* ContextBroker Interface
+~~~~~~~~~~~~~~~~~~~~
+
+ Springfield 는 HttpSession 과 ServletContext 그리고 Cookie 에 접근하기 위해 ContextBroker interface 를 제공한다.
+
++------------------------------------------------------------------------+
+public interface ContextBroker {
+
+	public <O> void put(O object);
+	public <O> O get(Class<O> type);
+	public <O> O get(Class<O> type, boolean throwsException);
+	public <O> O remove(Class<O> type);
+}
++------------------------------------------------------------------------+
+
+ 디폴트 설정에 의해 다음 세 개의 Bean(ContextBroker 구현체) 이 등록된다.
+ 
+*----------------+------------------+
+| Bean Name      | implements       |
+*----------------+------------------+
+| servletContextBroker   | com.u2ware.springfield.support.context. ServletContextBroker       |
+*----------------+------------------+
+| sessionContextBroker   | com.u2ware.springfield.support.context. SessionContextBroker       |
+*----------------+------------------+
+| cookieContextBroker    | com.u2ware.springfield.support.context. CookieContextBroker       |
+*----------------+------------------+
+
+
+ 

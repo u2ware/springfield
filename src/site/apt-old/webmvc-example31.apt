@@ -1,0 +1,96 @@
+ -----
+ WebMVC
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+WebMVC
+~~~~~~~~~~~~~~~~~~~~
+ 
+* MappingBean
+~~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part3.step1;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import com.u2ware.springfield.config.Springfield;
+import com.u2ware.springfield.config.Springfield.Strategy;
+
+@Springfield(
+	strategy=Strategy.DTO, 
+	methodLevelMapping={
+		"*","*.do",
+		"findForm.json","findForm.xml","findForm.xls",
+		"read.json","read.xml","read.xls"
+	},
+	identity={"code"}
+)
+public class MappingBean {
+
+	@Getter @Setter private Integer code;
+	@Getter @Setter private String name;
+}
++------------------------------------------------------------------------+
+
+* @Springfield 
+~~~~~~~~~~~~~~~~~~~
+
+ @Springfield 의 methodLevelMapping 속성으로   {{{http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/mvc.html#mvc-ann-methods}RequestMapping}} 을  추가 할 수 있다.
+ 
+  예제의 경우 ,\ 
+ "*" , "*.do", 에 의해  9 * 2 = 27 개의 url 이 mapping 되고,\
+ "findForm.json","findForm.xml","findForm.xls" 에 의해  EntityController 의 findForm 메소드에  3개의 url 이, \
+ ""read.json","read.xml","read.xls" 에 의해  EntityController 의 read 메소드에 3개의 url 이 추가 mapping 된다.
+ 
+       [Note:] 
+              methodLevelMapping 의 와일드카드 위치에는 EntityController 의 메소드 명이 되어야 한다.
+
+
+
+* RequestMapping
+~~~~~~~~~~~~~~~~~~~
+
+*------+-------------*----------------------+------------------------+--------+
+|매핑 경로 | HTTP Method | Controller Method 이름  | 예제 Command 객체 |  예제 매핑 경로   |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/                        | GET    | home       | MappingBean| /part3/step1/\  |
+|                                                          |        |            |            | /part3/step1/.do    |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>                         | GET    | findForm   | MappingBean| /part3/step1 \ |
+|                                                          |        |            |            | /part3/step1.do \   |
+|                                                          |        |            |            | /part3/step1.json \   |
+|                                                          |        |            |            | /part3/step1.xml \   |
+|                                                          |        |            |            | /part3/step1.xls    |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>                         | POST   | find       | MappingBean| /part3/step1 \  |
+|                                                          |        |            |            | /part3/step1.do \   |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>      | GET    | read       | MappingBean| /part3/step1/7 \     | 
+|                                                          |        |            |            | /part3/step1/7.do \   |
+|                                                          |        |            |            | /part3/step1/7.json \   |
+|                                                          |        |            |            | /part3/step1/7.xml \   |
+|                                                          |        |            |            | /part3/step1/7.xls    |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/new                     | GET    | createForm | MappingBean| /part3/step1/new \   |
+|                                                          |        |            |            | /part3/step1/new.do    |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/new                     | POST   | create     | MappingBean| /part3/step1/new \   | 
+|                                                          |        |            |            | /part3/step1/new.do    |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | GET    | updateForm | MappingBean| /part3/step1/7/eidt\ |
+|                                                          |        |            |            | /part3/step1/7/eidt.do    |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | PUT    | update     | MappingBean| /part3/step1/7/eidt\ |
+|                                                          |        |            |            | /part3/step1/7/eidt.do    |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | DELETE | delete     | MappingBean| /part3/step1/7/eidt\ |
+|                                                          |        |            |            | /part3/step1/7/eidt.do    |
+*------+-------------*----------------------+------------------------+--------+
+ 
+
+ 
+ 
+ 

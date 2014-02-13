@@ -1,0 +1,141 @@
+ -----
+ Configuration
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+Changelog
+~~~~~~~~~~~~~~~~~~~~
+
+* v1.3.9
+~~~~~~~~~~~~~~~~~~~~
+ * Add EntityValidator
+
+ * Add Navigation 
+ 
+ * Support Spring Security
+ 
+ * Refactoring
+
+
+
+
+* v1.3.8
+~~~~~~~~~~~~~~~~~~~~
+ * Add EntityValidator
+
+ * Support @Springfield strategy 
+  
+ * Remove @SpringfieldId 
+
+ * Support File Upload 
+
+ * Refactoring
+
+
+* v1.3.7
+~~~~~~~~~~~~~~~~~~~~
+ * Change @Springfield 
+
+ * Refactoring
+
+
+ 
+* v1.3.7
+~~~~~~~~~~~~~~~~~~~~
+ * Update springframework 3.2
+ 
+ * Update spring-data 1.2
+ 
+ * Change @Springfield
+ 
+ * Support Mongodb
+ 
+ * Refactoring
+ 
+
+
+* v1.3.6
+~~~~~~~~~~~~~~~~~~~~
+ * Change Service Layer
+ 
+ * Change Metamodel
+ 
+ * Repackage view layer
+ 
+ * Reset message properties
+ 
+ * Bug fixed.
+
+
+* v1.3.5
+~~~~~~~~~~~~~~~~~~~~
+ * Add ResourcePatternResolverBean
+ 
+ * Change All Layers(By ResourcePatternResolverBean)
+ 
+ * Change Tiles, JSTL View(Like Thymeleaf)
+ 
+ * Add Stream Upload/Download
+ 
+ * Support Excel View And Bulk Update
+ 
+ * Repackage Repository Layers
+
+
+* v1.3.4
+~~~~~~~~~~~~~~~~~~~~
+ * Move multipart package
+ 
+ * Move @Web / @Rendering / @SqlMap package
+ 
+ * Bug fixed. EntitySqlmapRepository
+ 
+ * Support Ordering
+ 
+ * Support Springfield View
+ 
+ * Support MyBatis. (EntitySqlSessionRepository)
+
+
+* v1.3.3
+~~~~~~~~~~~~~~~~~~~~
+ * Add ErrorsRejectableException.
+ 
+ * Change All Layers(By ValidationRejectableException)
+ 
+ * Add Springfield Message.
+ 
+ * Support Multipart File Upload.
+ 
+ * Add @Rendering
+ 
+ * Add EntityPageableAugumentResolver
+ 
+ * Support Paging 
+
+
+* v1.3.2
+~~~~~~~~~~~~~~~~~~~~
+ * Support i18n Message .
+ 
+ * Support Event Driven .
+ 
+ * Add Aspect Configuration.
+ 
+ * Bug fixed. Support Sqlmap. Add @SqlMap
+
+
+* v1.3.1
+~~~~~~~~~~~~~~~~~~~~
+ * iBatis support.
+ 
+ * Generic Service / Repository prototype Change.
+ 
+ * Bug fixed.
+
+
+* v1.3.0
+~~~~~~~~~~~~~~~~~~~~
+ * Initial Version From www.u2ware.com

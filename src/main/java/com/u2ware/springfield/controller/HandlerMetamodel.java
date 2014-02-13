@@ -127,7 +127,7 @@ public class HandlerMetamodel<T,Q> {
 	public String getIdentityUri(Object target) throws Exception{
 		if(! ObjectUtils.isEmpty(identity)) {
 			BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(target);
-	
+
 			int i= 0;
 			StringBuilder result = new StringBuilder();
 			for(String id : identity){

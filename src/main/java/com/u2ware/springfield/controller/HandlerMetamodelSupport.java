@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -21,8 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class HandlerMetamodelSupport {
 
-	protected static final Log logger = LogFactory.getLog(HandlerMetamodelSupport.class);
-	
 	private static Map<Class<?> , List<Map<String,Object>>> attributesMap = new HashMap<Class<?> , List<Map<String,Object>>>();
 
 	public static List<Map<String,Object>> retrieveClass(final Class<?> clazz, String[] identity) {
@@ -105,12 +101,12 @@ public class HandlerMetamodelSupport {
 	private static List<Map<String,Object>> retrieveAttributeRelationship(Field field) throws IllegalArgumentException, IllegalAccessException{
 		
 		javax.persistence.EmbeddedId embeddedId = field.getAnnotation(javax.persistence.EmbeddedId.class);
-		javax.persistence.ManyToOne manyToOne = field.getAnnotation(javax.persistence.ManyToOne.class);
+		//javax.persistence.ManyToOne manyToOne = field.getAnnotation(javax.persistence.ManyToOne.class);
 		//OneToMany oneToMany = field.getAnnotation(OneToMany.class);
 		//SpringfieldIds springfieldIds = field.getAnnotation(SpringfieldIds.class);
 
 		if(embeddedId != null) return retrieveClass(field.getType(), null);
-		if(manyToOne != null) return retrieveClass(field.getType(), null);
+		//if(manyToOne != null) return retrieveClass(field.getType(), null);
 		//if(oneToMany != null) findMetamodel(field.getType());
 		//if(springfieldIds != null) return retrieveClass(field.getType());
 		return null;

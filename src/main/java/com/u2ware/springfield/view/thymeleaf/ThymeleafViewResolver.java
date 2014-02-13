@@ -28,6 +28,9 @@ public class ThymeleafViewResolver extends org.thymeleaf.spring3.view.ThymeleafV
 	public void setBaseExtension(String baseExtension) {
 		support.setBaseExtension(baseExtension);
 	}
+	public void setSampleLocations(String[] sampleLocations) {
+		support.setSampleLocations(sampleLocations);
+	}
 
 	@Override
 	public View resolveViewName(String viewUrl, Locale locale) throws Exception {
@@ -40,7 +43,7 @@ public class ThymeleafViewResolver extends org.thymeleaf.spring3.view.ThymeleafV
 		}
 		
 		if(viewName == null){
-			viewName = support.resolveViewNameBySpringfield(attr, "html");
+			viewName = support.resolveViewNameBySampleLocations(attr, "html");
 		}
 		
 		if(viewName != null){

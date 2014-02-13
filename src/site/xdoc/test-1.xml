@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>Test</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+
+<body>
+    <section name="Test">
+		<subsection name="JpaBeanControllerTest.java">
+			<source><![CDATA[ 
+package com.u2ware.springfield.sample.part1.step2;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import org.junit.Test;
+
+import com.u2ware.springfield.sample.ApplicationContextTestRoot;
+
+public class JpaBeanControllerTest extends ApplicationContextTestRoot{
+
+	@Test
+	public void testFind() throws Exception{
+
+		this.mockMvc.perform(get("/part1/step2")
+				.param("model_query_pageable.pageNumber" , "0")
+				.param("model_query_pageable.pageSize" , "5")
+				.param("model_query_pageable.sortOrders[1].property" , "age")
+				.param("model_query_pageable.sortOrders[1].direction" , "-1"))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(model().attributeExists("model_query_result"));
+	
+	}
+}
+			]]></source>		
+	    	<dl>
+	    		<dt>Note:</dt>
+	    		<dd><a href="http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/testing.html#spring-mvc-test-framework">spring-mvc-test-framework</a></dd>
+	    	</dl>
+		</subsection>		
+    
+	</section>
+</body>
+</document>

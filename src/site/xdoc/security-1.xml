@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>Security</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+
+<body>
+<section name="Configuration">
+	<subsection name="web.xml">
+		<p><a href="http://www.springsource.org/spring-security">Spring Security</a> 모듈을 실행하기 위해  web.xml 을 변경한다.</p>
+		<dd>contextConfigLocation 에  <b>classpath:com/u2ware/springfield/context-security.xml</b> 를 추가하고,</dd>
+		<dd>Spring Security 에 필요한 관련  Listener 와 Filter 를 등록한다. Spring DispatcherServlet 의 이름은 "appServlet" 이다.</dd>
+		<source><![CDATA[
+	<!-- 
+	##########################################
+	#	RootContext
+	##########################################
+	-->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:com/u2ware/springfield/sample/root-context.xml
+			classpath:com/u2ware/springfield/context-security.xml
+		</param-value>
+	</context-param>
+	<listener>
+		<listener-class>
+			org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+	</listener>
+
+	<!-- 
+	##########################################
+	#	Spring Security  Listener & Filter
+	##########################################
+	-->
+	<listener>
+		<listener-class>
+			org.springframework.security.web.session.HttpSessionEventPublisher
+		</listener-class>
+	</listener>
+
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>
+			org.springframework.web.filter.DelegatingFilterProxy
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<servlet-name>appServlet</servlet-name>
+	</filter-mapping>
+
+		]]></source>
+	</subsection>
+	<subsection name="properties">
+		<p>
+			<a href="http://www.springsource.org/spring-security">Spring Security</a> 를  위해 
+			@Springfield 는 다음과 같은 설정을 사용한다. 	
+		</p>
+		<ul>
+			<li>security.login.page : 로그인 폼 페이지 경로. @Springfield 에서는 Security 관련 에러 발생시 리다이렉트되는 결로로도 사용한다.  </li>		
+			<li>security.login.page.username : 로그인 폼의 ID 변수명 </li>		
+			<li>security.login.page.password : 로그인 폼의 password 변수명 </li>		
+			<li>security.login.page.rememberme : 로그인 폼의 Remember Me 변수명 </li>		
+			<li>security.login : 로그인 폼 페이지의 form action 경로 </li>		
+			<li>security.logout : 로그아웃 경로</li>		
+		</ul>
+		<dl>
+			<dt>application-context.properties</dt>
+			<dd><p>@Springfield 의 기본 설정 값은 다음과 같다.</p></dd>
+			<dd>security.login.page=/security/user/loginForm</dd>
+			<dd>security.login.page.username=j_username</dd>
+			<dd>security.login.page.password=j_password</dd>
+			<dd>security.login.page.rememberme=_spring_security_remember_me</dd>
+			<dd>security.login=/j_spring_security_check</dd>
+			<dd>security.logout=/j_spring_security_logout</dd>
+		</dl>
+
+	</subsection>
+	
+</section>
+</body>
+</document>

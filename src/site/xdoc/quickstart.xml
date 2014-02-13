@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>Quick Start</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+<body>
+<section name="Quick Start">
+
+	<subsection name="Tools">
+		<ol>
+			<li><a href="http://www.springsource.org/downloads/sts-ggts">SPRING TOOL SUITE</a></li>
+			<li><a href="./download.html">Springfield</a></li>
+		</ol>
+	</subsection>
+
+	<subsection name="Make">
+		<ol>
+			<li> 
+				STS 의 [File]-[New]-[Spring Template Project] 를 실행하고 [Spring MVC Project] 를 선택한다.
+				<p><img src="./images/q1.png" alt=""/></p>
+			</li>
+			<li> 
+				Project Name 과 Top-level Package 를 설정한다.  
+				<p><img src="./images/q2.png" alt=""/></p>
+			</li>
+			<li> 
+				Project 생성
+				<p><img src="./images/q3.png" alt=""/></p>
+			</li>
+		</ol>
+	</subsection>
+
+	<subsection name="Config">
+		<ol>
+			<li> 
+				Edit pom.xml. &lt;dependencies&gt; 를 다음과 같이 변경한다. 
+				<source><![CDATA[
+	<dependencies>
+		<!-- 
+		####################################
+		# springfield
+		####################################
+		 -->
+		<dependency>
+	        <groupId>com.u2ware</groupId>
+	        <artifactId>springfield</artifactId>
+	        <version>1.3.9</version>
+		</dependency>
+					
+		<!-- Servlet -->
+		. 
+		.
+	
+		<!-- Test -->
+		. 
+		.
+	</dependencies>
+				]]></source>
+			</li>
+			<li> 
+				Edit Web.xml. 
+				
+				<p>
+					root-context 설정. "contextConfigLocation" 파라미터 값을 다음과 같이 변경한다. 
+					<source><![CDATA[
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:com/u2ware/springfield/sample/root-context.xml
+		</param-value>
+	</context-param>
+					]]></source>
+				</p>
+				<p>
+					servlet-context 설정. "contextConfigLocation" 파라미터 값을 다음과 같이 변경한다. 
+					<source><![CDATA[
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/root-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+					]]></source>
+				</p>
+				
+				<p>
+					서블릿 필터를 추가 한다. Spring DispatcherServlet 의 이름은 "appServlet" 이다.
+				</p>
+				<source><![CDATA[
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>
+			org.springframework.web.filter.CharacterEncodingFilter
+		</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>utf-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<servlet-name>appServlet</servlet-name>
+	</filter-mapping>	
+	
+	<filter>
+		<filter-name>multipartFilter</filter-name>
+		<filter-class>
+			org.springframework.web.multipart.support.MultipartFilter
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>multipartFilter</filter-name>
+		<servlet-name>appServlet</servlet-name>
+	</filter-mapping>
+	
+	<filter>
+		<filter-name>httpMethodFilter</filter-name>
+		<filter-class>
+			org.springframework.web.filter.HiddenHttpMethodFilter
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>httpMethodFilter</filter-name>
+		<servlet-name>appServlet</servlet-name>
+	</filter-mapping>
+				]]></source>
+			</li>
+		</ol>
+
+	</subsection>
+
+	<subsection name="Run">
+		<ol>
+			<li> 
+				Project 를  WAS 에 로드한다. 
+				<p><img src="./images/q4.png" alt=""/></p>
+			</li>
+			<li> 
+				WAS 를 시작하고. 웹 브라우저에서 페이지를 요청한다.
+				<p><img src="./images/q5.png" alt="" width="450"/></p>
+			</li>
+		</ol>
+
+	</subsection>
+
+</section>
+</body>
+</document>

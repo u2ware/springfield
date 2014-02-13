@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>@Springfield - Override</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+<body>
+<section name="@Springfield - Override">
+	<subsection name="Examples">
+		<table border="1">
+			<thead>
+				<tr>
+					<th>이름</th>
+					<th>설명</th>
+					<th>비고</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><a href="./override-1.html">TargetBean</a></td>
+					<td>@Springfield 가 자동 생성 등록하는 Bean Method 의  Override 예제</td>
+					<td></td>
+				</tr>		
+				<tr>
+					<td><a href="./override-2.html">CustomBean</a></td>
+					<td>Query(검색 객체)가 추가되고, @Springfield가 자동 생성 등록하는 Bean Method 의  Override 예제</td>
+					<td></td>
+				</tr>		
+				<tr>
+					<td><a href="./override-3.html">FormBean</a></td>
+					<td>Repository Layer 를  특정하지 않은 CRUD 확장 예제 </td>
+					<td></td>
+				</tr>		
+			</tbody>
+		</table>
+	</subsection>
+</section>
+</body>
+</document>

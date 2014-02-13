@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>@Springfield - Extends</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+
+<body>
+<section name="@Springfield - Extends">
+	<subsection name="Code">
+		<source><![CDATA[
+package com.u2ware.springfield.sample.part4.step2;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import com.u2ware.springfield.config.Springfield;
+import com.u2ware.springfield.config.Springfield.Strategy;
+
+@Springfield(
+	strategy=Strategy.JPA,
+	methodLevelMapping={
+		"*","*.do",
+		"findForm.json","findForm.xml","findForm.xls",
+		"read.json","read.xml","read.xls"
+	},
+	attributesCSV=
+		"webmvc.view.method.findForm={custom}," +
+		"webmvc.view.extension.none={jstlView}," +
+		"webmvc.view.extension.do={jstlView}"
+)
+@Entity
+public @ToString class ViewBean {
+
+	@Id
+	@Getter @Setter private @NotNull String id;
+	@Getter @Setter private @NotNull String password;
+	@Getter @Setter private @NotNull String name;
+	@Getter @Setter private @NotNull Integer age;
+}
+		]]></source>
+	</subsection>
+	<subsection name="View Resolver">
+		<p>
+			<a href="http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/mvc.html#mvc-viewresolver-resolver">View Resolver</a> 
+			를 이용한 @Springfield 의 Rendering 은 다음 과정을 거친다. 
+		</p>
+		<ol>
+			<li><a href="#step1">View Name 리턴</a></li>
+			<li><a href="#step2">View Name 변경</a></li>
+			<li><a href="#step3">View Resolver 결정</a> </li>
+			<li><a href="#step4">Resource 탐색 </a></li>
+		</ol>
+		
+		<table border="1">
+			<tr><th>HTTP Method</th><th>Controller Method 이름</th><th>예제 매핑 경로</th> <th><a href="#step1">1.</a></th><th><a href="#step2">2.</a></th><th><a href="#step3">3.</a></th><th><a href="#step4">4.</a></th></tr>
+			<tr><td>...</td> <td>...</td><td>...</td>          <td>...</td>         <td>...</td>  <td>...</td>  <td>...</td>  </tr>
+			<tr><td>GET</td> <td>findForm()</td><td>/part4/step2</td>       <td>"/part4/step2/<b>findForm</b>"</td>     <td>"/part4/step2/<b>custom</b>"</td><td>"<b>jstlView</b>"</td><td>[baseWebapp]<b>/part4/step2/custom.jsp</b></td></tr>
+			<tr><td>GET</td> <td>findForm()</td><td>/part4/step2.do</td>    <td>"/part4/step2/<b>findForm</b>.do"</td>  <td>"/part4/step2/<b>custom</b>.do"</td><td>"<b>jstlView</b>"</td><td>[baseWebapp]<b>/part4/step2/custom.do.jsp</b></td></tr>
+			<tr><td>GET</td> <td>findForm()</td><td>/part4/step2.json</td>  <td>"/part4/step2/<b>findForm</b>.json"</td><td>"/part4/step2/<b>custom</b>.json"</td><td>"<b>jsonView</b>"</td><td>-</td></tr>
+			<tr><td>GET</td> <td>findForm()</td><td>/part4/step2.xml</td>   <td>"/part4/step2/<b>findForm</b>.xml"</td> <td>"/part4/step2/<b>custom</b>.xml"</td><td>"<b>xmlView</b>"</td><td>-</td></tr>
+			<tr><td>GET</td> <td>findForm()</td><td>/part4/step2.xls</td>   <td>"/part4/step2/<b>findForm</b>.xls"</td> <td>"/part4/step2/<b>custom</b>.xls"</td><td>"<b>xlsView</b>"</td><td>-</td></tr>
+			<tr><td>...</td> <td>...</td><td>...</td>          <td>...</td>         <td>...</td>  <td>...</td>  <td>...</td>  </tr>
+			<tr><td>POST</td> <td>find()</td><td>/part4/step2</td>          <td>"/part4/step2/<b>find</b>"</td>         <td>"/part4/step2/<b>list</b>"</td>  <td>"<b>jstlView</b>"</td>  <td>[baseWebapp]<b>/part4/step2/list.jsp</b></td>  </tr>
+			<tr><td>POST</td> <td>find()</td><td>/part4/step2.do</td>       <td>"/part4/step2/<b>find</b>.do"</td>      <td>"/part4/step2/<b>list</b>.do"</td>  <td>"<b>jstlView</b>"</td>  <td>[baseWebapp]<b>/part4/step2/list.do.jsp</b></td>  </tr>
+			<tr><td>...</td> <td>...</td><td>...</td>          <td>...</td>         <td>...</td>  <td>...</td>  <td>...</td>  </tr>
+			<tr><td>GET</td><td>read()</td>    <td>/part4/step2/7</td>     <td>"/part4/step2/<b>read</b>"</td>         <td>"/part4/step2/<b>edit</b>"</td>  <td>"<b>jstlView</b>"</td>  <td>[baseWebapp]<b>/part4/step2/edit.jsp</b></td>  </tr>
+			<tr><td>GET</td><td>read()</td>    <td>/part4/step2/7.do</td>  <td>"/part4/step2/<b>read</b>.do"</td>      <td>"/part4/step2/<b>edit</b>.do"</td>  <td>"<b>jstlView</b>"</td>  <td>[baseWebapp]<b>/part4/step2/edit.do.jsp</b></td>  </tr>
+			<tr><td>GET</td><td>read()</td>    <td>/part4/step2/7.json</td><td>"/part4/step2/<b>read</b>.json"</td>    <td>"/part4/step2/<b>edit</b>.json"</td>  <td>"<b>jsonView</b>"</td> <td>-</td>  </tr>
+			<tr><td>GET</td><td>read()</td>    <td>/part4/step2/7.xml</td> <td>"/part4/step2/<b>read</b>.xml"</td>     <td>"/part4/step2/<b>edit</b>.xml"</td>  <td>"<b>xmlView</b>"</td>  <td>-</td>  </tr>
+			<tr><td>GET</td><td>read()</td>    <td>/part4/step2/7.xls</td> <td>"/part4/step2/<b>read</b>.xls"</td>     <td>"/part4/step2/<b>edit</b>.xls"</td>  <td>"<b>xlsView</b>"</td>  <td>-</td>  </tr>
+			<tr><td>...</td> <td>...</td><td>...</td>          <td>...</td>         <td>...</td>  <td>...</td>  <td>...</td>  </tr>
+		</table>
+
+
+
+		<h4 id="step1">1. View Name 리턴 </h4>
+		<p>Springfield 의 EntityController 의 각 메소드는  다음과 같은 규칙으로 View Name 을 리턴한다.</p>
+		<p><b><i>/{topLevelMapping}/{methodName}[.{extension}]</i></b></p>
+		
+
+
+		<h4 id="step2">2. View Name 변경 </h4>
+		<p>@Springfield 의 attributesCSV 속성에서 선언된  <b>webmvc.view.method.XXX</b> 값중  해당 View Name 의 메소드와  매치하여 변경한다.</p>
+		<dl>
+			<dt>application-context.properties</dt>
+			<dd><p>attributesCSV 에 선언하지 않으면 @Springfield 의 기본설정을 따른다.</p></dd>
+			<dd>webmvc.view.method.home=home</dd>
+			<dd>webmvc.view.method.findForm=list</dd>
+			<dd>webmvc.view.method.find=list</dd>
+			<dd>webmvc.view.method.createForm=edit</dd>
+			<dd>webmvc.view.method.create=refresh</dd>
+			<dd>webmvc.view.method.read=edit</dd>
+			<dd>webmvc.view.method.updateForm=edit</dd>
+			<dd>webmvc.view.method.update=refresh</dd>
+			<dd>webmvc.view.method.delete=refresh</dd>
+		</dl>
+
+
+		<h4 id="step3">3. View Resolver 결정 </h4>
+		<p>@Springfield 의 attributesCSV 속성에서 선언된  <b>webmvc.view.extension.XXX</b> 값중  View Name 의 확장자와 매치하여  View Resolver 를 결정한다.</p>
+		<dl>
+			<dt>application-context.properties</dt>
+			<dd><p>attributesCSV 에 선언하지 않으면 @Springfield 의 기본설정을 따른다.</p></dd>
+			<dd>webmvc.view.extension.none=thymeleafView</dd>
+			<dd>webmvc.view.extension.download=downloadView</dd>
+			<dd>webmvc.view.extension.stream=streamView</dd>
+			<dd>webmvc.view.extension.json=jsonView</dd>
+			<dd>webmvc.view.extension.xml=xmlView</dd>
+			<dd>webmvc.view.extension.xls=xlsView</dd>
+			<dd>webmvc.view.extension.jstl=jstlView</dd>
+			<dd>webmvc.view.extension.tiles=tilesView</dd>
+			<dd><p>확장자와 View Resolve 매핑은  추가 및 변경이 가능하다.</p></dd>
+			<dd>webmvc.view.extension.biz=myBizView</dd>
+		</dl>
+		
+
+		<h4 id="step4">4. Resource 탐색 </h4>
+		<p>만약, 리소스(jsp, html 등)가 필요한 View Resolver 는   Rumtime 에서 View Name 을 기준으로  경로를 탐색하여 리소스의 존재 여부를 확인하고 랜더링 한다.</p>
+		<dl>
+			<dt>application-context.properties</dt>
+			<dd><p>리소스 탐색의 기준이 되는 경로는  <b>basePackage</b> 와 <b>baseWebapp</b> 이다.</p></dd>
+			<dd>basePackage=com.u2ware.springfield.sample</dd>
+			<dd>baseWebapp=/WEB-INF/com/u2ware/springfield/sample</dd>
+		</dl>
+
+		<h4>5. Default Rendering</h4>
+		<p>만약, 모든 Resolver 가 리소스가 존재하지 않는 등의 이유로 랜더링에 모두 실패하면  @Springfield 가 제공하는 디폴트 View 화면이 제공된다.</p>
+
+	</subsection>
+</section>
+</body>
+</document>

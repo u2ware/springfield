@@ -6,11 +6,11 @@ public interface EntityService<T, Q>{
 	
 	public Object home(Q query);
 
-	public Iterable<T> findForm(Q query, EntityPageable pageable);
+	public Iterable<?> findForm(Q query, EntityPageable pageable);
 
-	public Iterable<T> find(Q query, EntityPageable pageable);
+	public Iterable<?> find(Q query, EntityPageable pageable);
 	
-	public T read(T entity) ;
+	public T read(T entity);
 	
 	public T createForm(T entity);
 	
@@ -18,10 +18,15 @@ public interface EntityService<T, Q>{
 	
 	public T updateForm(T entity);
 	
-	public T update(T entity) ;
+	public T update(T entity);
 	
 	public T delete(T entity);
 
+	//public boolean exists(T entity);
+
+	public boolean validate(T entity);
+
+	public boolean reset(T entity);
 }
 
 //public void addEventListener(ServiceEventListener listener);

@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>@@Springfield - Support</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+
+<body>
+<section name="Pageable">
+	<subsection name="Find Process (Controller - Service - Repository)">
+		<source><![CDATA[
+public abstract class EntityHandler<T,Q> {
+ 
+	public String findForm(EntityPageable pageable, Model m, Q query, BindingResult e){...}
+	.
+	.	
+}
+
+public interface EntityService<T, Q>{
+	
+	public Iterable<T> findForm(Q query, EntityPageable pageable);
+	.
+	.
+}
+
+public interface EntityRepository<T, ID extends Serializable> {
+	public List<T> findAll(Object query);
+	public Page<T> findAll(Object query, Pageable pageable);
+	.
+	.
+}
+		]]></source>
+		<dl>
+			<dt>Note:</dt>
+			<dd>
+				<ol>
+					<li>클라이언트에서 검색 조건 및 페이지 정보 파라미터와 함께 Controller Layer 를 호출한다.</li>
+					<li>Controller Layer 의 findForm() 에서 Service Layer 의  findForm() 를 호출한다.</li>
+					<li>Service Layer 의 findForm() 에서 EntityPageable 의 isEnable() 을 판단하여, Repository Layer 의 적절한  findAll() 를 호출하여 EntityPage 또는 List 를 생성한다.</li>
+					<li>Controller findForm() 에서 Service 로 부터 리턴 받은 EntityPage 또는 List 를 "model_query_result" 라는 이름으로 Model 에 담는다.</li>
+					<li>View Layer 에서 이를 클라이언트에 출력한다.</li>
+				</ol>
+			</dd>
+		</dl>
+	</subsection>
+
+	<subsection name="EntityPageable">
+		<table border="1">
+			<tr><th>HTTP Request Parameter Name  </th><th>Description</th></tr>
+			<tr><td>model_query_pageable.enable</td><td>pageNumber , default value is 0 </td></tr>		
+			<tr><td>model_query_pageable.pageNumber</td><td>pageSize , default value is 10</td></tr>		
+			<tr><td>model_query_pageable.sortOrder[].property</td><td>order property name</td></tr>		
+			<tr><td>model_query_pageable.sortOrder[].direction</td><td>order direction value</td></tr>		
+		</table>		
+		<dl>
+			<dt>Note:</dt>
+			<dd>Springfield 는 검색 결과 데이터행의 Paging 과 Ordering 처리를 위해  <i>com.u2ware.springfield.domain.EntityPageable</i> 을 사용한다.</dd>
+			<dd>기본 등록 되는  EntityPageableArgumentResolver 가   "model_query_pageable" 라는 Prefix 를 가진 HTTP Parameter 를 수집하여  EntityPageable 를 생성한다.</dd>
+		</dl>
+	</subsection>
+
+	<subsection name="EntityPage">
+		<table border="1">
+			<tr><th>EL </th><th>Description</th></tr>
+			<tr><td>model_query_result.content</td><td>Content List</td></tr>		
+			<tr><td>model_query_result.pageNumber</td><td>pageNumber</td></tr>
+			<tr><td>model_query_result.pageSize</td><td>pageSize</td></tr>
+			<tr><td>model_query_result.totalElements</td><td>total row Count</td></tr>
+			<tr><td>model_query_result.totalPages</td><td>total Pages Count</td></tr>
+			<tr><td>model_query_result.previousPage</td><td>previous page number of indexing</td></tr>
+			<tr><td>model_query_result.beginPage</td><td>begin page number of indexing</td></tr>
+			<tr><td>model_query_result.endPage</td><td>end page number of  indexing</td></tr>
+			<tr><td>model_query_result.nextPage</td><td>next page number of  indexing</td></tr>
+		</table>		
+		<dl>
+			<dt>Note:</dt>
+			<dd>Springfield 는 검색 결과 객체로 List 또는  <i>com.u2ware.springfield.domain.EntityPage</i> 를 사용한다.</dd>
+			<dd>EntityPage 는 결과 데이터행과 각종 Paging 결과 정보들을 담고 있다. 다음표는 EntityPage 의 속성들이며, View 단에서 EL 로 접근가능하다.</dd>
+		</dl>
+	</subsection>
+
+</section>
+</body>
+</document>

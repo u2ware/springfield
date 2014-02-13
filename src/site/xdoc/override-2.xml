@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>@Springfield - Override</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+<body>
+<section name="@Springfield - Override">
+	<subsection name="Code">
+		<source><![CDATA[
+package com.u2ware.springfield.sample.part3.step2;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import com.u2ware.springfield.config.Springfield;
+import com.u2ware.springfield.config.Springfield.Strategy;
+import com.u2ware.springfield.repository.QueryMethod;
+import com.u2ware.springfield.sample.part3.step1.TargetBean;
+
+@Springfield(
+	strategy=Strategy.JPA, 
+	entity=TargetBean.class
+)
+@QueryMethod("findByIdAndPasswordOrderByAgeDesc")
+public @ToString class CustomBean {
+	
+	@Getter @Setter private String id;
+	@Getter @Setter private String password;
+}
+		]]></source>
+		<source><![CDATA[
+package com.u2ware.springfield.sample.part3.step2;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.u2ware.springfield.domain.EntityPageable;
+import com.u2ware.springfield.repository.EntityRepository;
+import com.u2ware.springfield.sample.part3.step1.TargetBean;
+import com.u2ware.springfield.service.EntityServiceImpl;
+
+@Service
+public class CustomBeanService extends EntityServiceImpl<TargetBean, CustomBean>{
+
+	@Autowired @Qualifier("targetBeanRepository")
+	private EntityRepository<TargetBean, String> targetBeanRepository;
+
+	@Override
+	protected EntityRepository<TargetBean, ?> getRepository() {
+		return targetBeanRepository;
+	}
+	
+	@Override
+	@Transactional
+	public Iterable<?> findForm(CustomBean request, EntityPageable pageable) {
+		logger.debug("Overide findForm ");
+		return super.findForm(request, pageable);
+	}
+}
+		]]></source>
+		<source><![CDATA[
+package com.u2ware.springfield.sample.part3.step2;
+
+import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
+
+import com.u2ware.springfield.sample.part3.step1.TargetBean;
+import com.u2ware.springfield.validation.EntityValidatorImpl;
+
+@Service
+public class CustomBeanValidator extends EntityValidatorImpl<TargetBean, CustomBean>{
+
+	@Override
+	public void create(TargetBean target, Errors errors) {
+		super.create(target, errors); //JSR-303
+		logger.debug("Overide create ");
+		ValidationUtils.rejectIfEmpty(errors, "password", "errorCode");
+	}
+}
+		]]></source>
+		
+		
+	</subsection>
+	<subsection name="Beans">
+		<p>
+			<b>@Springfield(strategy=Strategy.JPA, entity=TargetBean.class)</b> 선언으로 다음 3개의 Bean 이  등록 된다.
+			 자동생성 하려는  Bean(Name)이  이미  존재한다면,  @Springfield 는 Bean 을 따로 생성하지 않는다.
+		</p>	
+		<table border="1">
+			<tr><th>bean name  </th>	<th>bean type</th>	<th>bean implement</th></tr>
+			<tr><td>"customBeanController"</td><td><i><![CDATA[EntityController<TargetBean, CustomBean>]]></i></td><td>com.u2ware.springfield.controller. EntityHandler</td></tr>
+			<tr><td>"customBeanValidator"</td> <td><i><![CDATA[EntityValidator<TargetBean, CustomBean>]]></i></td> <td><b>com.u2ware.springfield.sample.part3.step2. CustomBeanValidator</b></td></tr>
+			<tr><td>"customBeanService"</td>   <td><i><![CDATA[EntityService<TargetBean, CustomBean>]]></i></td>   <td><b>com.u2ware.springfield.sample.part3.step2. CustomBeanService</b></td></tr>
+		</table>
+		<dl>
+			<dt>Note:</dt>
+			<dd>CustomBeanService 에서 주입받은 "targetBeanRepository" Bean 은  이전 예제에서 이미 등록되어 있다.</dd>
+		</dl>
+	</subsection>
+
+	<subsection name="RequestMapping">
+		<table border="1">
+			<tr><th>매핑 경로</th>	<th>HTTP Method</th>	<th>Controller Method 이름</th>	<th>예제 Command 객체</th>	<th>예제 매핑 경로</th></tr>
+			<tr><td><i>/{topLevelMapping}/</i></td>         <td>GET</td>   <td>home()</td>      <td>CustomBean</td><td>/part3/step2/</td></tr>
+			<tr><td><i>/{topLevelMapping}</i></td>          <td>GET</td>   <td>findForm()</td>  <td>CustomBean</td><td>/part3/step2</td></tr>
+			<tr><td><i>/{topLevelMapping}</i></td>          <td>POST</td>  <td>find()</td>      <td>CustomBean</td><td>/part3/step2</td></tr>
+			<tr><td><i>/{topLevelMapping}/{id}</i></td>     <td>GET</td>   <td>read()</td>      <td>TargetBean</td><td>/part3/step2/bar</td></tr>
+			<tr><td><i>/{topLevelMapping}/new</i></td>      <td>GET</td>   <td>createForm()</td><td>TargetBean</td><td>/part3/step2/new</td></tr>
+			<tr><td><i>/{topLevelMapping}/new</i></td>      <td>POST</td>  <td>create()</td>    <td>TargetBean</td><td>/part3/step2/new</td></tr>
+			<tr><td><i>/{topLevelMapping}/{id}/edit</i></td><td>GET</td>   <td>updateForm()</td><td>TargetBean</td><td>/part3/step2/bar/eidt</td></tr>
+			<tr><td><i>/{topLevelMapping}/{id}/edit</i></td><td>PUT</td>   <td>update()</td>    <td>TargetBean</td><td>/part3/step2/bar/eidt</td></tr>
+			<tr><td><i>/{topLevelMapping}/{id}/edit</i></td><td>DELETE</td><td>delete()</td>    <td>TargetBean</td><td>/part3/step2/bar/eidt</td></tr>
+		</table>
+	</subsection>
+ 	<subsection name="Validation Layer ">
+		<p>Bean Name 규칙이 맞도록, <i>EntityValidator</i> 의 구현체를 작성하고 등록한다. <b>EntityValidatorImpl</b> 를 상속하여 구현이 가능하다.</p>
+		<dl>
+			<dt>com.u2ware.springfield.validator.EntityValidatorImpl</dt>
+			<dd><p>
+				<b>EntityValidatorImpl</b> 은   
+				<a href="http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/validation.html#validation-beanvalidation">JSR-303 Bean Validation</a> 
+				을 처리하는 Validator 컴퍼넌트이다</p>
+			</dd>
+			<dd>
+				<p>
+					예제에서, 중복키 여부를  체크하여 에러를 reject 하는 방식이 사용되었는데, 이는  
+					<a href="http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/validation.html#validator">org.springframework.validation.Validator</a>
+					의 구현방식과 동일하다. 
+				</p>			
+			</dd>
+		</dl>
+	</subsection>
+
+
+</section>
+</body>
+</document>

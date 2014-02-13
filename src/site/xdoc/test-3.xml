@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>Test</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+
+<body>
+    <section name="Test">
+		<subsection name="JpaBeanRepositoryTest.java">
+			<source><![CDATA[ 
+package com.u2ware.springfield.sample.part1.step2;
+
+import java.util.List;
+
+import junit.framework.Assert;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.u2ware.springfield.domain.EntityPageRequest;
+import com.u2ware.springfield.repository.EntityRepository;
+import com.u2ware.springfield.sample.ApplicationContextTestRoot;
+import com.u2ware.springfield.sample.part1.FindByIdAndPasswordOrderByNameDesc;
+import com.u2ware.springfield.sample.part1.MyQuery;
+
+@TransactionConfiguration(transactionManager="transactionManager",defaultRollback=true)
+@Transactional
+public class JpaBeanRepositoryTest extends ApplicationContextTestRoot{
+
+	@Autowired @Qualifier("jpaBeanRepository")
+	private EntityRepository<JpaBean,String> jpaBeanRepository;
+
+	@Before
+	public void init() throws Exception{
+		for(int i = 1 ; i < 10 ; i++){
+			jpaBeanRepository.createOrUpdate(new JpaBean("id"+i , "pwd"+i, "name"+i, i));
+		}
+	}
+	
+	
+	@Test
+	public void testFind() throws Exception{
+		
+		EntityPageRequest pageable = new EntityPageRequest();
+		pageable.addSortOrder("age" , 1);
+		
+		JpaBean query = new JpaBean();
+		//param.setId(7);
+		
+		long count = jpaBeanRepository.count(query);
+		logger.debug(count);
+		
+		Page<JpaBean> page = jpaBeanRepository.findAll(query, pageable);
+		logger.debug(page.getContent().size());
+		
+		Assert.assertEquals(9 , page.getContent().size());
+		Assert.assertEquals("id1", page.getContent().get(0).getId());
+	}
+}
+			]]></source>		
+	    	<dl>
+	    		<dt>Note:</dt>
+	    		<dd>@Springfield 에 의해 자동 생성된 Bean 은 @Autowire 로 주입 받을 수 있다. Bean 이름은  @Qualifier 로 선언 한다.</dd>
+	    		<dd>
+	    			<p>
+	    				@Autowired @Qualifier("<b>jpaBeanRepository</b>")<br/>
+						private <b>EntityRepository&lt;JpaBean,String&gt;</b> jpaBeanRepository;
+	    			</p>
+	    		</dd>
+	    	</dl>
+		</subsection>		
+	</section>
+</body>
+</document>

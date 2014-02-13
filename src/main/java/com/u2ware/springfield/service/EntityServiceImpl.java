@@ -14,27 +14,119 @@ public class EntityServiceImpl<T, Q> implements EntityService<T, Q>  {
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	private EntityRepository<T, ?> repository;
-	private String repositoryName;
 
-	public EntityServiceImpl(EntityRepository<T, ?> repository){
+	public EntityServiceImpl() {
+		super();
+	}
+	public EntityServiceImpl(EntityRepository<T, ?> repository) {
+		super();
 		this.repository = repository;
 	}
-	public EntityServiceImpl(String repositoryName, EntityRepository<T, ?> repository){
-		this.repositoryName = repositoryName;
+	public EntityServiceImpl(String repositoryBeanName, EntityRepository<T, ?> repository) {
+		super();
+		this.repository = repository;
+	}
+	////////////////////////////////////////////
+	//
+	/////////////////////////////////////////////
+	protected EntityRepository<T, ?> getRepository() {
+		return repository;
+	}
+	protected void setRepository(EntityRepository<T, ?> repository) {
 		this.repository = repository;
 	}
 
 	////////////////////////////////////////////
 	//
 	/////////////////////////////////////////////
-	public EntityRepository<T, ?> getRepository() {
-		logger.info("repository : "+getRepositoryName());
-		return repository;
+	protected Iterable<?> search(Q query, EntityPageable pageable) {
+		if(getRepository() == null) return new EntityPageImpl<T>();
+		if(pageable != null && pageable.isEnable()){
+			return new EntityPageImpl<T>(getRepository().findAll(query, pageable));
+		}else{
+			return getRepository().findAll(query);
+		}
 	}
-	public String getRepositoryName() {
-		return repositoryName;
+	
+	////////////////////////////////////////////
+	//
+	/////////////////////////////////////////////
+	@Transactional
+	public Object home(Q query) {
+		return query;
 	}
 
+	@Transactional
+	public Iterable<?> findForm(Q query, EntityPageable pageable) {
+		return search(query, pageable);
+	}
+	
+	@Transactional
+	public Iterable<?> find(Q query, EntityPageable pageable) {
+		return search(query, pageable);
+	}
+	
+	@Transactional
+	public T read(final T entity)  {
+		if(getRepository() == null) return entity;
+		T result = getRepository().read(entity);
+		return result;
+	}
+	
+	
+	@Transactional
+	public T createForm(T entity) {
+		return entity;
+	}
+	
+	@Transactional
+	public T create(final T entity) {
+		if(getRepository() == null) return entity;
+		T result = getRepository().create(entity);
+		return result;
+	}
+
+
+	@Transactional
+	public T updateForm(T entity) {
+		if(getRepository() == null) return entity;
+		T result = getRepository().read(entity);
+		return result;
+	}
+	
+	@Transactional
+	public T update(final T entity){
+		if(getRepository() == null) return entity;
+		T result =  getRepository().update(entity);
+		return result;
+	}
+
+	@Transactional
+	public T delete(final T entity) {
+		if(getRepository() == null) return entity;
+		getRepository().delete(entity);
+		return entity;
+	}
+	
+	////////////////////////////////////
+	//
+	////////////////////////////////////
+	@Transactional
+	public boolean validate(T entity) {
+		return true;
+	}
+
+	@Transactional
+	public boolean reset(T entity) {
+		return true;
+	}
+	
+	/*
+	public boolean exists(T entity) {
+		if(getRepository() == null) return false;
+		return getRepository().exists(entity);
+	}
+	*/
 
 	////////////////////////////////////
 	//
@@ -59,70 +151,6 @@ public class EntityServiceImpl<T, Q> implements EntityService<T, Q>  {
 		if(eventDispatcher != null)
 			eventDispatcher.firePostHandle(getClass(), targetMethod, source);
 	}
-		
-	////////////////////////////////////////////
-	//
-	/////////////////////////////////////////////
-	public Object home(Q query) {
-		return query;
-	}
 
-	@Transactional
-	public Iterable<T> findForm(Q query, EntityPageable pageable) {
-		if(pageable != null && pageable.isEnable()){
-			return new EntityPageImpl<T>(getRepository().findAll(query, pageable));
-		}else{
-			return getRepository().findAll(query);
-		}
-	}
 	
-	@Transactional
-	public Iterable<T> find(Q query, EntityPageable pageable) {
-		if(pageable != null && pageable.isEnable()){
-			return new EntityPageImpl<T>(getRepository().findAll(query, pageable));
-		}else{
-			return getRepository().findAll(query);
-		}
-	}
-
-		
-	
-	@Transactional
-	public T read(final T entity)  {
-		T result = getRepository().read(entity);
-		return result;
-	}
-	
-	
-	public T createForm(T entity) {
-		return entity;
-	}
-	
-	@Transactional
-	public T create(final T entity) {
-		T result = null;
-		if(! getRepository().exists(entity, true)){
-			result = getRepository().create(entity);
-		}
-		return result;
-	}
-
-
-	@Transactional
-	public T updateForm(T entity) {
-		T result = getRepository().read(entity);
-		return result;
-	}
-	
-	@Transactional
-	public T update(final T entity){
-		T result =  getRepository().update(entity);
-		return result;
-	}
-
-	@Transactional
-	public T delete(final T entity) {
-		getRepository().delete(entity);
-		return entity;
-	}
 }

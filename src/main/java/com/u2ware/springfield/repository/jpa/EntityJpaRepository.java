@@ -16,7 +16,6 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.JpaEntityInformationSupport;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
-import com.u2ware.springfield.domain.ValidationRejectableException;
 import com.u2ware.springfield.repository.EntityRepository;
 
 
@@ -56,26 +55,13 @@ public class EntityJpaRepository<T, ID extends Serializable> implements EntityRe
 	// exists
 	//////////////////////////////////
 	@Override 
-	public boolean exists(ID id, boolean throwsDuplicateException) {	
-		boolean result = simpleJpaRepository.exists(id);
-		if(throwsDuplicateException && result){
-			throw new ValidationRejectableException("com.u2ware.springfield.repository.DuplicateKey.message");
-		}else{
-			return result;
-		}
+	public boolean exists(ID id) {	
+		return simpleJpaRepository.exists(id);
 	}
 	@Override 
-	public boolean exists(T entity, boolean throwsDuplicateException) {
-		boolean result = false;
+	public boolean exists(T entity) {
 		ID id = entityInformation.getId(entity);
-		if(id != null){
-			result = simpleJpaRepository.exists(entityInformation.getId(entity));
-		}
-		if(throwsDuplicateException && result){
-			throw new ValidationRejectableException("com.u2ware.springfield.repository.DuplicateKey.message");
-		}else{
-			return result;
-		}
+		return simpleJpaRepository.exists(id);
 	}
 	
 	//////////////////////////////////
@@ -107,6 +93,10 @@ public class EntityJpaRepository<T, ID extends Serializable> implements EntityRe
 	public void delete(T entity) {
 		simpleJpaRepository.delete(entity);
 	}
+	@Override
+	public void delete(ID id) {
+		simpleJpaRepository.delete(id);
+	}
 	@Override 
 	public T createOrUpdate(T entity) {
 		return simpleJpaRepository.saveAndFlush(entity);
@@ -114,13 +104,25 @@ public class EntityJpaRepository<T, ID extends Serializable> implements EntityRe
 
 	
 	//////////////////////////////////
+	// count
+	//////////////////////////////////
+	@Override 
+	public long count(Object query) {
+		PartTreeQuery<T> spec = new PartTreeQuery<T>(entityClass, query);
+		return simpleJpaRepository.count(spec);
+	}
+	//////////////////////////////////
 	// find
 	//////////////////////////////////
+	@Override 
+	public List<T> findAll() {
+		return simpleJpaRepository.findAll();
+	}
 	@Override 
 	public List<T> findAll(Object query) {
 		PartTreeQuery<T> spec = new PartTreeQuery<T>(entityClass, query);
 		Sort specSort = spec.createSort();
-		logger.info("sort : "+specSort);
+		//logger.info("sort : "+specSort);
 		return simpleJpaRepository.findAll(spec, specSort);
 	}
 	@Override 
@@ -128,7 +130,7 @@ public class EntityJpaRepository<T, ID extends Serializable> implements EntityRe
 		PartTreeQuery<T> spec = new PartTreeQuery<T>(entityClass, query);
 		Sort specSort = spec.createSort();
 		Sort sortAll =  (specSort != null) ? specSort.and(sort) : sort;
-		logger.info("sort : "+sortAll);
+		//logger.info("sort : "+sortAll);
 		return simpleJpaRepository.findAll(spec, sortAll);
 	}
 	@Override
@@ -136,15 +138,24 @@ public class EntityJpaRepository<T, ID extends Serializable> implements EntityRe
 		PartTreeQuery<T> spec = new PartTreeQuery<T>(entityClass, query);
 		Sort specSort = spec.createSort();
 		Sort sortAll = (specSort != null) ? specSort.and(pageable.getSort()) : pageable.getSort();
-		logger.info("sort : "+sortAll);
+		//logger.info("sort : "+sortAll);
 		return simpleJpaRepository.findAll(spec, new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sortAll));
 	}
+	
+	//////////////////////////////////
+	// deleteAll
+	//////////////////////////////////
 	@Override 
-	public long count(Object query) {
-		PartTreeQuery<T> spec = new PartTreeQuery<T>(entityClass, query);
-		return simpleJpaRepository.count(spec);
+	public void deleteAll(){
+		simpleJpaRepository.deleteAll();
 	}
 	
+	@Override 
+	public void deleteAll(Object query) {
+		
+		Iterable<T> entities = findAll(query);
+		simpleJpaRepository.delete(entities);
+	}
 
 }
 

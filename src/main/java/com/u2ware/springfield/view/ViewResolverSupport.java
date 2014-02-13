@@ -28,8 +28,7 @@ public class ViewResolverSupport {
 	private String[] baseLocations;
 	private String baseExtension;
 	
-	private String[] springfieldLocations = new String[]{"classpath:com/u2ware/springfield/view/resources"};
-   	private String springfieldExtension = "springfield1";
+	private String[] sampleLocations;
 	
 	public void setResourceLoader(ResourceLoader resourceLoader) {
 		this.resourceLoader = resourceLoader;
@@ -57,6 +56,12 @@ public class ViewResolverSupport {
 	}
 	public String getBaseExtension() {
 		return baseExtension;
+	}
+	public String[] getSampleLocations() {
+		return sampleLocations;
+	}
+	public void setSampleLocations(String[] sampleLocations) {
+		this.sampleLocations = sampleLocations;
 	}
 	//////////////////////////////////////////////
 	//
@@ -90,7 +95,14 @@ public class ViewResolverSupport {
 		return staticAttributes;
 	}
 
-	public Map<String, String> attributes(String viewName){
+	public Map<String, String> attributes(String url){
+		
+		String viewName = url;
+		int sId = viewName.indexOf(";");
+		if(sId > 0){
+			viewName = url.substring(0, sId);
+		}
+		
 		
 		int qIdx = viewName.indexOf("?");
 		String query = (qIdx > 0) ? viewName.substring( qIdx + 1) : null;
@@ -181,17 +193,24 @@ public class ViewResolverSupport {
 	//////////////////////////////////////////////
 	//
 	//////////////////////////////////////////////
-	public String resolveViewNameBySpringfield(Map<String, String> attr, String extension){
+	public String resolveViewNameBySampleLocations(Map<String, String> attr, String extension){
 
-		String springfield = attr.get("webmvc.view.springfield");
-		springfield =  (springfield != null ? springfield :springfieldExtension);
+		String[] locations = sampleLocations;
+		String customLocations = attr.get("webmvc.view.thymeleaf.sampleLocations");
+		if(locations != null){
+			locations = StringUtils.commaDelimitedListToStringArray(customLocations);
+		}
 		
         String resource = null;
     	
-        String path = "/"+springfield+"/" + attr.get("method") +"."+extension;
-        resource = findResource(attr, "Springfield", springfieldLocations, path);
+        String path1 = "/" + attr.get("name") +"."+extension;
+        resource = findResource(attr, "Sample Location", sampleLocations, path1);
         if(resource != null) return resource;
 
+        String path2 = "/" + attr.get("method") +"."+extension;
+        resource = findResource(attr, "Sample Location", sampleLocations, path2);
+        if(resource != null) return resource;
+        
         return null;
 	}
 

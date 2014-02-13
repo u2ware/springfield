@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.u2ware.springfield.sample.part1.step1.MybatisBean">
+
+
+
+	<select id="exists" 
+		parameterType="com.u2ware.springfield.sample.part1.step1.MybatisBean" 
+		resultType="integer">
+		select count(id) from MybatisBean 
+		where id = #{id}
+	</select>
+
+	<insert id="create" 
+		parameterType="com.u2ware.springfield.sample.part1.step1.MybatisBean">
+		 insert into MybatisBean ( id, password, name, age ) values ( #{id}, #{password}, #{name}, #{age} )
+	</insert>
+
+	<select id="read" 
+		parameterType="com.u2ware.springfield.sample.part1.step1.MybatisBean" 
+		resultType="com.u2ware.springfield.sample.part1.step1.MybatisBean">
+		select * from MybatisBean 
+		where id = #{id}
+	</select>
+
+	<update id="update" 
+		parameterType="com.u2ware.springfield.sample.part1.step1.MybatisBean">
+		update MybatisBean set password = #{password} , name = #{name}, age = #{age}
+		where id = #{id}
+	</update>
+
+	<delete id="delete" 
+		parameterType="com.u2ware.springfield.sample.part1.step1.MybatisBean">
+		delete from MybatisBean
+		where id = #{id}
+	</delete>
+
+	<select id="findAll" 
+		parameterType="map" 
+		resultType="com.u2ware.springfield.sample.part1.step1.MybatisBean">
+		select * from MybatisBean
+		<include refid="whereSyntax"/>
+		<include refid="orderSyntax"/>
+	</select>
+
+	<select id="findAllCount" 
+		parameterType="map"
+		resultType="long">
+		select count(*) from MybatisBean 
+		<include refid="whereSyntax"/>
+	</select>
+
+	<delete id="deleteAll" 
+		parameterType="map">
+		delete from MybatisBean
+		<include refid="whereSyntax"/>
+	</delete>
+	
+	
+	<sql id="whereSyntax">
+		<if test="query != null">
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test="query.id != null"> and id = #{query.id}</if> 
+				<if test="query.password != null">and password = #{query.password}</if>
+				<if test="query.name != null"> and name = #{query.name}</if> 
+				<if test="query.age != null"> and age = #{query.age}</if> 
+			</trim>
+		</if>
+	</sql>
+	<sql id="orderSyntax">
+		<if test="pageable != null">
+			<trim prefix="order by" prefixOverrides=", ">
+				<foreach item="item" index="index" collection="pageable.sortOrders">
+					<if test="item.direction == 1">
+						, ${item.property} asc
+					</if>
+					<if test="item.direction == -1">
+						, ${item.property} desc
+					</if>
+				</foreach>
+			</trim>
+		</if>
+	</sql>
+
+
+
+
+	<!-- 
+	#######################################
+	#
+	#######################################
+	 -->
+	<select id="findByIdAndPasswordOrderByNameDesc" 
+		parameterType="map" 
+		resultType="com.u2ware.springfield.sample.part1.step1.MybatisBean">
+		select * from MybatisBean
+
+		<include refid="whereSyntaxFindByIdAndPasswordOrderByNameDesc"/>
+		<include refid="orderSyntax"/>
+	</select>
+	<select id="findByIdAndPasswordOrderByNameDescCount" 
+		parameterType="map"
+		resultType="long">
+		select count(*) from MybatisBean 
+		<include refid="whereSyntaxFindByIdAndPasswordOrderByNameDesc"/>
+	</select>
+	<sql id="whereSyntaxFindByIdAndPasswordOrderByNameDesc">
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="query.id != null"> and id = #{query.id}</if> 
+			<if test="query.password != null">and password = #{query.password}</if>
+		</trim>
+	</sql>
+
+
+	<!-- 
+	#######################################
+	#
+	#######################################
+	 -->
+	<select id="findByNameAndAgeOrderByIdAsc" 
+		parameterType="map" 
+		resultType="com.u2ware.springfield.sample.part1.step1.MybatisBean">
+		select * from MybatisBean
+
+		<include refid="whereSyntaxFindByNameAndAgeOrderByIdAsc"/>
+		<include refid="orderSyntax"/>
+	</select>
+	<select id="findByNameAndAgeOrderByIdAscCount" 
+		parameterType="map"
+		resultType="long">
+		select count(*) from MybatisBean 
+		<include refid="whereSyntaxFindByNameAndAgeOrderByIdAsc"/>
+	</select>
+	<sql id="whereSyntaxFindByNameAndAgeOrderByIdAsc">
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="query.name != null"> and name = #{query.name}</if> 
+			<if test="query.age != null"> and age = #{query.age}</if> 
+		</trim>
+	</sql>
+
+
+</mapper>

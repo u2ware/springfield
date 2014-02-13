@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>@Springfield - Basic</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+
+<body>
+<section name="@Springfield - Basic">
+	<subsection name="Code">
+		<source><![CDATA[
+package com.u2ware.springfield.sample.part1.step1;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import com.u2ware.springfield.config.Springfield;
+import com.u2ware.springfield.config.Springfield.Strategy;
+
+@Springfield(
+	strategy=Strategy.SQLSESSION,
+	identity={"id"}
+)
+public @ToString class MybatisBean {
+
+	@Getter @Setter private String id;
+	@Getter @Setter private String password;
+	@Getter @Setter private String name;
+	@Getter @Setter private Integer age;
+}
+		]]></source>
+		<source><![CDATA[
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.u2ware.springfield.sample.part1.step1.MybatisBean">
+
+	<select id="exists"> .... </select>
+
+	<insert id="create"> .... </insert>
+
+	<select id="read"> .... </select>
+
+	<update id="update"> .... </update>
+
+	<delete id="delete"> .... </delete>
+
+	<select id="findAll"> .... </select>
+
+	<select id="findAllCount"> .... </select>
+
+</mapper>
+		]]></source>
+	</subsection>
+
+	<subsection name="Beans">
+		<p><b>@Springfield(strategy=Strategy.SQLSESSION)</b> 선언으로 다음 4개의 Bean 이 자동 생성, 등록 된다.</p>	
+		<table border="1">
+			<tr><th>bean name  </th>	<th>bean type</th>	<th>bean implement</th></tr>
+			<tr><td>"mybatisBeanController"</td><td><i><![CDATA[EntityController<MybatisBean, MybatisBean>]]></i></td><td>com.u2ware.springfield.controller. EntityHandler</td></tr>
+			<tr><td>"mybatisBeanValidator"</td> <td><i><![CDATA[EntityValidator<MybatisBean, MybatisBean>]]></i></td> <td>com.u2ware.springfield.validation. EntityValidatorImpl</td></tr>
+			<tr><td>"mybatisBeanService"</td>   <td><i><![CDATA[EntityService<MybatisBean, MybatisBean>]]></i></td>   <td>com.u2ware.springfield.service. EntityServiceImpl</td></tr>
+			<tr><td>"mybatisBeanRepository"</td><td><i><![CDATA[EntityRepository<MybatisBean, String>]]></i></td>    <td><b>com.u2ware.springfield.repository.sqlsession. EntitySqlsessionRepository</b></td></tr>
+		</table>
+	</subsection>
+	<subsection name="RequestMapping">
+		<p>CRUD 를 기본으로 한 EntityController 의 9 개 method 를 <a href="http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/mvc.html#mvc-ann-methods">RequestMapping</a> 한다.</p>
+			
+		<table border="1">
+			<tr><th>매핑 경로</th>	<th>HTTP Method</th>	<th>Controller Method 이름</th>	<th>예제 Command 객체</th>	<th>예제 매핑 경로</th></tr>
+			<tr><td><i>/{topLevelMapping}/</i></td>         <td>GET</td>   <td>home()</td>      <td>MybatisBean</td><td>/part1/step1/</td></tr>
+			<tr><td><i>/{topLevelMapping}</i></td>          <td>GET</td>   <td>findForm()</td>  <td>MybatisBean</td><td>/part1/step1</td></tr>
+			<tr><td><i>/{topLevelMapping}</i></td>          <td>POST</td>  <td>find()</td>      <td>MybatisBean</td><td>/part1/step1</td></tr>
+			<tr><td><i>/{topLevelMapping}/{id}</i></td>     <td>GET</td>   <td>read()</td>      <td>MybatisBean</td><td>/part1/step1/foo</td></tr>
+			<tr><td><i>/{topLevelMapping}/new</i></td>      <td>GET</td>   <td>createForm()</td><td>MybatisBean</td><td>/part1/step1/new</td></tr>
+			<tr><td><i>/{topLevelMapping}/new</i></td>      <td>POST</td>  <td>create()</td>    <td>MybatisBean</td><td>/part1/step1/new</td></tr>
+			<tr><td><i>/{topLevelMapping}/{id}/edit</i></td><td>GET</td>   <td>updateForm()</td><td>MybatisBean</td><td>/part1/step1/foo/eidt</td></tr>
+			<tr><td><i>/{topLevelMapping}/{id}/edit</i></td><td>PUT</td>   <td>update()</td>    <td>MybatisBean</td><td>/part1/step1/foo/eidt</td></tr>
+			<tr><td><i>/{topLevelMapping}/{id}/edit</i></td><td>DELETE</td><td>delete()</td>    <td>MybatisBean</td><td>/part1/step1/foo/eidt</td></tr>
+		</table>
+		
+		<dl>
+			<dt>Note:</dt>
+			<dd>@Springfield 는  <b>identity</b> 속성에서 정의된 bean property 를   RequestMapping 의 <b>{id}</b>에 매핑한다.</dd>
+		</dl>
+		<dl>
+			<dt>Note:</dt>
+			<dd>@Springfield 의 topLevelMapping 속성에 별도의 선언 이 없으면, basePackage 를 기준으로 결정된다.</dd>
+			<dd>예제에서 basePackage 는 com.u2ware.springfield.sample 이므르 예제에서 topLevelMapping 은 /part1/step2 이 된다.</dd>
+		</dl>
+	</subsection>
+	<subsection name="MyBatis">
+		<dl>
+			<dt>Reference</dt>
+			<dd><a href="http://www.mybatis.org/core/">Mybatis</a></dd>
+		</dl>
+		<dl>
+			<dt>application-context.properties:</dt>
+			<dd><p>@Springfield 는  패턴에 맞는 파일을 찾아 sql mapping 한다.</p></dd>
+			<dd>orm.sqlsession.configLocation=</dd>
+			<dd>orm.sqlsession.mapperLocationsPattern=/**/*.sqlsession.xml</dd>
+		</dl>
+	</subsection>
+	
+</section>
+</body>
+</document>
+
+
+
+
+

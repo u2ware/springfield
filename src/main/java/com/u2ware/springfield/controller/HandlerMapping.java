@@ -5,11 +5,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -31,6 +31,10 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import com.u2ware.springfield.security.Navigation;
+
+
+
 
 public class HandlerMapping extends RequestMappingInfoHandlerMapping{
 	RequestMappingHandlerMapping f;
@@ -38,11 +42,9 @@ public class HandlerMapping extends RequestMappingInfoHandlerMapping{
 	protected final Log logger = LogFactory.getLog(getClass());
 
 	
-	@SuppressWarnings("unchecked")
-	protected Map<String,String> mappingTitle = new LinkedMap(new HashMap<String,String>());
+	protected Map<String,String> mappingTitle = new LinkedHashMap<String,String>(new HashMap<String,String>());
 
-	@SuppressWarnings("unchecked")
-	protected Map<String,Integer> mappingSeq = new LinkedMap(new HashMap<String,Integer>());
+	protected Map<String,Integer> mappingSeq = new LinkedHashMap<String,Integer>(new HashMap<String,Integer>());
 	
 	
 	protected void initHandlerMethods() {
@@ -52,12 +54,12 @@ public class HandlerMapping extends RequestMappingInfoHandlerMapping{
 	
 	protected void initNavigation(){
 		
-		
+		if(getServletContext().getAttribute(Navigation.OBJECT_NAME) != null) return;
 		
 		HandlerMappingNavigation root = new HandlerMappingNavigation();
-		root.setLink("/");
 		root.setPath("/");
-		root.setTitle("root.title");
+		root.setPattern("/**");
+		root.setName("root.title");
 
 		for(String mapping : mappingTitle.keySet()){
 			
@@ -75,8 +77,8 @@ public class HandlerMapping extends RequestMappingInfoHandlerMapping{
 						
 				if(StringUtils.hasText(p)){
 					child = new HandlerMappingNavigation();
+					child.setPattern(p+"/**");
 					child.setPath(p);
-					child.setLink(p);
 					
 					String title = sub[sub.length-1];
 					if(! StringUtils.hasText(title)){
@@ -87,30 +89,51 @@ public class HandlerMapping extends RequestMappingInfoHandlerMapping{
 					}
 					
 					
-					child.setTitle(title);
+					child.setName(title);
 	
 					parent = (HandlerMappingNavigation) parent.addChild(child);
 				}
 			}
 		}
-		
-		printNavigation(root, 0);
 
-		//logger.debug("springfield_navigation : "+ getClass().getName());
-		getServletContext().setAttribute(root.getClass().getName(), root);			
+		getServletContext().setAttribute(Navigation.OBJECT_NAME, root);			
+		logger.warn("Navigation build success.");
+		
+		//if(logger.isInfoEnabled())
+		//	printNavigation(0, root);
 	}
 
-	private void printNavigation(HandlerMappingNavigation n, int i){
-		//logger.debug(i + " "+n.getPath()+" "+n.getLink()+" "+n.getTitle());
-		if(n.getChilds() != null){
+/*	private void printNavigation(int i, Navigation n){
+		logger.info(i + " "+n);
+		if(n.getChildren() != null){
 			int j = i+1;
-			for(HandlerMappingNavigation c : n.getChilds()){
-				printNavigation(c, j);
+			for(Navigation c : n.getChildren()){
+				printNavigation(j ,c);
 			}
 		}
 	}
+*/
+	@SuppressWarnings("serial")
+	private class HandlerMappingNavigation extends Navigation{
 
-	
+		@Override
+		public String getPath() {
+			if(super.getChildren().size() > 0){
+				return getChildren().get(0).getPath();
+			}
+			return super.getPath();
+		}
+		
+		@Override
+		public Navigation addChild(Navigation child){
+			if(super.getChildren().contains(child)){
+				return getChildren().get(getChildren().indexOf(child));
+			}else{
+				super.getChildren().add(child);
+				return child;
+			}
+		}
+	}	
 	
 	
 	

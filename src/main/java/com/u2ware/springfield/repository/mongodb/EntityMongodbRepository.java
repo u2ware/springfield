@@ -18,7 +18,6 @@ import org.springframework.data.mongodb.repository.query.MongoEntityInformation;
 import org.springframework.data.mongodb.repository.support.DefaultEntityInformationCreator;
 import org.springframework.data.mongodb.repository.support.SimpleMongoRepository;
 
-import com.u2ware.springfield.domain.ValidationRejectableException;
 import com.u2ware.springfield.repository.EntityRepository;
 
 public class EntityMongodbRepository<T,ID extends Serializable> implements EntityRepository<T,ID>{
@@ -57,26 +56,13 @@ public class EntityMongodbRepository<T,ID extends Serializable> implements Entit
 	// exists
 	//////////////////////////////////
 	@Override
-	public boolean exists(ID id, boolean throwsDuplicateException) {		
-		boolean result = simpleMongoRepository.exists(id);
-		if(throwsDuplicateException && result){
-			throw new ValidationRejectableException("com.u2ware.springfield.repository.DuplicateKey.message");
-		}else{
-			return result;
-		}
+	public boolean exists(ID id) {		
+		return simpleMongoRepository.exists(id);
 	}
 	@Override
-	public boolean exists(T entity, boolean throwsDuplicateException) {		
-		boolean result = false;
+	public boolean exists(T entity) {		
 		ID id = entityInformation.getId(entity);
-		if(id != null){
-			result = simpleMongoRepository.exists(id);
-		}
-		if(throwsDuplicateException && result){
-			throw new ValidationRejectableException("com.u2ware.springfield.repository.DuplicateKey.message");
-		}else{
-			return result;
-		}
+		return simpleMongoRepository.exists(id);
 	}
 
 	//////////////////////////////////
@@ -106,6 +92,10 @@ public class EntityMongodbRepository<T,ID extends Serializable> implements Entit
 		simpleMongoRepository.delete(entity);
 	}
 	@Override
+	public void delete(ID id) {
+		simpleMongoRepository.delete(id);
+	}
+	@Override
 	public T createOrUpdate(T entity) {
 		return simpleMongoRepository.save(entity);
 	}
@@ -113,10 +103,14 @@ public class EntityMongodbRepository<T,ID extends Serializable> implements Entit
 	// findAll
 	//////////////////////////////////
 	@Override
+	public List<T> findAll() {
+		return simpleMongoRepository.findAll();
+	}
+	@Override
 	public List<T> findAll(Object query) {
 		PartTreeQuery spec = new PartTreeQuery(entityClass, query);
 		Sort specSort = spec.createSort();
-		logger.info("sort : "+specSort);
+		//logger.info("sort : "+specSort);
 		Query mongoQuery = createQuery(spec, null, specSort);
 		return getTemplate().find(mongoQuery, entityInformation.getJavaType(), entityInformation.getCollectionName());
 	}
@@ -125,7 +119,7 @@ public class EntityMongodbRepository<T,ID extends Serializable> implements Entit
 		PartTreeQuery spec = new PartTreeQuery(entityClass, query);
 		Sort specSort = spec.createSort();
 		Sort sortAll =  (specSort != null) ? specSort.and(sort) : sort;
-		logger.info("sort : "+sortAll);
+		//logger.info("sort : "+sortAll);
 		Query mongoQuery = createQuery(spec, null, sortAll);
 		return getTemplate().find(mongoQuery, entityInformation.getJavaType(), entityInformation.getCollectionName());
 	}
@@ -134,7 +128,7 @@ public class EntityMongodbRepository<T,ID extends Serializable> implements Entit
 		PartTreeQuery spec = new PartTreeQuery(entityClass, query);
 		Sort specSort = spec.createSort();
 		Sort sortAll = (specSort != null) ? specSort.and(pageable.getSort()) : pageable.getSort();
-		logger.info("sort : "+sortAll);
+		//logger.info("sort : "+sortAll);
 
 		Query mongoQuery = createQuery(spec, new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sortAll), null);
 		long count = getTemplate().count(mongoQuery, entityInformation.getCollectionName());
@@ -150,7 +144,20 @@ public class EntityMongodbRepository<T,ID extends Serializable> implements Entit
 		return count;
 	}
 	
+	//////////////////////////////////
+	// deleteAll
+	//////////////////////////////////
+	@Override 
+	public void deleteAll(){
+		simpleMongoRepository.deleteAll();
+	}
 	
+	@Override 
+	public void deleteAll(Object query) {
+		PartTreeQuery spec = new PartTreeQuery(entityClass, query);
+		Query mongoQuery = createQuery(spec, null, null);
+		mongoOperations.remove(mongoQuery, entityInformation.getCollectionName());
+	}
 	
 	protected Query createQuery(PartTreeQuery spec, Pageable pageable, Sort sort){
 		Query mongoQuery = new Query();
@@ -160,110 +167,6 @@ public class EntityMongodbRepository<T,ID extends Serializable> implements Entit
 		}
 		return mongoQuery.with(pageable).with(sort);
 	}
+	
+	
 }
-
-/*
-
-
-	//////////////////////////////////
-	// QueryMethodExecutor
-	//////////////////////////////////
-	public List<T> findAll(Object query) {
-		return findAll(quessQueryMethodName(query), query);
-	}
-	public List<T> findAll(Object query, Sort sort) {
-		return findAll(quessQueryMethodName(query), query, sort);
-	}
-	public Page<T> findAll(Object query, Pageable pageable) {
-		return findAll(quessQueryMethodName(query), query, pageable);
-	}
-	public List<T> findAll(String queryMethodName, Object query) {
-		return findAll(new PartTreeQuerySpecification<T>(queryMethodName, entityClass, query));
-	}
-	public List<T> findAll(String queryMethodName, Object query, Sort sort) {
-		return findAll(new PartTreeQuerySpecification<T>(queryMethodName, entityClass, query), sort);
-	}
-	public Page<T> findAll(String queryMethodName, Object query, Pageable pageable) {
-		return findAll(new PartTreeQuerySpecification<T>(queryMethodName, entityClass, query), pageable);
-	}
-
-	protected String quessQueryMethodName(Object query){
-
-		Class<?> beanClass = query.getClass();
-		String queryMethodName = ClassUtils.getShortNameAsProperty(beanClass);
-		QueryMethod queryMethod = AnnotationUtils.findAnnotation(beanClass, QueryMethod.class);
-
-		if(queryMethod != null && StringUtils.hasText(queryMethod.value())){
-			queryMethodName = queryMethod.value();
-		}
-
-		if(! queryMethodName.toLowerCase().startsWith("findby")){
-			queryMethodName = "findBy";
-		}
-
-		logger.debug(query.getClass() +" quessQueryMethodName is "+queryMethodName);
-		return queryMethodName;
-	}
-
-	//////////////////////////////////
-	// Specification...
-	//////////////////////////////////
-	public List<T> findAll(Specification<T> spec) {
-		Query query = getQuery(spec, (Sort) null);
-		return mongoOperations.find(query, entityClass, entityInformation.getCollectionName());
-	}
-
-	public List<T> findAll(Specification<T> spec, Sort sort) {
-		Query query = getQuery(spec, (Sort) sort);
-		return mongoOperations.find(query, entityClass, entityInformation.getCollectionName());
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Page<T> findAll(Specification<T> spec, Pageable pageable) {
-		Query query = getQuery(spec, pageable);
-		long count = mongoOperations.count(query, entityInformation.getCollectionName());
-		List<?> result = mongoOperations.find(query.with(pageable), entityClass, entityInformation.getCollectionName());
-		return new PageImpl(result, pageable, count);
-	}
-	private Query getQuery(Specification<T> spec, Sort sort) {
-		Query query = new Query();
-		Criteria criteria = spec.toCriteria(entityInformation, query, mongoOperations);
-		if(criteria != null){
-			query.addCriteria(criteria);
-		}
-		return query.with(sort);
-	}
-	private Query getQuery(Specification<T> spec, Pageable pageable) {
-		Query query = new Query();
-		Criteria criteria = spec.toCriteria(entityInformation, query, mongoOperations);
-		if(criteria != null){
-			query.addCriteria(criteria);
-		}
-		Query q =  query.with(pageable);
-		return q;
-	}
-
-	//////////////////////////////////
-	// NativeQueryExecutor
-	//////////////////////////////////
-	public List<?> executeQuery(String statement) {
-		return null;
-	}
-	public List<?> executeQuery(String statement, Object param) {
-		return null;
-	}
-	public int executeUpdate(String statement) {
-		return 0;
-	}
-	public int executeUpdate(String statement, Object param) {
-		return 0;
-	}
-
-	public String[] id() {
-		return null;
-	}
-
-
-
-
-*/

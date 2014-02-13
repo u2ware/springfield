@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>@Springfield</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+
+<body>
+<section name="@Springfield">
+	<p>
+		POJO Class 에   @Springfield 을 선언하면  Generic 류의 Controller / Service / Repository Bean 을 
+		 생성하여 CoC 에 의해 "~Controller", "~Validator", "~Service", "~Repository" 라는 Bean Name 으로, 
+		 springframework 의 applicationContext에 등록 한다. 
+	</p>
+	<p>
+		<img/>
+	</p>
+	<p>
+		자동 생성, 등록 되는 Bean 종류 및 구현체는 strategy 속성 값에 따라 결정된다. 
+	</p>
+	<table border="1">
+		<tr><th>Springfield Strategy</th>	<th>bean name  </th>	<th>bean type</th>	<th>bean implement</th></tr>
+		<tr><td rowspan="4"><b>SQLSESSION</b></td><td>"~Controller"</td><td><i><![CDATA[EntityController<T,Q>]]></i></td> <td>com.u2ware.springfield.controller. EntityHandler</td></tr>
+		<tr>                                      <td>"~Validator"</td> <td><i><![CDATA[EntityValidator<T,Q>]]></i></td>  <td>com.u2ware.springfield.validation. EntityValidatorImpl</td></tr>
+		<tr>                                      <td>"~Service"</td>   <td><i><![CDATA[EntityService<T,Q>]]></i></td>	  <td>com.u2ware.springfield.service. EntityServiceImpl</td></tr>
+		<tr>                                      <td>"~Repository"</td><td><i><![CDATA[EntityRepository<T,ID>]]></i></td><td><b>com.u2ware.springfield.repository.sqlsession. EntitySqlsessionRepository</b></td></tr>
+		<tr><td rowspan="4"><b>JPA</b></td>       <td>"~Controller"</td><td><i><![CDATA[EntityController<T,Q>]]></i></td> <td>com.u2ware.springfield.controller. EntityHandler</td></tr>
+		<tr>                                      <td>"~Validator"</td> <td><i><![CDATA[EntityValidator<T,Q>]]></i></td>  <td>com.u2ware.springfield.validation. EntityValidatorImpl</td></tr>
+		<tr>                                      <td>"~Service"</td>   <td><i><![CDATA[EntityService<T,Q>]]></i></td>    <td>com.u2ware.springfield.service. EntityServiceImpl</td></tr>
+		<tr>                                      <td>"~Repository"</td><td><i><![CDATA[EntityRepository<T,ID>]]></i></td><td><b>com.u2ware.springfield.repository.jpa. EntityJpaRepository</b></td></tr>
+		<tr><td rowspan="4"><b>MONGODB</b></td>   <td>"~Controller"</td><td><i><![CDATA[EntityController<T,Q>]]></i></td> <td>com.u2ware.springfield.controller. EntityHandler</td>	</tr>
+		<tr>                                      <td>"~Validator"</td> <td><i><![CDATA[EntityValidator<T,Q>]]></i></td>  <td>com.u2ware.springfield.validation. EntityValidatorImpl</td>	</tr>
+		<tr>                                      <td>"~Service"</td>   <td><i><![CDATA[EntityService<T,Q>]]></i></td>    <td>com.u2ware.springfield.service. EntityServiceImpl</td>	</tr>
+		<tr>                                      <td>"~Repository"</td><td><i><![CDATA[EntityRepository<T,ID>]]></i></td><td><b>com.u2ware.springfield.repository.mongodb. EntityMongodbRepository</b></td></tr>
+		<tr><td rowspan="3"><b>DTO</b></td>       <td>"~Controller"</td><td><i><![CDATA[EntityController<T,Q>]]></i></td> <td>com.u2ware.springfield.controller. EntityHandler</td>	</tr>
+		<tr>                                      <td>"~Validator"</td> <td><i><![CDATA[EntityValidator<T,Q>]]></i></td>  <td>com.u2ware.springfield.validation. EntityValidatorImpl</td>	</tr>
+		<tr>                                      <td>"~Service"</td>   <td><i><![CDATA[EntityService<T,Q>]]></i></td>    <td>com.u2ware.springfield.service. EntityServiceImpl</td>	</tr>
+		<tr><td><b>SQLSESSION _REPOSITORY_ONLY</b></td><td>"~Repository"</td><td><i><![CDATA[EntityRepository<T,ID>]]></i></td><td><b>com.u2ware.springfield.repository.sqlsession. EntitySqlsessionRepository</b></td></tr>
+		<tr><td><b>JPA _REPOSITORY_ONLY</b>       </td><td>"~Repository"</td><td><i><![CDATA[EntityRepository<T,ID>]]></i></td><td><b>com.u2ware.springfield.repository.jpa. EntityJpaRepository</b></td></tr>
+		<tr><td><b>MONGODB _REPOSITORY_ONLY</b>   </td><td>"~Repository"</td><td><i><![CDATA[EntityRepository<T,ID>]]></i></td><td><b>com.u2ware.springfield.repository.mongodb. EntityMongodbRepository</b></td></tr>
+	</table>
+	
+</section>
+
+
+</body>
+</document>
+

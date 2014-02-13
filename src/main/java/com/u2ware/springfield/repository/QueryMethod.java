@@ -15,4 +15,6 @@ public @interface QueryMethod {
 
 	String query() default "";
 	String countQuery() default "";	
+	
+	
 }

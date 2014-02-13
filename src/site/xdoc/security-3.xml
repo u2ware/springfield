@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>Security</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+
+<body>
+<section name="Navigation">
+	
+	<p>
+		<a href="http://www.springsource.org/spring-security">Spring Security</a> 에서 
+		인증(authentication) 과 권한(authorization) 모듈을 위해  
+		@Springfield 에서는   Navigation XML 을 사용한다. &lt;navigation&gt; 요소의 속성은 다음과 같다.
+	</p>
+	<ul>
+		<li>path : Request Mapping 경로.</li>
+		<li>name : Request Mapping 경로의 이름</li>
+
+		<li>method : <a href="http://static.springsource.org/spring-security/site/docs/3.2.x/reference/springsecurity-single.html#nsa-intercept-url">intercept-url method</a></li>
+		<li>pattern : <a href="http://static.springsource.org/spring-security/site/docs/3.2.x/reference/springsecurity-single.html#nsa-intercept-url">intercept-url pattern</a></li>
+		<li>access : <a href="http://static.springsource.org/spring-security/site/docs/3.2.x/reference/springsecurity-single.html#nsa-intercept-url">intercept-url access</a></li>
+
+		<li>hide : 해당 메뉴의 숨김 여부</li>
+		<li>accessible : 해당 메뉴의 권한 체크 여부. true 이면 권한을 체크하여  hide 속성을 동적으로 변경한다.</li>
+	</ul>
+
+	<source><![CDATA[
+<navigation path="/" >
+	<navigation pattern="/part1/**"  path="/part1/step1/"  name="part1" >
+		<navigation name="step1" >
+			<navigation pattern="/part1/step1/**"  path="/part1/step1/"  name="MybatisBean" />
+		</navigation>
+		<navigation name="step2" >
+			<navigation pattern="/part1/step2/**"  path="/part1/step2/"  name="JpaBean" />
+		</navigation>
+		<navigation name="step3" >
+			<navigation pattern="/part1/step3/**"  path="/part1/step3/"  name="MongodbBean" />
+		</navigation>
+	</navigation>
+	<navigation pattern="/part2/**"  path="/part2/step1"  name="part2" >
+		<navigation  name="step1" >
+			<navigation pattern="/part2/step1/**"  path="/part2/step1"  name="QueryBean" />
+		</navigation>
+		<navigation  name="step2" >
+			<navigation pattern="/part2/step21/**"  path="/part2/step21"  name="FindByName" />
+			<navigation pattern="/part2/step22/**"  path="/part2/step22"  name="FindByAgeBetween" />
+		</navigation>
+	</navigation>
+	<navigation pattern="/part3/**"  path="/part3/step1"  name="part3" >
+		<navigation  name="step1" >
+			<navigation pattern="/part3/step1/**"  path="/part3/step1"  name="TargetBean" />
+		</navigation>
+		<navigation  name="step2" >
+			<navigation pattern="/part3/step2/**"  path="/part3/step2"  name="CustomBean" />
+		</navigation>
+		<navigation  name="step3" >
+			<navigation pattern="/part3/step3/**"  path="/part3/step3"  name="FormBean" />
+		</navigation>
+	</navigation>
+	<navigation pattern="/part4/**"  path="/part4/step1/"  name="part4" >
+		<navigation  name="step1" >
+			<navigation pattern="/part4/step1/**"  path="/part4/step1"  name="MappingBean" />
+			<navigation                            path="/part4/step1.json"  name="/part4/step1.json" />
+			<navigation                            path="/part4/step1.xml"  name="/part4/step1.xml" />
+			<navigation                            path="/part4/step1.xls"  name="/part4/step1.xls" />
+		</navigation>
+		<navigation  name="step2" >
+			<navigation pattern="/part4/step2/**"  path="/part4/step2/"  name="ViewBean" />
+			<navigation                            path="/part4/step2.do"  name="/part4/step2.do" />
+		</navigation>
+	</navigation>
+	<navigation pattern="/others/**"  path="/others/context/new"  name="others" >
+		<navigation  name="context" >
+			<navigation pattern="/others/context/**"  path="/others/context/new"  name="DayStep" />
+		</navigation>
+		<navigation  name="fileupload" >
+			<navigation pattern="/others/upload/**"  path="/others/upload"  name="AttachedFile" />
+			<navigation pattern="/others/multipart/**"  path="/others/multipart/upload"  name="AjaxUpload" />
+		</navigation>
+	</navigation>
+	<navigation pattern="/security/**" path="/security/user/loginForm" hide="true" accessible="true" access="hasRole('ROLE_ANONYMOUS')" name="security" >
+		<navigation name="user" >
+			<navigation pattern="/security/user/loginForm/**"  path="/security/user/loginForm"  name="LogIn" />
+			<navigation pattern="/security/user/forgot/**"     path="/security/user/forgot/new"  name="Forgot" />
+			<navigation pattern="/security/user/register/**"   path="/security/user/register/new"  name="register" />
+		</navigation>
+		<navigation name="member" >
+			<navigation pattern="/security/member/info/**"      access="hasRole('ROLE_USER')" path="/security/member/info/new"  name="info" />
+			<navigation pattern="/security/member/password/**"  access="hasRole('ROLE_USER')" path="/security/member/password/new"  name="password" />
+			<navigation pattern="/security/member/leave/**"     access="hasRole('ROLE_USER')" path="/security/member/leave/new"  name="leave" />
+		</navigation>
+		<navigation name="admin" >
+			<navigation pattern="/security/admin/authority/**" accessible="true" access="hasRole('ROLE_ADMIN')" path="/security/admin/authority"  name="authority" />
+			<navigation pattern="/security/admin/member/**"    accessible="true" access="hasRole('ROLE_ADMIN')" path="/security/admin/member"  name="member" />
+		</navigation>
+	</navigation>
+</navigation>
+	]]></source>
+	
+	<dl>
+		<dt>application-context.properties</dt>
+		<p>
+			<dd>Navigation XML 의 경로는 설정가능하다.</dd>
+			<dd>webmvc.navigation=/application-navigation.xml</dd>
+		</p>
+		<p>
+			<dd>Navigation XML 파일의 로딩이 실패하였을 경우 @Springfield 는  모든 Request Mapping 을 조립하여 navigation 객체를 생성하며 , </dd>
+			<dd>이때 모든 경로의 access 속성은 hasRole('ROLE_ANONYMOUS') 로 간주 한다.</dd>
+		</p>
+	</dl>
+</section>
+</body>
+</document>

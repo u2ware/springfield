@@ -1,0 +1,18 @@
+ -----
+ WebMVC
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+WebMVC
+~~~~~~~~~~~~~~~~~~~~
+
+ @Springfield 는 자유롭게 RequestMapping 추가와  View 를 설정이 가능하다.
+ 
+       * {{{./webmvc-example31.html} MappingBean }}
+    
+       * {{{./webmvc-example32.html} ViewBean }}
+       
+ 
+  

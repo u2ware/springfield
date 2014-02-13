@@ -7,32 +7,10 @@
 
 	<!-- 
 	#############################################################
-	# multipartResolver 
-	#############################################################
-	<bean id="filterMultipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-	    <property name="maxUploadSize" value="#{prop['webmvc.view.multipart.maxUploadSize']}"/>
-	</bean>
-	-->	
-	<bean id="filterMultipartResolver" class="com.u2ware.springfield.support.multipart.MultipartFileResolver">
-	    <property name="maxUploadSize" value="#{prop['webmvc.view.multipart.maxUploadSize']}"/>
-	</bean>
-
-	<bean id="multipartFileHandler" class="com.u2ware.springfield.support.multipart.MultipartFileHandlerImpl">
-		<property name="location" value="#{prop['webmvc.view.multipart.location']}"/>
-	</bean>
-
-	<bean id="uploadFileRepository" class="com.u2ware.springfield.support.multipart.UploadFileRepositoryImpl">
-		<property name="multipartFileHandler" ref="multipartFileHandler"/>
-	</bean>
-  
-  
-  
-	<!-- 
-	#############################################################
 	# download 
 	#############################################################
 	-->	
-	<bean id="downloadView" class="com.u2ware.springfield.view.multipart.MultipartFileView">
+	<bean id="downloadView" class="com.u2ware.springfield.support.multipart.MultipartFileView">
 		<property name="download" value="true"/>
 		<property name="multipartFileHandler" ref="multipartFileHandler"/>
 	</bean>
@@ -41,10 +19,7 @@
 	
 		<property name="staticName" value="downloadView"/>
 		<property name="staticAttributes" value="#{prop}"/>
-
 	</bean>
-
-
 
 
 	<!-- 
@@ -52,7 +27,7 @@
 	# stream
 	#############################################################
 	-->
-	<bean id="streamView" class="com.u2ware.springfield.view.multipart.MultipartFileView">
+	<bean id="streamView" class="com.u2ware.springfield.support.multipart.MultipartFileView">
 		<property name="download" value="false"/>
 		<property name="multipartFileHandler" ref="multipartFileHandler"/>
 	</bean>
@@ -62,6 +37,7 @@
 		<property name="staticName" value="streamView"/>
 		<property name="staticAttributes" value="#{prop}"/>
 	</bean>
+
 
 	<!-- 
 	################################
@@ -76,6 +52,7 @@
 		<property name="staticName" value="jsonView"/>
 		<property name="staticAttributes" value="#{prop}"/>
 	</bean>
+
 
 	<!-- 
 	################################
@@ -141,7 +118,7 @@
 	<bean id="tilesConfigurerDefinitions" class="com.u2ware.springfield.support.resource.ResourcePatternResolverBean">
 		<property name="targetName" value="Tiles"/>
 		<property name="locationPatterns" value="
-			classpath:com/u2ware/springfield/**/tiles-definitions.xml,
+			classpath:com/u2ware/springfield/view/tiles/tiles-definitions.xml,
 			classpath:/#{prop['basePackage'].replace('.','/')}#{prop['webmvc.view.tiles.definitionsPattern']},
 			#{prop['baseWebapp']}#{prop['webmvc.view.tiles.definitionsPattern']}"/>
 	</bean>
@@ -165,7 +142,7 @@
 	# thymeleaf
 	#############################################################
 	-->
-	<bean id="templateResolver" class="com.u2ware.springfield.view.thymeleaf.support.ResourceBasedTemplateResolver">
+	<bean id="templateResolver" class="com.u2ware.springfield.view.thymeleaf.templateresolver.ResourceBasedTemplateResolver">
 		<property name="prefix" value="" />
 		<property name="suffix" value="" />
 		<property name="characterEncoding" value="UTF-8" />
@@ -173,7 +150,13 @@
 		<property name="cacheable" value="#{prop['webmvc.view.thymeleaf.cacheable']}"/>
 	</bean>
 	<bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
-		<property name="templateResolver" ref="templateResolver" />		
+		<property name="templateResolver" ref="templateResolver" />	
+		 <property name="additionalDialects">
+            <set>
+                <bean class="org.thymeleaf.extras.springsecurity3.dialect.SpringSecurityDialect" />
+                <bean class="com.u2ware.springfield.sample.views.type1.Type1Dialet" />
+            </set>
+        </property>
 	</bean>
 	<bean class="com.u2ware.springfield.view.thymeleaf.ThymeleafViewResolver">
 
@@ -182,6 +165,8 @@
 
 		<property name="baseLocations" value="#{prop['baseWebapp']},classpath:/#{prop['basePackage'].replace('.','/')}"/>
 		<property name="baseExtension" value="html"/>
+		
+		<property name="sampleLocations" value="#{prop['webmvc.view.thymeleaf.sampleLocations']}"/>
 
  		<property name="templateEngine" ref="templateEngine" />
 		<property name="characterEncoding" value="UTF-8"/>
@@ -189,7 +174,7 @@
 		<property name="contentType" value="text/html"/>
 		<property name="staticVariables">
 			<map>
-				<entry key="thymeleafRootLocation" value="/aa/aa/aa" />
+				<entry key="aaa" value="/aa/aa/aa" />
 			</map>
 		</property>
 

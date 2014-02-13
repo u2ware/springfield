@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>@Springfield - Basic</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+
+<body>
+<section name="@Springfield - Basic">
+	<subsection name="Code">
+		<source><![CDATA[
+package com.u2ware.springfield.sample.part1.step2;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import com.u2ware.springfield.config.Springfield;
+import com.u2ware.springfield.config.Springfield.Strategy;
+
+@Springfield(
+	strategy=Strategy.JPA
+)
+@Entity
+public @ToString class JpaBean {
+
+	@Id
+	@Getter @Setter private String id;
+	@Getter @Setter private String password;
+	@Getter @Setter private String name;
+	@Getter @Setter private Integer age;
+}
+		]]></source>
+	</subsection>
+
+	<subsection name="Beans">
+		<p><b>@Springfield(strategy=Strategy.SQLSESSION)</b> 선언으로 다음 4개의 Bean 이 자동 생성, 등록 된다.</p>	
+		<table border="1">
+			<tr><th>bean name  </th>	<th>bean type</th>	<th>bean implement</th></tr>
+			<tr><td>"jpaBeanController"</td><td><i><![CDATA[EntityController<JpaBean, JpaBean>]]></i></td><td>com.u2ware.springfield.controller. EntityHandler</td></tr>
+			<tr><td>"jpaBeanValidator"</td> <td><i><![CDATA[EntityValidator<JpaBean, JpaBean>]]></i></td> <td>com.u2ware.springfield.validation. EntityValidatorImpl</td></tr>
+			<tr><td>"jpaBeanService"</td>   <td><i><![CDATA[EntityService<JpaBean, JpaBean>]]></i></td>   <td>com.u2ware.springfield.service. EntityServiceImpl</td></tr>
+			<tr><td>"jpaBeanRepository"</td><td><i><![CDATA[EntityRepository<JpaBean, String>]]></i></td><td><b>com.u2ware.springfield.repository.jpa. EntityJpaRepository</b></td></tr>
+		</table>
+	</subsection>
+	<subsection name="RequestMapping">
+		<p>CRUD 를 기본으로 한 EntityController 의 9 개 method 를 <a href="http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/mvc.html#mvc-ann-methods">RequestMapping</a> 한다.</p>
+		<table border="1">
+			<tr><th>매핑 경로</th>	<th>HTTP Method</th>	<th>Controller Method 이름</th>	<th>예제 Command 객체</th>	<th>예제 매핑 경로</th></tr>
+			<tr><td><i>/{topLevelMapping}/</i></td>         <td>GET</td>   <td>home()</td>      <td>JpaBean</td><td>/part1/step2/</td></tr>
+			<tr><td><i>/{topLevelMapping}</i></td>          <td>GET</td>   <td>findForm()</td>  <td>JpaBean</td><td>/part1/step2</td></tr>
+			<tr><td><i>/{topLevelMapping}</i></td>          <td>POST</td>  <td>find()</td>      <td>JpaBean</td><td>/part1/step2</td></tr>
+			<tr><td><i>/{topLevelMapping}/{id}</i></td>     <td>GET</td>   <td>read()</td>      <td>JpaBean</td><td>/part1/step2/bar</td></tr>
+			<tr><td><i>/{topLevelMapping}/new</i></td>      <td>GET</td>   <td>createForm()</td><td>JpaBean</td><td>/part1/step2/new</td></tr>
+			<tr><td><i>/{topLevelMapping}/new</i></td>      <td>POST</td>  <td>create()</td>    <td>JpaBean</td><td>/part1/step2/new</td></tr>
+			<tr><td><i>/{topLevelMapping}/{id}/edit</i></td><td>GET</td>   <td>updateForm()</td><td>JpaBean</td><td>/part1/step2/bar/eidt</td></tr>
+			<tr><td><i>/{topLevelMapping}/{id}/edit</i></td><td>PUT</td>   <td>update()</td>    <td>JpaBean</td><td>/part1/step2/bar/eidt</td></tr>
+			<tr><td><i>/{topLevelMapping}/{id}/edit</i></td><td>DELETE</td><td>delete()</td>    <td>JpaBean</td><td>/part1/step2/bar/eidt</td></tr>
+		</table>
+		<dl>
+			<dt>Note:</dt>
+			<dd>@Springfield 는    <b>@javax.persistence.Id</b> 가 선언된 bean property 를   RequestMapping 의 <b>{id}</b>에 매핑한다.</dd>
+		</dl>
+		<dl>
+			<dt>Note:</dt>
+			<dd>@Springfield 의 topLevelMapping 속성에 별도의 선언 이 없으면, basePackage 를 기준으로 결정된다.</dd>
+			<dd>예제에서 basePackage 는 com.u2ware.springfield.sample 이므르 예제에서 topLevelMapping 은 /part1/step2 이 된다.</dd>
+		</dl>
+	</subsection>
+	<subsection name="JPA">
+		<dl>
+			<dt>Reference</dt>
+			<dd><a href="http://docs.jboss.org/hibernate/entitymanager/3.6/reference/en/html/">JPA</a></dd>
+			<dd><a href="http://static.springsource.org/spring-data/data-jpa/docs/current/reference/html/">spring-data-jpa</a></dd>
+		</dl>
+		<dl>
+			<dt>application-context.properties:</dt>
+			<dd><p>jpa 설정</p></dd>
+			<dd>orm.jpa.defaultPersistenceUnitName=em</dd>
+			<dd>orm.jpa.hibernate.dialect=org.hibernate.dialect.HSQLDialect</dd>
+			<dd>#orm.jpa.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect</dd>
+			<dd>#orm.jpa.hibernate.hbm2ddl.auto=validate</dd>
+			<dd>orm.jpa.hibernate.hbm2ddl.auto=update</dd>
+			<dd>orm.jpa.hibernate.show_sql=true</dd>
+			<dd>orm.jpa.hibernate.format_sql=true</dd>
+		</dl>
+	</subsection>
+	
+</section>
+</body>
+</document>
