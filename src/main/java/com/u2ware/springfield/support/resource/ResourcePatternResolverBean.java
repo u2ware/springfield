@@ -1,35 +1,40 @@
 package com.u2ware.springfield.support.resource;
 
+import java.io.IOException;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternUtils;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 public class ResourcePatternResolverBean implements ResourceLoaderAware, InitializingBean{
 
-	protected final Log logger = LogFactory.getLog(getClass());
+	private static final Logger logger = LoggerFactory.getLogger(ResourcePatternResolverBean.class);
+
 
 	private String targetName;
+	private String[] packageToScan = new String[]{""};
 	private String[] locationPatterns;
 	private ResourcePatternResolver resourcePatternResolver;
-	//private ResourcePatternResolverBeanSupport resourcePatternResolverBeanSupport;
 	
 	
-
+	public void setPackageToScan(String[] packageToScan) {
+		this.packageToScan = packageToScan;
+	}
 	public void setLocationPatterns(String[] locationPatterns) {
 		this.locationPatterns = locationPatterns;
 	}
 	public void setResourceLoader(ResourceLoader resourceLoader) {
-		
 		this.resourcePatternResolver = ResourcePatternUtils.getResourcePatternResolver(resourceLoader);
 		//this.resourcePatternResolverBeanSupport = new ResourcePatternResolverBeanSupport(resourceLoader);
 	}
@@ -60,31 +65,47 @@ public class ResourcePatternResolverBean implements ResourceLoaderAware, Initial
 	///////////////////////////////////////////////
 	//
 	//////////////////////////////////////////////
+	private int addResources(HashSet<Resource> resourcesSet, String pattern){
+		logger.warn(targetName+" Pattern: "+pattern);
+		int count = 0;
+		try{
+			Resource[] resources = resourcePatternResolver.getResources(pattern);
+			for(Resource r : resources){
+				if(r.exists()){
+					resourcesSet.add(r);
+					logger.warn(targetName+" Adding: "+r);
+					count++;
+				}else{
+					//logger.fatal(r);
+				}
+			}
+		}catch(Exception e){
+			//e.printStackTrace();
+		}
+		return count;
+	}
+	
 	public void afterPropertiesSet() throws Exception {
 		
 		if (ObjectUtils.isEmpty(locationPatterns)) return;
 
-	
 		resourcesSet = new HashSet<Resource>();
-		
-		for(String locationPattern : locationPatterns){
-			logger.warn(targetName+" Pattern: "+locationPattern);
+
+		for(String packageToScanPath : packageToScan){
 			
-			try{
-				Resource[] resources = resourcePatternResolver.getResources(locationPattern);
-				for(Resource r : resources){
-					if(r.exists()){
-						resourcesSet.add(r);
-						logger.warn(targetName+" Adding: "+r);
-					}else{
-						//logger.fatal("Adding: ");
-						
-					}
+			String classBasedResourcePath = "classpath:"+ClassUtils.convertClassNameToResourcePath(packageToScanPath);
+			String webappBasedResourcePath = "/WEB-INF/"+ClassUtils.convertClassNameToResourcePath(packageToScanPath);
+			
+			for(String locationPattern : locationPatterns){
+				int r1 = addResources(resourcesSet, classBasedResourcePath+locationPattern);
+				int r2 = addResources(resourcesSet, webappBasedResourcePath+locationPattern);
+				if(r1 + r2 < 1){
+					addResources(resourcesSet, locationPattern);
 				}
-			}catch(Exception e){
-				//e.printStackTrace();
 			}
 		}
+		
+		
 
 		if(resourcesSet.size() < 1) return;
 
@@ -100,5 +121,36 @@ public class ResourcePatternResolverBean implements ResourceLoaderAware, Initial
 			basenames[i] = StringUtils.stripFilenameExtension(locations[i]);
 			i++;
 		}
+	}
+	
+	public String getLocation(Locale locale, String location){
+		
+		String language = locale.getLanguage();
+		String country = locale.getCountry();
+		
+		StringBuilder result = new StringBuilder();
+		result.append(StringUtils.stripFilenameExtension(location));
+		if(StringUtils.hasText(language)){
+			result.append("_");
+			result.append(language);
+		}
+		if(StringUtils.hasText(country)){
+			result.append("_");
+			result.append(country);
+		}
+		result.append(".");
+		result.append(StringUtils.getFilenameExtension(location));
+		return result.toString();
+	}
+	public Resource getResource(Locale locale, Resource resource) throws IOException{
+		
+		String src = resource.getURL().toString();
+		String location = getLocation(locale, src); 
+		
+		Resource dest = resourcePatternResolver.getResource(location);
+		if(dest.exists()){
+			return dest;
+		}
+		return resource;
 	}
 }

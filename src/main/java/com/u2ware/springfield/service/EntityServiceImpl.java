@@ -1,8 +1,8 @@
 package com.u2ware.springfield.service;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.u2ware.springfield.domain.EntityPageImpl;
@@ -11,21 +11,18 @@ import com.u2ware.springfield.repository.EntityRepository;
 
 public class EntityServiceImpl<T, Q> implements EntityService<T, Q>  {
 
-	protected final Log logger = LogFactory.getLog(getClass());
+	protected static final Logger logger = LoggerFactory.getLogger(EntityServiceImpl.class);
 
 	private EntityRepository<T, ?> repository;
 
-	public EntityServiceImpl() {
-		super();
+	protected EntityServiceImpl(){
 	}
-	public EntityServiceImpl(EntityRepository<T, ?> repository) {
-		super();
-		this.repository = repository;
-	}
-	public EntityServiceImpl(String repositoryBeanName, EntityRepository<T, ?> repository) {
+	
+	protected EntityServiceImpl(EntityRepository<T, ?> repository) {
 		super();
 		this.repository = repository;
 	}
+
 	////////////////////////////////////////////
 	//
 	/////////////////////////////////////////////
@@ -36,18 +33,13 @@ public class EntityServiceImpl<T, Q> implements EntityService<T, Q>  {
 		this.repository = repository;
 	}
 
-	////////////////////////////////////////////
-	//
-	/////////////////////////////////////////////
-	protected Iterable<?> search(Q query, EntityPageable pageable) {
-		if(getRepository() == null) return new EntityPageImpl<T>();
-		if(pageable != null && pageable.isEnable()){
-			return new EntityPageImpl<T>(getRepository().findAll(query, pageable));
-		}else{
-			return getRepository().findAll(query);
-		}
+/*
+	@Override
+	public String[] getIdAttributeNames() {
+		if(getRepository() == null) return null;
+		return getRepository().getIdAttributeNames();
 	}
-	
+*/	
 	////////////////////////////////////////////
 	//
 	/////////////////////////////////////////////
@@ -56,15 +48,25 @@ public class EntityServiceImpl<T, Q> implements EntityService<T, Q>  {
 		return query;
 	}
 
-	@Transactional
 	public Iterable<?> findForm(Q query, EntityPageable pageable) {
-		return search(query, pageable);
+		return find(query, pageable);
 	}
 	
 	@Transactional
 	public Iterable<?> find(Q query, EntityPageable pageable) {
-		return search(query, pageable);
+		if(getRepository() == null) return new EntityPageImpl<T>();
+		if(pageable != null && pageable.isEnable()){
+			return new EntityPageImpl<T>(getRepository().findAll(query, pageable));
+		}else{
+			return getRepository().findAll(query);
+		}
 	}
+	
+
+	public T readForm(T entity) {
+		return read(entity);
+	}
+
 	
 	@Transactional
 	public T read(final T entity)  {
@@ -111,26 +113,6 @@ public class EntityServiceImpl<T, Q> implements EntityService<T, Q>  {
 	////////////////////////////////////
 	//
 	////////////////////////////////////
-	@Transactional
-	public boolean validate(T entity) {
-		return true;
-	}
-
-	@Transactional
-	public boolean reset(T entity) {
-		return true;
-	}
-	
-	/*
-	public boolean exists(T entity) {
-		if(getRepository() == null) return false;
-		return getRepository().exists(entity);
-	}
-	*/
-
-	////////////////////////////////////
-	//
-	////////////////////////////////////
 	private ServiceEventDispatcher eventDispatcher;
 
 	protected void addEventListener(ServiceEventListener listener){
@@ -151,6 +133,5 @@ public class EntityServiceImpl<T, Q> implements EntityService<T, Q>  {
 		if(eventDispatcher != null)
 			eventDispatcher.firePostHandle(getClass(), targetMethod, source);
 	}
-
 	
 }

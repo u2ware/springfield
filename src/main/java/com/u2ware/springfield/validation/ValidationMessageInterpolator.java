@@ -4,16 +4,14 @@ import java.util.Locale;
 
 import javax.validation.MessageInterpolator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.support.MessageSourceAccessor;
 
 public class ValidationMessageInterpolator implements MessageInterpolator, MessageSourceAware{
 	
-	protected final Log logger = LogFactory.getLog(getClass());
-
+	//private static final Logger logger = LoggerFactory.getLogger(ValidationMessageInterpolator.class);
+	
 	protected final MessageSourceAccessor validationMessageSource = ValidationMessage.getAccessor();
 	private MessageSourceAccessor messageSourceAccessor;
 

@@ -11,11 +11,13 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Springfield {
 
-	Strategy strategy() default Strategy.DEFAULT; 
+	Strategy strategy() default Strategy.DEFAULT_STRATEGY; 
 
 	public enum Strategy{
-		DEFAULT,
+		DEFAULT_STRATEGY,
 		DTO,
+		HIBERNATE,
+		HIBERNATE_REPOSITORY_ONLY,
 		JPA,
 		JPA_REPOSITORY_ONLY,
 		MONGODB,

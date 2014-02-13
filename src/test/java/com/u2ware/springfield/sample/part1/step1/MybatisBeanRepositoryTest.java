@@ -43,10 +43,10 @@ public class MybatisBeanRepositoryTest extends ApplicationContextTestRoot{
 		//param.setId(7);
 	
 		long count = mybatisBeanRepository.count(query);
-		logger.debug(count);
+		logger.debug(""+count);
 				
 		Page<MybatisBean> page = mybatisBeanRepository.findAll(query, pageable);
-		logger.debug(page.getContent().size());
+		logger.debug(""+page.getContent().size());
 		
 		Assert.assertEquals(9 , page.getContent().size());
 		Assert.assertEquals("id1", page.getContent().get(0).getId());

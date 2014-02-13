@@ -5,14 +5,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 public class MultipartFileHandlerImpl implements MultipartFileHandler {
 	
-	protected final Log logger = LogFactory.getLog(getClass());
+	private static final Logger logger = LoggerFactory.getLogger(MultipartFileHandlerImpl.class);
+
 
 	private String location;
 
@@ -23,26 +24,19 @@ public class MultipartFileHandlerImpl implements MultipartFileHandler {
 	/////////////////////////////////
 	//
 	////////////////////////////////
-	private ContentFilePolicy defaultPolicy = new ContentFilePolicy(){
-		public String getContentFile(MultipartFile multipartFile, String nameKeyword) {
-			if(StringUtils.hasText(nameKeyword)){
-				return nameKeyword+"_"+System.currentTimeMillis();
-			}else{
-				return ""+System.currentTimeMillis();
-			}
+	private UploadFileNameResolver defaultFilenameResolver = new UploadFileNameResolver(){
+		public String resolveFileName(MultipartFile multipartFile) throws IOException {
+			return System.currentTimeMillis()+"_"+multipartFile.getOriginalFilename();
 		}
 	};
 	
 	@Override
-	public String saveFile(MultipartFile multipartFile) throws IOException {
-		return saveFile(multipartFile, null, defaultPolicy);
+	public synchronized String uploadFile(MultipartFile multipartFile) throws IOException {
+		return uploadFile(multipartFile, defaultFilenameResolver);
 	}
+
 	@Override
-	public String saveFile(MultipartFile multipartFile, String name) throws IOException {
-		return saveFile(multipartFile, name, defaultPolicy);
-	}
-	@Override
-	public String saveFile(MultipartFile multipartFile, String name, ContentFilePolicy policy) throws IOException {
+	public synchronized String uploadFile(MultipartFile multipartFile, UploadFileNameResolver resolver) throws IOException {
 
 		logger.info("MultipartFile : "+multipartFile);
 		logger.info("MultipartFile Name: "+multipartFile.getName());
@@ -50,7 +44,7 @@ public class MultipartFileHandlerImpl implements MultipartFileHandler {
 		logger.info("MultipartFile ContentType: "+multipartFile.getContentType());
 		logger.info("MultipartFile OriginalFilename: "+multipartFile.getOriginalFilename());
 
-		String contentFile = policy.getContentFile(multipartFile, name);
+		String contentFile = resolver.resolveFileName(multipartFile);
 		logger.info("contentFile : "+contentFile);
 		File dest = findFile(contentFile);
 
@@ -70,15 +64,16 @@ public class MultipartFileHandlerImpl implements MultipartFileHandler {
 	}
 	
 	@Override
-	public File findFile(String contentFile) throws IOException {
+	public synchronized File findFile(String contentFile) throws IOException {
 		logger.info("contentFile : "+contentFile);
 		File file = new File(getBaseDir(), contentFile);
 		logger.info("Find File : "+file);
+		logger.info("Find File : "+file.exists());
 		return file;
 	}
 	
 	@Override
-	public void deleteFile(String contentFile) throws IOException {
+	public synchronized void deleteFile(String contentFile) throws IOException {
 		
 		if(contentFile.startsWith("/")){
 			String[] paths = StringUtils.delimitedListToStringArray(contentFile, "/");
@@ -112,7 +107,7 @@ public class MultipartFileHandlerImpl implements MultipartFileHandler {
 	//
 	////////////////////////////////
 	private File dir;
-	private File getBaseDir() {
+	private synchronized File getBaseDir() {
 		if(dir != null) return dir;
 		try{
 			dir = new File(location);

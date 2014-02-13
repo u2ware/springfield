@@ -2,6 +2,7 @@ package com.u2ware.springfield.sample.others.xls;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -14,18 +15,18 @@ import org.springframework.format.annotation.NumberFormat;
 import com.u2ware.springfield.config.Springfield;
 import com.u2ware.springfield.config.Springfield.Strategy;
 import com.u2ware.springfield.sample.part1.step2.JpaBean;
-import com.u2ware.springfield.support.multipart.DownloadFile;
+import com.u2ware.springfield.view.multipart.MultipartFileBean;
 
 
 
 @Springfield(
 	strategy=Strategy.JPA,
 	entity=JpaBean.class,
-	methodLevelMapping={"findForm"},
+	methodLevelMapping={"find"},
 	attributesCSV="webmvc.view.extension.none={xlsView}"
 )
 @Entity
-public class XlsReport implements DownloadFile{
+public class XlsReport implements MultipartFileBean{
 
 	
 	@NotNull @Id
@@ -53,7 +54,10 @@ public class XlsReport implements DownloadFile{
 		return null;
 	}
 
-	public long getContentSize() {
-		return 0;
+	public Long getContentSize() {
+		return new Long(0);
 	}
+	
+	@Transient 
+	private @Getter @Setter boolean download;
 }

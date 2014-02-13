@@ -10,14 +10,14 @@
 
 	<!-- -->
 	<bean id="c3p0DataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
-	    <property name="driverClass" value="#{prop['datasource.c3p0.driver']}"/>
-	    <property name="jdbcUrl" value="#{prop['datasource.c3p0.url']}"/>
-	    <property name="user" value="#{prop['datasource.c3p0.username']}"/>
-	    <property name="password" value="#{prop['datasource.c3p0.password']}"/>
+	    <property name="driverClass" value="#{prop['c3p0DataSource.driverClass']}"/>
+	    <property name="jdbcUrl" value="#{prop['c3p0DataSource.jdbcUrl']}"/>
+	    <property name="user" value="#{prop['c3p0DataSource.user']}"/>
+	    <property name="password" value="#{prop['c3p0DataSource.password']}"/>
 
-		<property name="initialPoolSize" value="#{prop['datasource.c3p0.initialPoolSize']}" />
-	    <property name="maxPoolSize" value="#{prop['datasource.c3p0.maxPoolSize']}" />
-	    <property name="minPoolSize" value="#{prop['datasource.c3p0.minPoolSize']}" />
+		<property name="initialPoolSize" value="#{prop['c3p0DataSource.initialPoolSize']}" />
+	    <property name="maxPoolSize" value="#{prop['c3p0DataSource.maxPoolSize']}" />
+	    <property name="minPoolSize" value="#{prop['c3p0DataSource.minPoolSize']}" />
 	</bean>	
 
 </beans>

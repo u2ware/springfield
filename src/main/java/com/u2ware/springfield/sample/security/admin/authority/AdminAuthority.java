@@ -12,7 +12,6 @@ import org.springframework.security.core.GrantedAuthority;
 import com.u2ware.springfield.config.Springfield;
 import com.u2ware.springfield.config.Springfield.Strategy;
 import com.u2ware.springfield.repository.QueryMethod;
-import com.u2ware.springfield.sample.security.Role;
 
 @Springfield(
 	strategy=Strategy.DTO,
@@ -23,7 +22,7 @@ import com.u2ware.springfield.sample.security.Role;
 public class AdminAuthority {
 
 	@Getter @Setter private @NotNull String username;
-	@Getter @Setter private @NotNull Role authorityGroup;
+	@Getter @Setter private @NotNull String authorityGroup;
 
 	public AdminAuthority() {
 

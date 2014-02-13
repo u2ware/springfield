@@ -14,6 +14,8 @@ import jxl.write.WritableCell;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.context.ResourceLoaderAware;
@@ -27,10 +29,12 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.view.AbstractView;
 
-import com.u2ware.springfield.support.multipart.DownloadFile;
 import com.u2ware.springfield.view.ViewResolverSupport;
+import com.u2ware.springfield.view.multipart.MultipartFileBean;
 
 public class XlsView extends AbstractView implements ResourceLoaderAware{
+
+	private static final Logger logger = LoggerFactory.getLogger(XlsView.class);
 
 	private static final String CONTENT_TYPE = "application/vnd.ms-excel";
 	
@@ -61,7 +65,7 @@ public class XlsView extends AbstractView implements ResourceLoaderAware{
 	}
 	private String resolveName(Map<String, Object> model) throws Exception{
 		try{
-			DownloadFile d = (DownloadFile)ViewResolverSupport.getRequestModel(model);
+			MultipartFileBean d = (MultipartFileBean)ViewResolverSupport.getRequestModel(model);
 			return d.getContentName();
 
 		}catch(Exception e){

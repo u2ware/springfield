@@ -10,11 +10,11 @@
 	# download 
 	#############################################################
 	-->	
-	<bean id="downloadView" class="com.u2ware.springfield.support.multipart.MultipartFileView">
+	<bean id="downloadView" class="com.u2ware.springfield.view.multipart.MultipartFileBeanView">
 		<property name="download" value="true"/>
 		<property name="multipartFileHandler" ref="multipartFileHandler"/>
 	</bean>
-	<bean class="com.u2ware.springfield.view.multipart.MultipartFileViewResolver">
+	<bean class="com.u2ware.springfield.view.multipart.MultipartFileBeanViewResolver">
 		<constructor-arg ref="downloadView"/>
 	
 		<property name="staticName" value="downloadView"/>
@@ -27,11 +27,11 @@
 	# stream
 	#############################################################
 	-->
-	<bean id="streamView" class="com.u2ware.springfield.support.multipart.MultipartFileView">
+	<bean id="streamView" class="com.u2ware.springfield.view.multipart.MultipartFileBeanView">
 		<property name="download" value="false"/>
 		<property name="multipartFileHandler" ref="multipartFileHandler"/>
 	</bean>
-	<bean class="com.u2ware.springfield.view.multipart.MultipartFileViewResolver">
+	<bean class="com.u2ware.springfield.view.multipart.MultipartFileBeanViewResolver">
 		<constructor-arg ref="streamView"/>
 	
 		<property name="staticName" value="streamView"/>
@@ -43,7 +43,7 @@
 	################################
 	# jackson
 	################################
-	 -->
+	-->
 	<bean id="jsonView" class="com.u2ware.springfield.view.jackson.JsonView">
 		<property name="contentType" value="application/json;charset=UTF-8"/>
 	</bean>
@@ -89,7 +89,7 @@
 		<property name="staticAttributes" value="#{prop}"/>
 
 		<property name="baseExtension" value="xls"/>
-		<property name="baseLocations" value="#{prop['baseWebapp']},classpath:/#{prop['basePackage'].replace('.','/')}"/>
+		<property name="baseLocations" value="/WEB-INF/#{prop['webmvc.packagesToScan'].replace('.','/')},classpath:/#{prop['webmvc.packagesToScan'].replace('.','/')}"/>
 	</bean>
 
 	
@@ -104,7 +104,7 @@
 		<property name="staticAttributes" value="#{prop}"/>
 		
 		<property name="baseExtension" value="jsp"/>
-		<property name="baseLocations" value="#{prop['baseWebapp']}"/>
+		<property name="baseLocations" value="/WEB-INF/#{prop['webmvc.packagesToScan'].replace('.','/')}"/>
 
 		<property name="prefix" value="" />
 		<property name="suffix" value="" />
@@ -117,10 +117,9 @@
 	-->
 	<bean id="tilesConfigurerDefinitions" class="com.u2ware.springfield.support.resource.ResourcePatternResolverBean">
 		<property name="targetName" value="Tiles"/>
+		<property name="packageToScan" value="#{prop['webmvc.packagesToScan']}"></property>
 		<property name="locationPatterns" value="
-			classpath:com/u2ware/springfield/view/tiles/tiles-definitions.xml,
-			classpath:/#{prop['basePackage'].replace('.','/')}#{prop['webmvc.view.tiles.definitionsPattern']},
-			#{prop['baseWebapp']}#{prop['webmvc.view.tiles.definitionsPattern']}"/>
+			classpath:com/u2ware/springfield/view/tiles/tiles-definitions.xml,#{prop['webmvc.tiles.definitionsPattern']}"/>
 	</bean>
 	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
 		<property name="definitions" value="#{tilesConfigurerDefinitions.locations}"/>
@@ -129,7 +128,7 @@
 		<property name="staticName" value="tilesView"/>
 		<property name="staticAttributes" value="#{prop}"/>
 
-		<property name="baseLocations" value="#{prop['baseWebapp']}"/>
+		<property name="baseLocations" value="/WEB-INF/#{prop['webmvc.packagesToScan'].replace('.','/')}"/>
 		<property name="baseExtension" value="jsp"/>
 
 		<property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView"/> 
@@ -147,26 +146,27 @@
 		<property name="suffix" value="" />
 		<property name="characterEncoding" value="UTF-8" />
 		<property name="templateMode" value="HTML5" />
-		<property name="cacheable" value="#{prop['webmvc.view.thymeleaf.cacheable']}"/>
+		<property name="cacheable" value="#{prop['webmvc.thymeleaf.cacheable']}"/>
 	</bean>
 	<bean id="templateEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
 		<property name="templateResolver" ref="templateResolver" />	
 		 <property name="additionalDialects">
             <set>
                 <bean class="org.thymeleaf.extras.springsecurity3.dialect.SpringSecurityDialect" />
-                <bean class="com.u2ware.springfield.sample.views.type1.Type1Dialet" />
             </set>
         </property>
 	</bean>
+	
+	
 	<bean class="com.u2ware.springfield.view.thymeleaf.ThymeleafViewResolver">
 
 		<property name="staticName" value="thymeleafView"/>
 		<property name="staticAttributes" value="#{prop}"/>
 
-		<property name="baseLocations" value="#{prop['baseWebapp']},classpath:/#{prop['basePackage'].replace('.','/')}"/>
+		<property name="baseLocations" value="/WEB-INF/#{prop['webmvc.packagesToScan'].replace('.','/')},classpath:/#{prop['webmvc.packagesToScan'].replace('.','/')}"/>
 		<property name="baseExtension" value="html"/>
 		
-		<property name="sampleLocations" value="#{prop['webmvc.view.thymeleaf.sampleLocations']}"/>
+		<property name="sampleLocations" value="#{prop['webmvc.thymeleaf.sampleLocations']}"/>
 
  		<property name="templateEngine" ref="templateEngine" />
 		<property name="characterEncoding" value="UTF-8"/>
@@ -184,6 +184,21 @@
 </beans>
 
 
+	<!-- 
+	#############################################################
+	# contentNegotiationManager
+	#############################################################
+	<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+	    <property name="mediaTypes" >
+	        <value>
+	            json=application/json
+	            xml=application/xml
+	            
+	        </value>
+	    </property>
+	    <property name="defaultContentType" value="text/html"/>
+	</bean>
+	 -->
 
 	
 	<!-- 

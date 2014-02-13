@@ -1,5 +1,7 @@
 package com.u2ware.springfield.sample.part1.step1;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,10 +15,10 @@ import com.u2ware.springfield.config.Springfield.Strategy;
 )
 public @ToString class MybatisBean {
 
-	@Getter @Setter private String id;
-	@Getter @Setter private String password;
-	@Getter @Setter private String name;
-	@Getter @Setter private Integer age;
+	@NotNull @Getter @Setter private String id;
+	@NotNull @Getter @Setter private String password;
+	@NotNull @Getter @Setter private String name;
+	@NotNull @Getter @Setter private Integer age;
 
 	public MybatisBean() {
 

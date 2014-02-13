@@ -8,7 +8,7 @@ import org.apache.commons.collections.list.LazyList;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 
-public final class EntityPageRequest implements EntityPageable{
+public class EntityPageRequest implements EntityPageable{
 
 	private boolean enable = true;
 	private int pageNumber = 0;

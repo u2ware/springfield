@@ -36,7 +36,7 @@ public class AttachedFileService extends EntityServiceImpl<AttachedFile, Integer
 	public AttachedFile create(AttachedFile entity) {
 		try {
 			MultipartFile multipartFile = entity.getMultipartFile(); 
-			String contentFile = multipartFileHandler.saveFile(multipartFile);
+			String contentFile = multipartFileHandler.uploadFile(multipartFile);
 			
 			entity.setContentFile(contentFile);
 			entity.setContentName(multipartFile.getOriginalFilename());
@@ -46,7 +46,7 @@ public class AttachedFileService extends EntityServiceImpl<AttachedFile, Integer
 			throw new RejectableException("multipartFile" , "id");
 		}
 		AttachedFile newEntity = getRepository().create(entity);
-		logger.debug(newEntity.getId());
+		logger.debug(newEntity.getId().toString());
 		
 		return newEntity;
 	}

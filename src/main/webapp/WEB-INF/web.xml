@@ -4,7 +4,6 @@
     <param-name>contextConfigLocation</param-name>
     <param-value>
 			classpath:com/u2ware/springfield/sample/root-context.xml
-			classpath:com/u2ware/springfield/context-security.xml
 		</param-value>
   </context-param>
   <listener>
@@ -12,6 +11,16 @@
 			org.springframework.web.context.ContextLoaderListener
 		</listener-class>
   </listener>
+  <filter>
+    <filter-name>localeChangeFilter</filter-name>
+    <filter-class>
+			com.u2ware.springfield.support.i18n.LocaleChangeFilter
+		</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>localeChangeFilter</filter-name>
+    <servlet-name>appServlet</servlet-name>
+  </filter-mapping>
   <listener>
     <listener-class>
 			org.springframework.security.web.session.HttpSessionEventPublisher

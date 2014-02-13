@@ -7,9 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
@@ -25,9 +25,9 @@ public class LoginUserRememberMeRepository implements PersistentTokenRepository{
 
 	//InMemoryTokenRepositoryImpl m;
 	//JdbcTokenRepositoryImpl j;
+	private static final Logger logger = LoggerFactory.getLogger(LoginUserRememberMeRepository.class);
 	
-	protected final Log logger = LogFactory.getLog(getClass());
-
+	
 	@Autowired @Qualifier("persistentLoginsRepository")
 	public EntityRepository<PersistentLogins, String> persistentLoginsRepository;
 	

@@ -33,7 +33,7 @@ public class AttachedFileControllerTest extends ApplicationContextTestRoot{
 	public void testDownload() throws Exception{
 		
 		this.mockMvc.perform(
-				get("/others/upload/{id}.download", "1"))
+				get("/others/upload/{id}.download", 1))
 			.andDo(print())
 			.andExpect(status().isOk());
 	}

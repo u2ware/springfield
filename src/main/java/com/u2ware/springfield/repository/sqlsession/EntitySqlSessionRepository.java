@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
@@ -25,19 +25,25 @@ import com.u2ware.springfield.repository.QueryMethod;
 
 public class EntitySqlSessionRepository<T,ID extends Serializable> implements EntityRepository<T,ID>{
 
-	protected final Log logger = LogFactory.getLog(getClass());
+	private static final Logger logger = LoggerFactory.getLogger(EntitySqlSessionRepository.class);
 
+	private Class<T> entityClass;
 	private String sqlSessionNamespace;
 	private SqlSessionTemplate sqlSessionTemplate;
 	
-	public EntitySqlSessionRepository(Class<T> entityClass){
-		this(entityClass, null);
+	public EntitySqlSessionRepository(Class<T> entityClass) {
+		this.entityClass = entityClass;
+		this.sqlSessionNamespace = this.entityClass.getName();
 	}
 	public EntitySqlSessionRepository(Class<T> entityClass, SqlSessionTemplate sqlSessionTemplate){
-		if(sqlSessionTemplate !=null)this.setTemplate(sqlSessionTemplate);
-		this.sqlSessionNamespace = entityClass.getName();
+		this.entityClass = entityClass;
+		this.sqlSessionNamespace = this.entityClass.getName();
+		if(sqlSessionTemplate !=null) this.setTemplate(sqlSessionTemplate);
 	}
 
+	/////////////////////////////////////////////
+	//
+	/////////////////////////////////////////////
 	@Autowired(required=false)
 	public void setTemplate(SqlSessionTemplate sqlSessionTemplate){
 		this.sqlSessionTemplate = sqlSessionTemplate;
@@ -47,8 +53,6 @@ public class EntitySqlSessionRepository<T,ID extends Serializable> implements En
 	public SqlSessionTemplate getTemplate() {
 		return sqlSessionTemplate;
 	}
-
-	
 	
 	//////////////////////////////////
 	// exists
@@ -117,7 +121,34 @@ public class EntitySqlSessionRepository<T,ID extends Serializable> implements En
 		return exists(entity) ? update(entity) : create(entity);
 	}
 
+	@Override
+	public long count() {
+		return 0;
+	}
+	@Override
+	public List<T> findAll() {
+		return null;
+	}
+	@Override
+	public List<T> findAll(Sort sort) {
+		return null;
+	}
+
+	@Override
+	public Page<T> findAll(Pageable pageable) {
+		return null;
+	}
+	@Override 
+	public void deleteAll(){
+		deleteAll(null);
+	}
+
+
+
 	
+	//////////////////////////////////
+	// 
+	//////////////////////////////////
 	@Override 
 	public long count(Object query) {
 		String statement = sqlSessionNamespace+"."+quessStatement(query, "findAll")+"Count";
@@ -128,13 +159,6 @@ public class EntitySqlSessionRepository<T,ID extends Serializable> implements En
 		//logger.debug("result "+total);
 		
 		return total;
-	}
-	//////////////////////////////////
-	// find
-	//////////////////////////////////
-	@Override
-	public List<T> findAll() {
-		return findAll(null);
 	}
 	@Override 
 	public List<T> findAll(Object query) {
@@ -170,15 +194,6 @@ public class EntitySqlSessionRepository<T,ID extends Serializable> implements En
 
 		return new PageImpl<T>(contents, pageable, total);		
 	}
-
-	///////////////////////////////////////
-	//
-	//////////////////////////////////////
-	@Override 
-	public void deleteAll(){
-		deleteAll(null);
-	}
-
 	@Override 
 	public void deleteAll(Object query) {
 		String statement = sqlSessionNamespace+"."+quessStatement(query, "deleteAll");
@@ -188,7 +203,12 @@ public class EntitySqlSessionRepository<T,ID extends Serializable> implements En
 		int rows = getTemplate().delete(statement, param);
 		logger.debug(rows + " rows delete");
 	}
+
 	
+
+	///////////////////////////////////////
+	//
+	//////////////////////////////////////
 	protected Map<String,Object> createQueryParameter(Object query, Pageable pageable, Sort sort){
 		Map<String,Object> param = new HashMap<String,Object>();
 		param.put("query", query);

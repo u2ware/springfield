@@ -1,13 +1,13 @@
 package com.u2ware.springfield.support.context;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean;
 
 @SuppressWarnings("unchecked")
 public class SessionContextBroker extends ObjectFactoryCreatingFactoryBean implements ContextBroker{
 
-	protected final Log logger = LogFactory.getLog(getClass());
+	private static final Logger logger = LoggerFactory.getLogger(SessionContextBroker.class);
 
 	private SessionContext sessionContext; 
 	

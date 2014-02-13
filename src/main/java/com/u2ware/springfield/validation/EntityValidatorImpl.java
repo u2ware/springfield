@@ -1,7 +1,7 @@
 package com.u2ware.springfield.validation;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.Errors;
@@ -10,7 +10,8 @@ import org.springframework.validation.ValidationUtils;
 
 public class EntityValidatorImpl<T,Q> implements EntityValidator<T,Q>{
 
-	protected final Log logger = LogFactory.getLog(getClass());
+	protected static final Logger logger = LoggerFactory.getLogger(EntityValidatorImpl.class);
+
 
 	//@Autowired(required=false)
 	//protected javax.validation.Validator jsr303Validator;

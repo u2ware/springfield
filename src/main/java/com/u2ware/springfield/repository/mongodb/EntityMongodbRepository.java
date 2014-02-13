@@ -3,170 +3,153 @@ package com.u2ware.springfield.repository.mongodb;
 import java.io.Serializable;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity;
 import org.springframework.data.mongodb.repository.query.MongoEntityInformation;
-import org.springframework.data.mongodb.repository.support.DefaultEntityInformationCreator;
+import org.springframework.data.mongodb.repository.support.MappingMongoEntityInformation;
 import org.springframework.data.mongodb.repository.support.SimpleMongoRepository;
 
 import com.u2ware.springfield.repository.EntityRepository;
 
-public class EntityMongodbRepository<T,ID extends Serializable> implements EntityRepository<T,ID>{
+public class EntityMongodbRepository<T, ID extends Serializable> implements EntityRepository<T,ID> {
 
-	protected final Log logger = LogFactory.getLog(getClass());
-	
-	private final Class<T> entityClass;
+	//private static final Logger logger = LoggerFactory.getLogger(EntityMongodbRepository.class);
+
+	private Class<T> entityClass;
 	private MongoOperations mongoOperations;
-	private MongoEntityInformation<T,ID> entityInformation;
-	private SimpleMongoRepository<T, ID> simpleMongoRepository;
-
-	public EntityMongodbRepository(Class<T> entityClass){
+	private MongoEntityInformation<T, ID> metadata;
+	private SimpleMongoRepository<T, ID> repository;
+	
+	
+	public EntityMongodbRepository(Class<T> entityClass) {
 		this(entityClass, null);
 	}
-	public EntityMongodbRepository(Class<T> entityClass, MongoOperations mongoOperations){
-		if(mongoOperations !=null)this.setTemplate(mongoOperations);
+	public EntityMongodbRepository(Class<T> entityClass, MongoOperations mo) {
 		this.entityClass = entityClass;
-	}
-
-	@Autowired(required=false)
-	public void setTemplate(MongoOperations mongoOperations) {
-		this.mongoOperations = mongoOperations;
-		this.entityInformation = new DefaultEntityInformationCreator(
-						mongoOperations.getConverter().getMappingContext())
-				.getEntityInformation(entityClass);
-		this.simpleMongoRepository = new SimpleMongoRepository<T,ID>(entityInformation, mongoOperations);
+		if(mo != null) setTemplate(mo);
 	}
 	
-	@Override
-	@SuppressWarnings("unchecked")
+	
+	/////////////////////////////////////////////
+	//
+	/////////////////////////////////////////////
+	@Autowired(required=false) @SuppressWarnings("unchecked") 
+	public void setTemplate(MongoOperations mo) {
+		if(mongoOperations != null) return;
+		this.mongoOperations = mo;
+		this.metadata = new MappingMongoEntityInformation<T, ID>(
+				(MongoPersistentEntity<T>) 
+				(mo.getConverter().getMappingContext().getPersistentEntity(entityClass)));
+		this.repository = new SimpleMongoRepository<T,ID>(metadata, mo);
+	}
+	
+	@Override @SuppressWarnings("unchecked")
 	public MongoOperations getTemplate() {
 		return mongoOperations;
 	}
 
-	//////////////////////////////////
-	// exists
-	//////////////////////////////////
+	
+	/////////////////////////////////////////////
+	//
+	/////////////////////////////////////////////
 	@Override
-	public boolean exists(ID id) {		
-		return simpleMongoRepository.exists(id);
+	public boolean exists(T entity) {
+		return repository.exists(metadata.getId(entity));
 	}
 	@Override
-	public boolean exists(T entity) {		
-		ID id = entityInformation.getId(entity);
-		return simpleMongoRepository.exists(id);
-	}
-
-	//////////////////////////////////
-	// crud
-	//////////////////////////////////
-	@Override
-	public T read(ID id) {		
-		if(id == null) return null;
-		return simpleMongoRepository.findOne(id);
+	public boolean exists(ID id) {
+		return repository.exists(id);
 	}
 	@Override
-	public T read(T entity) {		
-		ID id = entityInformation.getId(entity);
-		return simpleMongoRepository.findOne(id);
+	public T read(ID id) {
+		return repository.findOne(id);
+	}
+	@Override
+	public T read(T entity) {
+		return repository.findOne(metadata.getId(entity));
 	}
 	@Override
 	public T create(T entity) {
-		getTemplate().insert(entity);
-		return entity;
+		return repository.save(entity);
 	}
 	@Override
 	public T update(T entity) {
-		return simpleMongoRepository.save(entity);
-	}
-	@Override
-	public void delete(T entity) {
-		simpleMongoRepository.delete(entity);
-	}
-	@Override
-	public void delete(ID id) {
-		simpleMongoRepository.delete(id);
+		return repository.save(entity);
 	}
 	@Override
 	public T createOrUpdate(T entity) {
-		return simpleMongoRepository.save(entity);
+		return repository.save(entity);
 	}
-	//////////////////////////////////
-	// findAll
-	//////////////////////////////////
+	@Override
+	public void delete(T entity) {
+		repository.delete(entity);
+	}
+	@Override
+	public void delete(ID id) {
+		repository.delete(id);
+	}
+	@Override
+	public void deleteAll() {
+		repository.deleteAll();
+	}
+	@Override
+	public void deleteAll(Object query) {
+		repository.delete(findAll(query));
+	}
+
+	/////////////////////////////////////////
+	//
+	//////////////////////////////////////////
+	@Override
+	public long count() {
+		MongodbQueryExecutor<T> executor = new MongodbQueryExecutor<T>(mongoOperations, entityClass);
+		return executor.count();
+	}
 	@Override
 	public List<T> findAll() {
-		return simpleMongoRepository.findAll();
+		MongodbQueryExecutor<T> executor = new MongodbQueryExecutor<T>(mongoOperations, entityClass);
+		return executor.findAll();
 	}
 	@Override
-	public List<T> findAll(Object query) {
-		PartTreeQuery spec = new PartTreeQuery(entityClass, query);
-		Sort specSort = spec.createSort();
-		//logger.info("sort : "+specSort);
-		Query mongoQuery = createQuery(spec, null, specSort);
-		return getTemplate().find(mongoQuery, entityInformation.getJavaType(), entityInformation.getCollectionName());
+	public List<T> findAll(Sort sort) {
+		MongodbQueryExecutor<T> executor = new MongodbQueryExecutor<T>(mongoOperations, entityClass);
+		return executor.findAll(sort);
 	}
 	@Override
-	public List<T> findAll(Object query, Sort sort) {
-		PartTreeQuery spec = new PartTreeQuery(entityClass, query);
-		Sort specSort = spec.createSort();
-		Sort sortAll =  (specSort != null) ? specSort.and(sort) : sort;
-		//logger.info("sort : "+sortAll);
-		Query mongoQuery = createQuery(spec, null, sortAll);
-		return getTemplate().find(mongoQuery, entityInformation.getJavaType(), entityInformation.getCollectionName());
+	public Page<T> findAll(Pageable pageable) {
+		MongodbQueryExecutor<T> executor = new MongodbQueryExecutor<T>(mongoOperations, entityClass);
+		return executor.findAll(pageable);
 	}
-	@Override
-	public Page<T> findAll(Object query, Pageable pageable) {
-		PartTreeQuery spec = new PartTreeQuery(entityClass, query);
-		Sort specSort = spec.createSort();
-		Sort sortAll = (specSort != null) ? specSort.and(pageable.getSort()) : pageable.getSort();
-		//logger.info("sort : "+sortAll);
-
-		Query mongoQuery = createQuery(spec, new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sortAll), null);
-		long count = getTemplate().count(mongoQuery, entityInformation.getCollectionName());
-		List<T> result = getTemplate().find(mongoQuery, entityClass, entityInformation.getCollectionName());
-		return new PageImpl<T>(result, pageable, count);
-	}
-
+	
+	
+	/////////////////////////////////////////
+	//
+	//////////////////////////////////////////
 	@Override
 	public long count(Object query) {
-		PartTreeQuery spec = new PartTreeQuery(entityClass, query);
-		Query mongoQuery = createQuery(spec, null, null);
-		long count = getTemplate().count(mongoQuery, entityInformation.getCollectionName());
-		return count;
+		MongodbQueryExecutor<T> executor = new MongodbQueryExecutor<T>(mongoOperations, entityClass);
+		return executor.count(query);
 	}
-	
-	//////////////////////////////////
-	// deleteAll
-	//////////////////////////////////
-	@Override 
-	public void deleteAll(){
-		simpleMongoRepository.deleteAll();
+
+	@Override
+	public List<T> findAll(Object query) {
+		MongodbQueryExecutor<T> executor = new MongodbQueryExecutor<T>(mongoOperations, entityClass);
+		return executor.findAll(query);
 	}
-	
-	@Override 
-	public void deleteAll(Object query) {
-		PartTreeQuery spec = new PartTreeQuery(entityClass, query);
-		Query mongoQuery = createQuery(spec, null, null);
-		mongoOperations.remove(mongoQuery, entityInformation.getCollectionName());
+
+	@Override
+	public List<T> findAll(Object query, Sort sort) {
+		MongodbQueryExecutor<T> executor = new MongodbQueryExecutor<T>(mongoOperations, entityClass);
+		return executor.findAll(query, sort);
 	}
-	
-	protected Query createQuery(PartTreeQuery spec, Pageable pageable, Sort sort){
-		Query mongoQuery = new Query();
-		Criteria criteria = spec.toPredicate(mongoOperations);
-		if(criteria != null){
-			mongoQuery.addCriteria(criteria);
-		}
-		return mongoQuery.with(pageable).with(sort);
+
+	@Override
+	public Page<T> findAll(Object query, Pageable pageable) {
+		MongodbQueryExecutor<T> executor = new MongodbQueryExecutor<T>(mongoOperations, entityClass);
+		return executor.findAll(query, pageable);
 	}
-	
-	
 }

@@ -12,14 +12,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.u2ware.springfield.config.Springfield;
 import com.u2ware.springfield.config.Springfield.Strategy;
-import com.u2ware.springfield.support.multipart.DownloadFile;
+import com.u2ware.springfield.view.multipart.MultipartFileBean;
 
 @Springfield(
 	strategy=Strategy.JPA,
 	methodLevelMapping={"*","read.stream","read.download"}
 )
 @Entity
-public class AttachedFile implements DownloadFile{
+public class AttachedFile implements MultipartFileBean{
 	
 	@Transient 
 	private @Getter @Setter MultipartFile multipartFile;
@@ -29,5 +29,9 @@ public class AttachedFile implements DownloadFile{
 	private @Getter @Setter String contentFile;
 	private @Getter @Setter String contentName;
 	private @Getter @Setter String contentType;
-	private @Getter @Setter long contentSize;
+	private @Getter @Setter Long contentSize;
+	
+	@Transient 
+	private @Getter @Setter boolean download;
+
 }

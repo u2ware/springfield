@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ClassUtils;
@@ -18,7 +18,7 @@ import com.u2ware.springfield.controller.EntityController;
 
 public class ViewResolverSupport {
 
-	protected final Log logger = LogFactory.getLog(getClass());
+	private static final Logger logger = LoggerFactory.getLogger(ViewResolverSupport.class);
 	
 	private ResourceLoader resourceLoader;
 
@@ -151,7 +151,7 @@ public class ViewResolverSupport {
 		attributes.put("webmvc.view.resolver", resolver);
 
 		String initialExt = (extension != null ? "."+extension : "");
-		String initialPath = path + name + initialExt;
+		String initialPath = path + method + initialExt;
 		logger.info("["+staticName+"] Negotiating view  :  "+initialPath);
 		
 		return attributes;
@@ -177,15 +177,27 @@ public class ViewResolverSupport {
         String resource = null;
         
 		////////////////////////////////////////////
-        String path1 = attr.get("path") + attr.get("name") + extension;
+        String path1 = attr.get("path") + attr.get("method") + extension;
         resource = findResource(attr, staticName, baseLocations, path1);
         if(resource != null) return resource;
         
 		////////////////////////////////////////////
-        String path2 = "/" + attr.get("name") + extension;
+        String path2 = "/" + attr.get("method") + extension;
         resource = findResource(attr, staticName, baseLocations,path2);
         if(resource != null) return resource;
 
+        
+		////////////////////////////////////////////
+        String path3 = attr.get("path") + attr.get("name") + extension;
+        resource = findResource(attr, staticName, baseLocations, path3);
+        if(resource != null) return resource;
+        
+		////////////////////////////////////////////
+        String path4 = "/" + attr.get("name") + extension;
+        resource = findResource(attr, staticName, baseLocations, path4);
+        if(resource != null) return resource;
+        
+        
         return null;
 	}
 
@@ -203,14 +215,15 @@ public class ViewResolverSupport {
 		
         String resource = null;
     	
-        String path1 = "/" + attr.get("name") +"."+extension;
+        String path1 = "/" + attr.get("method") +"."+extension;
         resource = findResource(attr, "Sample Location", sampleLocations, path1);
         if(resource != null) return resource;
 
-        String path2 = "/" + attr.get("method") +"."+extension;
+        
+        String path2 = "/" + attr.get("name") +"."+extension;
         resource = findResource(attr, "Sample Location", sampleLocations, path2);
         if(resource != null) return resource;
-        
+
         return null;
 	}
 
