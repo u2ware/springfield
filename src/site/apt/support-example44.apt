@@ -1,0 +1,149 @@
+ -----
+ Support
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+Support
+~~~~~~~~~~~~~~~~~~~~
+
+* UploadController
+~~~~~~~~~~~~~~~~~~~~
+
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part4.step4;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.u2ware.springfield.support.multipart.MultipartFileHandler;
+import com.u2ware.springfield.view.multipart.MultipartFileController;
+
+@Controller
+@RequestMapping("/part4/step4/")
+public class UploadController extends MultipartFileController{
+	
+	@Autowired
+	private MultipartFileHandler multipartFileHandler;
+	
+	public MultipartFileHandler getMultipartFileHandler() {
+		return multipartFileHandler;
+	}
+
+	@RequestMapping(value = "/upload", method = RequestMethod.GET)
+	public String uploadForm() throws Exception {
+		return "/part4/step4/upload";
+	}
+}
++------------------------------------------------------------------------+
+
+* MultipartFileController
+~~~~~~~~~~~~~~~~~~~~
+
++------------------------------------------------------------------------+
+public abstract class MultipartFileController {
+
+	@RequestMapping(value="/upload", method=RequestMethod.POST)
+	public View upload(HttpServletRequest request, HttpServletResponse response, @RequestParam("multipartFile")MultipartFile[] multipartFile, Model model) throws Exception{
+		.
+		.
+	}
+
+	@RequestMapping(value="/delete", method=RequestMethod.POST)
+	public View delete(HttpServletRequest request, HttpServletResponse response, @RequestParam("multipartFile")String[] multipartFile, Model model) throws Exception{
+		.
+		.
+		.
+	}
+}
++------------------------------------------------------------------------+
+
+
+* upload.html (HTML with Kendoui)
+~~~~~~~~~~~~~~~~~~~~
+
++------------------------------------------------------------------------+
+<form>
+	<input type="file" name="multipartFile" id="multipartFile" multiple="multiple"/>
+</form>
+
+	<script>
+		$(document).ready(function() {
+		    $("#multipartFile").kendoUpload({
+		        async: {
+		            saveUrl: "/springfield/part4/step4/upload",
+		            removeUrl: "/springfield/part4/step4/delete",
+		            autoUpload: true
+		        },  
+	          cancel: onCancel,
+            complete: onComplete,
+            error: onError,
+            progress: onProgress,
+            remove: onRemove,
+            select: onSelect,
+            success: onSuccess,
+            upload: onUpload
+		    });
+		});
+		
+		function onSelect(e) {
+				console.log("Select :: " + getFileInfo(e));
+    }
+
+    function onUpload(e) {
+    	console.log("Upload :: " + getFileInfo(e));
+    }
+
+    function onSuccess(e) {
+    	e.files[0]['contentFile'] = e.response.contentFile;
+    	console.log("Success :: " + getFileInfo(e));
+    }
+
+    function onError(e) {
+    	console.log("Error (" + e.operation + ") :: " + getFileInfo(e));
+    }
+
+    function onProgress(e) {
+    	console.log("Progress (" + e.operation + ") :: " + getFileInfo(e));
+    }
+
+    function onComplete(e) {
+    	console.log("Success :: " + getFileInfo(e));
+    }
+
+    function onCancel(e) {
+    	console.log("Cancel :: " + getFileInfo(e));
+    }
+
+    function onRemove(e) {
+    	e.data = {"multipartFile" : e.files[0]['contentFile']}
+    	console.log("Remove :: " + getFileInfo(e));
+    }		
+
+    function getFileInfo(e) {
+        return e;
+    }        
+	</script>
+
+
++------------------------------------------------------------------------+
+
+ {{{http://demos.kendoui.com/web/upload/async.html}kendoui Asynchronous Upload}}
+
+
+* com.u2ware.springfield.support.multipart.UploadFileController
+~~~~~~~~~~~~~~~~~~~~
+ Springfield 는 com.u2ware.springfield.view.multipart.MultipartFileController 를 제공하여 
+ 비동기 파일업로드를 위한 별도의 request mapping 을 추가할수 있도록 한다.
+
+*-------------*-----------------+
+| HTTP Method |   예제 매핑 경로   | 파라미터 이름
+*-------------*-----------------+
+| POST  |  /part4/step4/<<upload>> | multipartFile
+*-------------*-----------------+
+| POST   |  /part4/step4/<<delete>> | multipartFile 
+*-------------*-----------------+
+

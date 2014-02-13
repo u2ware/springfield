@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">			
+
+
+	<!-- 
+	#############################################################
+	# SessionContextBroker
+	#############################################################
+	 -->
+	<bean id="sessionContext" class="com.u2ware.springfield.support.context.SessionContext" scope="session"/>
+	<bean id="sessionContextBroker" class="com.u2ware.springfield.support.context.SessionContextBroker">
+		<property name="targetBeanName" value="sessionContext" />
+	</bean>
+
+	<bean id="servletContextBroker" class="com.u2ware.springfield.support.context.ServletContextBroker">
+	</bean>
+
+
+	<!-- 
+	#############################################################
+	# i18n
+	#############################################################
+	 -->
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="defaultLocale" value="#{prop['webmvc.defaultLocale']}"/>
+	</bean>
+
+	<!-- 
+	#############################################################
+	# navigation
+	#############################################################
+	<bean id="navigation" class="com.u2ware.springfield.controller.NavigationFactoryBean">
+		<property name="location" value="#{prop['baseWebapp']}/navigation.xml"/>
+	</bean>
+	-->
+
+	<!-- 
+	#############################################################
+	# messageSource
+	#############################################################
+	 -->
+	<bean id="messageSourceBasenames" class="com.u2ware.springfield.support.resource.ResourcePatternResolverBean">
+		<property name="targetName" value="MessageSource"/>
+		<property name="locationPatterns" value="
+			classpath:com/u2ware/springfield/support/validation/messages.xml,
+			classpath:#{prop['basePackage'].replace('.','/')}#{prop['webmvc.messageBasenamesPattern']},
+			#{prop['baseWebapp']}#{prop['webmvc.messageBasenamesPattern']}
+		"/>
+	</bean>
+	 
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="defaultEncoding" value="UTF-8"/>
+		<property name="basenames" value="#{messageSourceBasenames.basenames}"/>
+	</bean>
+	
+
+	<!-- 
+	#############################################################
+	# conversionService
+	#############################################################
+				<bean class="com.u2ware.springfield.support.conversion.MultipartFileFormatAnnotationFormatterFactory"/>
+	 -->
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="formatters">
+			<list>
+				<bean class="com.u2ware.springfield.support.conversion.StringTrimFormatter"/>
+			</list>
+		</property>
+	</bean>
+	
+
+	<!-- 
+	#############################################################
+	# validator
+	#############################################################
+	 -->
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="messageInterpolator">
+			<bean class="com.u2ware.springfield.support.validation.ValidationMessageInterpolator" />
+		</property>
+	</bean>
+
+	<!-- 
+	#############################################################
+	# contentNegotiationManager
+	#############################################################
+	<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+	    <property name="mediaTypes" >
+	        <value>
+	            json=application/json
+	            xml=application/xml
+	            
+	        </value>
+	    </property>
+	    <property name="defaultContentType" value="text/html"/>
+	</bean>
+	 -->
+
+	<!-- 
+	#############################################################
+	# MVC @Controller programming model
+	#############################################################
+	 -->
+	<mvc:annotation-driven conversion-service="conversionService" validator="validator" >
+		<mvc:argument-resolvers>
+			<bean class="com.u2ware.springfield.domain.EntityPageableArgumentResolver"/>
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
+
+	<!-- 
+	#############################################################
+	# mvc:interceptors
+	#############################################################
+	 -->
+	<mvc:interceptors>
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>
+		<bean class="com.u2ware.springfield.controller.HandlerLoggingInterceptor"/>	
+	</mvc:interceptors>
+
+	<!-- 
+	#############################################################
+	#  Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory 
+	#############################################################
+	<mvc:resources mapping="/springfield/resources/**" location="classpath:/META-INF/springfield/" />
+	 -->
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	
+</beans>

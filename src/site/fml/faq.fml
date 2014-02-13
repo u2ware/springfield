@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<faqs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/FML/1.0"
+  xsi:schemaLocation="http://maven.apache.org/FML/1.0 http://maven.apache.org/xsd/fml-1.0.xsd"
+  id="General FAQ">
+  <part id="General">
+    <faq id="where">
+      <question>아키텍쳐 모델은?</question>
+      <answer>
+        <p>
+          <a href="http://martinfowler.com/bliki/AnemicDomainModel.html">Anemic Domain Model</a> 
+          
+        </p>
+      </answer>
+    </faq>
+    <faq id="why">
+      <question>다른 프레임워크를 함께 쓸 수 있는가?</question>
+      <answer>
+        <p>
+			의존성 jar 가 충돌하지 않는다면 다른 프레임워크와 함께 사용될 수 있다.
+        </p>
+      </answer>
+    </faq>
+  </part>
+</faqs>

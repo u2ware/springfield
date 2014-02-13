@@ -1,0 +1,111 @@
+ -----
+ Data Access
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+Data Access 
+~~~~~~~~~~~~~~~~~~~~
+ 
+* MongodbBean
+~~~~~~~~~~~~~~~~~~~~
+
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part1.step3;
+
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.u2ware.springfield.config.Springfield;
+import com.u2ware.springfield.config.Springfield.Strategy;
+
+@Springfield(
+	strategy=Strategy.MONGODB
+)
+@Document
+public @ToString class MongodbBean {
+
+	@Id
+	private @Getter @Setter Integer id;
+	private @Getter @Setter String password;
+	private @Getter @Setter String name;
+	private @Getter @Setter String address;
+}
++------------------------------------------------------------------------+
+
+
+* @Springfield
+~~~~~~~~~~~~~~~~~~~
+
+
+ @Springfield(strategy=Strategy.MONGODB) 선언으로 다음 3개의 Bean 이 자동 생성, 등록 된다.
+
+*-------------------------+----------------------------------------------+------------------------------+
+| bean id                 | bean type                                    | implements                   |
+*-------------------------+----------------------------------------------+------------------------------+
+| "mongodbBeanController"   | < EntityController\<MongodbBean, MongodbBean\> > |  com.u2ware.springfield.controller. EntityHandler |
+*-------------------------+----------------------------------------------+------------------------------+
+| "mongodbBeanService"      | < EntityService\<MongodbBean, MongodbBean\> >    | com.u2ware.springfield.service. EntityServiceImpl  |
+*-------------------------+----------------------------------------------+------------------------------+
+| "mongodbBeanRepository"        | < EntityRepository\<MongodbBean, Integer\> >           | com.u2ware.springfield.repository.mongodb. EntityMongodbRepository  |
+*-------------------------+----------------------------------------------+------------------------------+
+
+		[application-context.properties:] 
+			mongodb 설정
+			
+				orm.mongodb.host=localhost\
+				orm.mongodb.port=27017
+
+
+
+  [Reference:]  
+            {{{http://docs.mongodb.org/manual/tutorial/}mongodb}}\
+			{{{http://static.springsource.org/spring-data/data-mongodb/docs/current/reference/html/}spring-data-mongdb }}
+ 
+
+
+* RequestMapping
+~~~~~~~~~~~~~~~~~~~
+
+  EntityController 는 CRUD 를 기본으로 한 9 개의 method 에 {{{http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/mvc.html#mvc-ann-methods}RequestMapping}} 한다.
+ 
+*------+-------------*----------------------+------------------------+--------+
+|매핑 경로 | HTTP Method | Controller Method 이름  | 예제 Command 객체 |  예제 매핑 경로   |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/                        | GET    | home       | MongodbBean| /part1/step3/       |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>                         | GET    | findForm   | MongodbBean| /part1/step3        |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>                         | POST   | find       | MongodbBean| /part1/step3        |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>      | GET    | read       | MongodbBean| /part1/step3/7      | 
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/new                     | GET    | createForm | MongodbBean| /part1/step3/new    |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/new                     | POST   | create     | MongodbBean| /part1/step3/new    | 
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | GET    | updateForm | MongodbBean| /part1/step3/7/eidt |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | PUT    | update     | MongodbBean| /part1/step3/7/eidt |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | DELETE | delete     | MongodbBean| /part1/step3/7/eidt |
+*------+-------------*----------------------+------------------------+--------+
+
+
+
+      [Note:]  
+          Springfield 는 @org.springframework.data.annotation.Id 를  읽어서   RequestMapping 의  <<\{id\}>> 를 결정하는 용도로 사용한다.
+  
+
+  [Note:] 
+            topLevelMapping 은  별도의 선언 이 없으면, basePackage 를 기준으로 결정된다. \
+                            예제에서 basePackage 는 example.u2ware.springfield 이므르 예제에서 topLevelMapping 은 /part1/step3 이 된다.
+
+
+ 

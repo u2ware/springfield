@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="Springfield" 
+	xmlns="http://maven.apache.org/DECORATION/1.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+
+
+
+
+  <bannerLeft>
+    <name>springfield logo</name>
+    <src>./images/springfield_logo_small.gif</src>
+    <href>http://www.u2ware.com/</href>
+  </bannerLeft>
+
+
+  <body>
+<!--
+     <links>
+      <item name="Apache" href="http://www.apache.org/" />
+      <item name="Maven 1.0" href="http://maven.apache.org/"/>
+      <item name="Maven 2" href="http://maven.apache.org/maven2/"/>
+    </links>
+ -->
+     <links>
+      <item name="U2ware" href="http://www.u2ware.com/" />
+      <item name="Orgos" href="http://www.orgos.co.kr/" />
+      
+    </links>
+ 
+ <!-- 
+    <menu name="Maven 2.0">
+      <item name="APT Format" href="format.html"/>
+      <item name="FAQ" href="faq.html"/>
+      <item name="Xdoc Example" href="xdoc.html"/>
+    </menu>
+ -->
+     <menu name="Springfield">
+      <item name="Introduction" href="index.html"/>
+      <item name="Download" href="download.html"/>
+      <item name="Changelog" href="changelog.html"/>
+      <item name="FAQ" href="faq.html"/>
+      <item name="Project Information" href="project-info.html"/>
+    </menu>
+
+     <menu name="Documentation">
+      <item name="Configuration" href="configuration.html">
+	      <item name="pom.xml" href="configuration-1.html"/>
+	      <item name="context.proeprties" href="configuration-2.html"/>
+	      <item name="context.xml" href="configuration-3.html"/>
+	      <item name="web.xml" href="configuration-4.html"/>
+	      <item name="servlet.xml" href="configuration-5.html"/>
+	      <item name="logback.xml" href="configuration-6.html"/>
+	      <item name="JUnit" href="configuration-7.html"/>
+      </item>
+
+      <item name="Data Access" href="dataaccess.html">
+	      <item name="Mybatis"  href="dataaccess-example11.html"/>
+	      <item name="JPA"      href="dataaccess-example12.html"/>
+	      <item name="Mongodb"  href="dataaccess-example13.html"/>
+	      <item name="Query"    href="dataaccess-example14.html"/>
+	      <item name="Pageable" href="dataaccess-example15.html"/>
+      </item>
+
+      <item name="View" href="webmvc.html">
+	      <item name="MappingBean" href="webmvc-example21.html"/>
+	      <item name="ViewBean" href="webmvc-example22.html"/>
+      </item>
+
+      <item name="Extension" href="extension.html">
+	      <item name="Command" href="extension-example31.html"/>
+	      <item name="Override" href="extension-example32.html"/>
+	      <item name="DTO" href="extension-example33.html"/>
+      </item>
+
+<!-- 	     
+ -->
+ <!-- 
+      <item name="DataAccess" href="dataaccess.html">
+	      <item name="Mybatis" href="dataaccess-example21.html"/>
+	      <item name="JPA" href="dataaccess-example22.html"/>
+	      <item name="Mongodb" href="dataaccess-example23.html"/>
+      </item>
+      <item name="Extension" href="extension.html">
+	      <item name="EntityPageable" href="extension-example30.html"/>
+	      <item name="Multi-Query" href="extension-example31.html"/>
+	      <item name="Override" href="extension-example32.html"/>
+	      <item name="DTO" href="extension-example33.html"/>
+      </item>
+-->
+      <item name="Support" href="support.html">
+	      <item name="Validation" href="support-example41.html"/>
+	      <item name="ContextBroker" href="support-example42.html"/>
+	      <item name="FileUpload 1" href="support-example43.html"/>
+	      <item name="FileUpload 2" href="support-example44.html"/>
+      </item>
+    </menu>
+
+ 
+  </body>
+</project>

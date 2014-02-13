@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://www.u2ware.com/schema/springfield"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:tool="http://www.springframework.org/schema/tool"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:repository="http://www.springframework.org/schema/data/repository"
+	targetNamespace="http://www.u2ware.com/schema/springfield"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xsd:import namespace="http://www.springframework.org/schema/tool" />
+	<xsd:import namespace="http://www.springframework.org/schema/beans" />
+	<xsd:import namespace="http://www.springframework.org/schema/tx" />
+	<xsd:import namespace="http://www.springframework.org/schema/context"/>
+	<xsd:import namespace="http://www.springframework.org/schema/data/repository"/>
+
+	<xsd:simpleType name="entityManagerFactoryRef">
+		<xsd:annotation>
+			<xsd:appinfo>
+				<tool:annotation kind="ref">
+					<tool:assignable-to type="org.springframework.orm.jpa.AbstractEntityManagerFactoryBean" />
+				</tool:annotation>
+			</xsd:appinfo>
+		</xsd:annotation>
+		<xsd:union memberTypes="xsd:string" />
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="transactionManagerRef">
+		<xsd:annotation>
+			<xsd:appinfo>
+				<tool:annotation kind="ref">
+					<tool:assignable-to type="org.springframework.transaction.PlatformTransactionManager"/>
+				</tool:annotation>
+			</xsd:appinfo>
+		</xsd:annotation>
+		<xsd:union memberTypes="xsd:string"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="defaultStrategy">
+		<xsd:annotation>
+			<xsd:appinfo>
+				<tool:annotation kind="ref">
+					<tool:assignable-to type="com.u2ware.springfield.annotation.Springfield.Strategy"/>
+				</tool:annotation>
+			</xsd:appinfo>
+		</xsd:annotation>
+		<xsd:union memberTypes="xsd:string"/>
+	</xsd:simpleType>
+
+
+<!-- 
+	<xsd:simpleType name="conversionServiceRef">
+		<xsd:annotation>
+			<xsd:appinfo>
+				<tool:annotation kind="ref">
+					<tool:assignable-to type="org.springframework.core.convert.ConversionService"/>
+				</tool:annotation>
+			</xsd:appinfo>
+		</xsd:annotation>
+		<xsd:union memberTypes="xsd:string"/>
+	</xsd:simpleType>
+
+
+	<xsd:simpleType name="validatorRef">
+		<xsd:annotation>
+			<xsd:appinfo>
+				<tool:annotation kind="ref">
+					<tool:assignable-to type="org.springframework.validation.SmartValidator"/>
+				</tool:annotation>
+			</xsd:appinfo>
+		</xsd:annotation>
+		<xsd:union memberTypes="xsd:string"/>
+	</xsd:simpleType>
+
+
+	<xsd:simpleType name="messageSourceRef">
+		<xsd:annotation>
+			<xsd:appinfo>
+				<tool:annotation kind="ref">
+					<tool:assignable-to type="org.springframework.context.MessageSource"/>
+				</tool:annotation>
+			</xsd:appinfo>
+		</xsd:annotation>
+		<xsd:union memberTypes="xsd:string"/>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="contentNegotiatingViewResolverRef">
+		<xsd:annotation>
+			<xsd:appinfo>
+				<tool:annotation kind="ref">
+					<tool:assignable-to type="org.springframework.web.servlet.view.ContentNegotiatingViewResolver"/>
+				</tool:annotation>
+			</xsd:appinfo>
+		</xsd:annotation>
+		<xsd:union memberTypes="xsd:string"/>
+	</xsd:simpleType>
+ -->
+
+	<xsd:element name="modules">
+		<xsd:complexType>
+			<xsd:attribute name="base-package" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation><![CDATA[
+						Defines the base package where the @Webapp annotaion will be tried to be detected.
+					]]></xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="transaction-manager-ref" type="transactionManagerRef" use="optional"/>
+			<xsd:attribute name="entity-manager-factory-ref" type="entityManagerFactoryRef" use="optional"/>
+			<xsd:attribute name="default-strategy" type="defaultStrategy" use="required"/>
+<!-- 			
+			<xsd:attribute name="conversion-service-ref" type="conversionServiceRef" use="optional" default=""/>
+			<xsd:attribute name="message-source-ref" type="conversionServiceRef" use="optional" default=""/>
+			<xsd:attribute name="validator-ref" type="conversionServiceRef" use="optional" default=""/>
+			<xsd:attribute name="content-negotiating-view-resolver-ref" type="contentNegotiatingViewResolverRef" use="optional" default=""/>
+ -->		
+
+		</xsd:complexType>
+	</xsd:element>
+	
+	
+	
+	
+	
+</xsd:schema>

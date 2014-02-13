@@ -1,0 +1,27 @@
+ -----
+ Configuration
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+Configuration
+~~~~~~~~~~~~~~~~~~~~
+ 
+
+       * {{{./configuration-1.html} pom.xml }} : maven pom
+    
+       * {{{./configuration-2.html} application-context.properties }}: "application-context.xml" 에서 사용되는 각종 설정 정보이다.
+       
+       * {{{./configuration-3.html} application-context.xml }}: root context
+
+       * {{{./configuration-4.html} web.xml }}: /WEB-INF/web.xml
+
+       * {{{./configuration-5.html} application-servlet.xml }}: /WEB-INF/application-servlet.xml
+
+       * {{{./configuration-6.html} logback.xml }}: logging
+
+
+      [Note:]  
+                       모든 예제에서 {{{http://projectlombok.org/}projectlombok}} 이 사용되므로 설치를 권장한다.
+

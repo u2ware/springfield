@@ -1,0 +1,149 @@
+ -----
+ WebMVC
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+Extension
+~~~~~~~~~~~~~~~~~~~~
+ 
+* FirstCommand
+~~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part3.step1;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import com.u2ware.springfield.config.Springfield;
+import com.u2ware.springfield.config.Springfield.Strategy;
+import com.u2ware.springfield.repository.QueryMethod;
+
+import example.u2ware.springfield.part1.step2.JpaBean;
+
+@Springfield(
+	strategy=Strategy.JPA,
+	entity=JpaBean.class,
+	topLevelMapping="/part3/step11"
+)
+@QueryMethod("findByNameOrderByAddressDesc")
+public class FirstCommand {
+
+	private @Getter @Setter String name;
+}
++------------------------------------------------------------------------+
+
+* SecondCommand
+~~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part3.step1;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import com.u2ware.springfield.config.Springfield;
+import com.u2ware.springfield.config.Springfield.Strategy;
+import com.u2ware.springfield.repository.QueryMethod;
+
+import example.u2ware.springfield.part1.step2.JpaBean;
+
+@Springfield(
+	strategy=Strategy.JPA,
+	entity=JpaBean.class,
+	topLevelMapping="/part3/step12"
+)
+@QueryMethod("findByAddressOrderByNameDesc")
+public class SecondCommand {
+	
+	private @Getter @Setter String address;
+}
++------------------------------------------------------------------------+
+
+* @Springfield
+~~~~~~~~~~~~~~~~~~~
+
+ @Springfield 선언으로 다음 5개의 Bean 이 자동 생성, 등록 된다.
+
+*-----------------------------+----------------------------------------------------+------------------------------------+
+| bean name                   | bean type                                          | bean implements |
+*-----------------------------+----------------------------------------------------+------------------------------------+
+| "firstCommandController"  | < EntityController\<JpaBean, FirstCommand\> > | com.u2ware.springfield.controller. EntityHandler |
+*-----------------------------+----------------------------------------------------+------------------------------------+
+| "firstCommandService"     | < EntityService\<JpaBean, FirstCommand\> >    | com.u2ware.springfield.service. EntityServiceImpl    |
+*-----------------------------+----------------------------------------------------+------------------------------------+ 
+| "command2Controller"  | < EntityController\<JpaBean, SecondCommand\> > | com.u2ware.springfield.controller. EntityHandler |
+*-----------------------------+----------------------------------------------------+------------------------------------+
+| "command2Service"     | < EntityService\<JpaBean, SecondCommand\> >    | com.u2ware.springfield.service. EntityServiceImpl    |
+*-----------------------------+----------------------------------------------------+------------------------------------+
+| "jpaBeanRepository"   | < EntityRepository\<JpaBean, Integer\> >  | com.u2ware.springfield.repository.jpa. EntityJpaRepository    |
+*-----------------------------+----------------------------------------------------+------------------------------------+
+
+	자동생성된 빈은 다음과 같이 하위 Layer 의 Bean 을 주입받아서 의존 관계를 갖는다.
+
+		< "firstCommandController" <- "firstCommandService" <- "jpaBeanRepository"  >\
+		< "secondCommandController" <- "secondCommandService" <- "jpaBeanRepository" >
+
+	[Note:]
+	  	동일한 Entity 에 대해 RequestMapping 을 추가하고 여러가지 서로 다른 질의문을 정의할 수 있는 방법이다.
+
+
+
+* RequestMapping
+~~~~~~~~~~~~~~~~~~~
+ 
+*------+-------------*----------------------+------------------------+--------+
+|매핑 경로 | HTTP Method | Controller Method 이름  | 예제 Command 객체 |  예제 매핑 경로   |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/                        | GET    | home       | FirstCommand| /part3/step11/       |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>                         | GET    | findForm   | FirstCommand| /part3/step11        |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>                         | POST   | find       | FirstCommand| /part3/step11        |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>      | GET    | read       | JpaBean| /part3/step11/7      | 
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/new                     | GET    | createForm | JpaBean| /part3/step11/new    |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/new                     | POST   | create     | JpaBean| /part3/step11/new    | 
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | GET    | updateForm | JpaBean| /part3/step11/7/eidt |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | PUT    | update     | JpaBean| /part3/step11/7/eidt |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | DELETE | delete     | JpaBean| /part3/step11/7/eidt |
+*------+-------------*----------------------+------------------------+--------+
+
+
+*------+-------------*----------------------+------------------------+--------+
+|매핑 경로 | HTTP Method | Controller Method 이름  | 예제 Command 객체 |  예제 매핑 경로   |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/                        | GET    | home       | SecondCommand  | /part3/step12/       |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>                         | GET    | findForm   | SecondCommand | /part3/step12        |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>                         | POST   | find       | SecondCommand | /part3/step12        |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>      | GET    | read       | JpaBean | /part3/step12/7      | 
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/new                     | GET    | createForm | JpaBean | /part3/step12/new    |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/new                     | POST   | create     | JpaBean | /part3/step12/new    | 
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | GET    | updateForm | JpaBean | /part3/step12/7/eidt |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | PUT    | update     | JpaBean | /part3/step12/7/eidt |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | DELETE | delete     | JpaBean | /part3/step22/7/eidt |
+*------+-------------*----------------------+------------------------+--------+
+
+      [Note:]  
+          FirstSampleQuery 와  SecondSampleQuery 가 동일 package 내에 있으므로 경로가 topLevelMapping 이 중복된다.
+                        따라서 , topLevelMapping 을 직접지정하는 방식이 사용되었다.
+
+
+
+ 
+
+
+

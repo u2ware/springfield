@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title th:text="#{application.title}">SPRINGFIELD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="Brinicle Service Platform"/>
+    <meta name="author" content=""/>
+    <meta HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE"/>
+	<meta HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE"/>   
+
+    <!--[if lt IE 9]>
+	<script type="text/javascript" src="https://github.com/aFarkas/html5shiv/blob/master/dist/html5shiv.js"></script>
+    <![endif]-->
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"/>
+	<script type="text/javascript" src="http://malsup.github.com/jquery.form.js"/>
+	<script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/bootstrap.min.js"/>
+    <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet"/>
+ 
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 10px 0;
+      }
+	.border-example {
+	  position: relative;
+	  margin: 2px 0;
+	  padding: 10px 10px 10px 10px;
+	  *padding-top: 10px;
+	  background-color: #fff;
+	  border: 1px solid #ddd;
+	  -webkit-border-radius: 4px;
+	     -moz-border-radius: 4px;
+	          border-radius: 4px;
+	}    
+	
+	.tight-example {
+		margin: 0;
+		padding: 0;
+	}	
+	
+	  
+.footer {
+  padding: 20px 0;
+  margin-top: 20px;
+  border-top: 1px solid #e5e5e5;
+  background-color: #f5f5f5;
+}
+.footer p {
+  margin-bottom: 0;
+  color: #777;
+}
+.footer-links {
+  margin: 10px 0;
+}
+.footer-links li {
+  display: inline;
+  margin-right: 10px;
+}	
+	
+    </style>
+</head>
+<body>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+	  	<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" th:href="@{/}"  th:text="#{application.title}"></a>
+				
+				<div class="btn-group pull-right">
+					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+						<i class="icon-user"></i> 홍길동 
+						<span class="caret"></span>
+					</a>
+				
+					<ul class="dropdown-menu">
+						<li>
+							<a href="#" th:text="#{application.changePassword}"></a>
+						</li>
+						<li>
+							<a href="#" th:text="#{application.userManagement}"></a>
+						</li>
+						<li class="divider"></li>
+						<li>
+							<a href="#" th:text="#{application.logout}"></a>
+						</li>
+					</ul>
+				</div>
+				<div class="nav-collapse collapse">
+					<ul class="nav">
+						<li th:class="${#httpServletRequest.getRequestURI().contains(n1.path)} ? 'active'" th:each="n1 : ${#root['application']['com.u2ware.springfield.controller.HandlerMappingNavigation'].childs}">
+							<a th:href="@{${n1.link}}" th:text="${n1.title}"/>
+						</li>
+					</ul>
+				</div><!--/.nav-collapse -->
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span2">
+				<div class="sidebar-nav border-example" th:unless="${! #httpServletRequest.getRequestURI().contains(n1.path)}"  th:each="n1 : ${#root['application']['com.u2ware.springfield.controller.HandlerMappingNavigation'].childs}">
+					
+					<ul class="nav nav-list" th:each="n2 : ${n1.childs}">
+
+						<li th:if="${#lists.isEmpty(n2.childs)}" th:class="${#httpServletRequest.getRequestURI().endsWith(n2.path)} ? 'active'">
+							<a th:href="@{${n2.link}}" th:text="${n2.title}"/>
+						</li>
+						
+						<!-- <li th:unless="${#lists.isEmpty(n2.childs)}" class="divider"/> -->
+						<li th:unless="${#lists.isEmpty(n2.childs)}" th:text="${n2.title}" class="nav-header">
+						</li>
+
+						<li th:unless="${#lists.isEmpty(n2.childs)}" th:each="n3 : ${n2.childs}" th:class="${#httpServletRequest.getRequestURI().endsWith(n3.path)} ? 'active'">
+							<a th:href="@{${n3.link}}" th:text="${n3.title}"/>
+						</li>
+					</ul>
+				</div><!--/.well sidebar-nav -->
+			</div><!--/.span2-->
+
+			<div class="span10">
+				<div id="listPannel" class="row-fluid" >
+				</div><!--/.row-fluid-->
+			</div><!--/.span10-->
+		</div><!--/.row-fluid-->
+	</div><!--/.container-fluid-->
+
+
+	<!-- editPannel -->
+	<div id="editPannel" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editPannel" aria-hidden="true">
+
+	</div>
+
+	<!-- progressPannel -->
+
+
+	<footer class="footer">
+		<div class="container ">
+			<p class="pull-right"><a href="#" th:text="#{application.backToTop}"></a></p>
+			<p th:text="${#httpServletRequest.getRequestURI()}"></p>
+		</div>
+	</footer>
+	
+</body>
+<script th:inline="javascript">
+/*<![CDATA[*/      
+$(document).ready(function() { 
+	requestList();
+}); 
+
+///////////////
+//
+///////////////////
+function progressStart(){
+	//alert('processStart');
+}
+function progressEnd(){
+	//alert('processEnd');
+}
+function progressError(a,b,c){
+	alert('jqXHR :' + a);
+	alert('textStatus :' + b);
+	alert('errorThrown :' + c);
+}
+
+
+///////////////
+//
+///////////////////
+function requestList(path){
+	
+	
+	var url = path;
+	if(url == null){
+		url = /*[[@{${command_path}}+${command_extension} ]]*/ "";
+	}
+	console.log('Request List : '+url);
+	
+	
+	progressStart();
+
+	$.ajax({
+		'type': 'GET',
+		'url': url,
+		'success': function(html){
+			console.log('Request List : success ');
+			responseList(html)
+		},
+		'error' : function(jqXHR, textStatus, errorThrown) {
+			console.log('Request List : error ');
+			progressError(jqXHR, textStatus, errorThrown);
+		}
+	});
+}
+
+function responseList(html){
+	$('#listPannel').html(html);
+	
+	$('#queryForm').ajaxForm({
+		'beforeSubmit' : progressStart,
+		'success' : responseList,
+		'error' : progressError
+	});
+	
+	progressEnd();
+}
+
+function pageAction(page){
+	$('#pageNumber').val(page);
+	$('#queryForm').submit();
+}
+
+function orderAction(orderNo, newValue){
+	$('#order'+orderNo).val(newValue);
+	$('#queryForm').submit();
+}
+
+///////////////
+//
+///////////////////
+function requestEdit(url){
+
+	console.log('Request Edit : '+url);
+
+	progressStart();
+	
+	$.ajax({
+		'type': 'GET',
+		'url': url,
+		'success': function(html){
+			console.log('Request Edit : success ');
+			responseEdit(html);
+		},
+		'error' : function(jqXHR, textStatus, errorThrown) {
+			console.log('Request Edit : error ');
+			progressError(jqXHR, textStatus, errorThrown);
+		}
+	});
+}
+
+function responseEdit(html,b,c,d){
+	
+	$('#editPannel').html(html);
+
+	if(html.indexOf("CLOSE") >= 0 ){
+		$('#editPannel').modal('hide');
+		requestList();
+		
+	}else{
+		$('#editPannel').modal('show');
+		
+		$('#entity').ajaxForm({
+			'beforeSubmit' : progressStart,
+			'success' : responseEdit,
+			'error' : progressError
+		});
+		progressEnd();
+	}
+}
+
+/*]]>*/</script>
+
+
+</html>
