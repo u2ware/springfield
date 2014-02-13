@@ -20,7 +20,7 @@ Use Springfield via Maven:
         <dependency>
             <groupId>com.u2ware</groupId>
             <artifactId>springfield</artifactId> 
-            <version>1.4.0</version> 
+            <version>1.5.0</version> 
         </dependency>
         ...
     </dependencies>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+<!-- 
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:springfield="http://www.u2ware.com/schema/springfield"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/jdbc 
+		http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.u2ware.com/schema/springfield 
+		http://www.u2ware.com/schema/springfield/u2ware-springfield.xsd"&gt;
+ -->
+
+	<section id="springfield.modules">
+		<title>&lt;springfield:modules&gt;</title>
+		
+		<programlistingco>
+			<areaspec>
+				<areaset id="modules.namesapce">
+					<area coords="5"/>
+					<area coords="9"/>
+					<area coords="10"/>
+				</areaset>
+			</areaspec>
+			<programlisting language="xml">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:springfield="http://www.u2ware.com/schema/springfield"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.u2ware.com/schema/springfield 
+		http://www.u2ware.com/schema/springfield/u2ware-springfield.xsd"&gt;
+
+	&lt;springfield:modules 
+		properties-ref="...."
+		base-package="com.yourcompany.yourproject" 
+		default-strategy="..."
+		data-source-ref="..."
+		entity-manager-factory-ref="..."
+		session-factory-ref="..."
+		sql-session-factory-ref="..."
+	/&gt;
+
+	...
+&lt;/beans&gt;
+			</programlisting>
+			<calloutlist>
+				<callout arearefs="modules.namesapce">springfield namesapce &amp; schemaLocation</callout>
+			</calloutlist>				
+		</programlistingco>
+			
+		<table>
+			<title>&lt;springfield:modules&gt; Attributes</title>
+			<tgroup cols="4">
+				<thead>
+					<row>
+						<entry>name</entry>
+						<entry>required</entry>
+						<entry>assignable</entry>
+						<entry>description</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>properties-ref</entry>
+						<entry>optional</entry>
+						<entry><interfacename>java.util.Properties</interfacename></entry>
+						<entry>Properties Reference Bean Name</entry>
+					</row>
+
+					<row>
+						<entry>base-package</entry>
+						<entry>required</entry>
+						<entry><interfacename>java.lang.String</interfacename></entry>
+						<entry>root package for scan @Springfield</entry>
+					</row>
+	
+					<row>
+						<entry>default-strategy</entry>
+						<entry>optional</entry>
+						<entry>
+							<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/config/Springfield.Strategy.html">
+							<interfacename>Springfield.Strategy</interfacename>
+							</ulink>
+						</entry>
+						<entry>@Springfield default bean auto register strategy</entry>
+					</row>
+
+					<row>
+						<entry>data-source-ref</entry>
+						<entry>optional</entry>
+						<entry><interfacename>javax.sql.DataSource</interfacename></entry>
+						<entry>dataSource Reference Bean Name</entry>
+					</row>
+
+					<row>
+						<entry>entity-manager-factory-ref</entry>
+						<entry>optional</entry>
+						<entry><interfacename>org.springframework.orm.jpa.AbstractEntityManagerFactoryBean</interfacename></entry>
+						<entry>JPA EntityManager Reference Bean Name</entry>
+					</row>
+
+					<row>
+						<entry>session-factory-ref</entry>
+						<entry>optional</entry>
+						<entry><interfacename>org.springframework.orm.hibernate3.AbstractSessionFactoryBean</interfacename></entry>
+						<entry>Hibernate SessionFactory Reference Bean Name</entry>
+					</row>
+
+					<row>
+						<entry>sql-session-factory-ref</entry>
+						<entry>optional</entry>
+						<entry><interfacename>org.mybatis.spring.SqlSessionFactoryBean</interfacename></entry>
+						<entry>Mybatis SessionFactory Reference Bean Name</entry>
+					</row>
+
+				</tbody>
+			</tgroup>
+		</table>
+		
+	
+	</section>
+

@@ -14,7 +14,7 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 @XStreamAlias("navigation") 
 public class Navigation implements Serializable{
 
-	public final static String OBJECT_NAME = "navigation";
+	public final static String OBJECT_NAME      = "navigation";
 	
 	@XStreamAsAttribute private boolean selected ;
 	@XStreamAsAttribute private boolean hide;

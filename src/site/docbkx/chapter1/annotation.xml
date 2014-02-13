@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+
+	<section id="springfield.annotation">
+		<title>@Springfield</title>
+		<programlisting language="java">
+@Springfield(
+		strategy=Strategy.JPA,
+		entity=Class.class,
+		identity={"...","..."},
+		topLevelMapping="...",
+		methodLevelMapping={"...","..."},
+		attributesCSV="key1={value1},key2={value2}, ..."
+)
+@Entity
+public class Foo{
+	
+	@Id
+	private String id;
+	
+	...
+}		
+		</programlisting>
+		
+		<table>
+			<title>
+				<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/config/Springfield.html">
+				<interfacename>@Springfield</interfacename>
+				</ulink> Attributes
+			</title>
+			<tgroup cols="3">
+				<thead>
+					<row>
+						<entry>name</entry>
+						<entry>required</entry>
+						<entry>assignable</entry>
+						<entry>description</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>strategy</entry>
+						<entry>optional</entry>
+						<entry>
+							<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/config/Springfield.Strategy.html">
+							<interfacename>Springfield.Strategy</interfacename>
+							</ulink>
+						</entry>
+						<entry>bean auto register strategy...</entry>
+					</row>
+					<row>
+						<entry>entity</entry>
+						<entry>optional</entry>
+						<entry><interfacename>java.lang.Class</interfacename></entry>
+						<entry>Entity class</entry>
+					</row>
+					<row>
+						<entry>identity</entry>
+						<entry>optional</entry>
+						<entry><interfacename>java.lang.String[]</interfacename></entry>
+						<entry>Identity property names</entry>
+					</row>
+					<row>
+						<entry>topLevelMapping</entry>
+						<entry>optional</entry>
+						<entry><interfacename>java.lang.String</interfacename></entry>
+						<entry>Handler mapping path </entry>
+					</row>
+					<row>
+						<entry>methodLevelMapping</entry>
+						<entry>optional</entry>
+						<entry><interfacename>java.lang.String[]</interfacename></entry>
+						<entry>Handler mapping path</entry>
+					</row>
+					<row>
+						<entry>attributesCSV</entry>
+						<entry>optional</entry>
+						<entry><interfacename>java.lang.String</interfacename></entry>
+						<entry>view options</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+	</section>

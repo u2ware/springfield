@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class EntityInformation<T,Q> implements InitializingBean{
 	
-	//private static final Logger logger = LoggerFactory.getLogger(EntityInformation.class);
+	//protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private String basePackage;
 	private Class<T> entityClass;
@@ -100,6 +100,8 @@ public class EntityInformation<T,Q> implements InitializingBean{
 	public String getEntityPath(Object target) {
 
 		BeanWrapper wrapper = PropertyAccessorFactory.forBeanPropertyAccess(target);
+		
+		
 		int i= 0;
 		StringBuilder result = new StringBuilder();
 		for(String id : identity){
@@ -203,6 +205,8 @@ public class EntityInformation<T,Q> implements InitializingBean{
 			this.identity = array;
 		}
 		
+		
+		
 		int i= 0;
 		StringBuilder identityPath = new StringBuilder();
 		for(String id : identity){
@@ -229,15 +233,17 @@ public class EntityInformation<T,Q> implements InitializingBean{
 				boolean keepGoing = canKeepGoing(field);
 				
 				if(keepGoing){
-					Attribute attr = createAttribute(parent, field, isId, false, StringUtils.isEmpty(parent));
+					Attribute attr = createAttribute(parent, field, isId, false, ! StringUtils.hasText(parent));
 					attrs.add(attr);
+					//logger.debug(""+attr);
 					
 					doWithFields(attrs, field.getType(), field.getName(), isId );
 					
 				}else{
 					if(canStop(field)){
-						Attribute attr = createAttribute(parent, field, isId, true, StringUtils.isEmpty(parent));
+						Attribute attr = createAttribute(parent, field, isId, true, ! StringUtils.hasText(parent));
 						attrs.add(attr);
+						//logger.debug(""+attr);
 					}
 				}
 			}});
@@ -313,7 +319,7 @@ public class EntityInformation<T,Q> implements InitializingBean{
 		}
 
 		
-		String name = StringUtils.isEmpty(parent) ? field.getName() : parent+"."+field.getName();
+		String name = StringUtils.hasText(parent) ? parent+"."+field.getName() : field.getName();
 		Attribute a =  new Attribute();
 		a.setName(name);
 		a.setId(id);

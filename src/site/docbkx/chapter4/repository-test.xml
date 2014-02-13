@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+  "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+
+	<section>
+		<title>Unit Test</title>
+
+		<para>
+			
+			<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/EntityRepository.html">
+       		<interfacename>EntityRepository</interfacename>
+       		</ulink>의  테스트 코드는 다음과 같다.
+
+			<programlisting language="java">
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations="file:src/main/webapp/WEB-INF/spring/root-context.xml")
+@Transactional
+public class RepositoryTest{
+
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
+
+	@Autowired
+	@Qualifier("fooRepository")
+	private EntityRepository&lt;Foo, String&gt; fooRepository;
+
+	@Autowired
+	@Qualifier("barRepository")
+	private EntityRepository&lt;Bar, Integer&gt; barRepository;
+
+	@Test
+	public void testMethod() throws Exception{
+		//Test Code...
+	}
+}
+			</programlisting>
+
+		</para>
+	
+	</section>

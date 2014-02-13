@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+  "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	<section>
+    	<title>Validation</title>
+    	
+		<para>
+			<xref linkend="springfield.modules"/>는   
+			Validation 처리를 위해 다음 bean 을 등록 한다.
+		</para>
+       	<table>
+       		<title>Auto Register Beans for Validation Support</title>
+			<tgroup cols="2">
+				<thead>
+					<row>
+						<entry>Bean Name</entry>
+						<entry>Bean Object</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>springfieldWebmvcValidator</entry>
+						<entry><interfacename>org.springframework.validation.beanvalidation.LocalValidatorFactoryBean</interfacename></entry>
+					</row>
+				</tbody>
+	       	</tgroup> 
+		</table>
+    	
+    	<para>
+       		도메인 클래스에 <ulink url="http://docs.spring.io/spring-framework/docs/3.2.5.RELEASE/spring-framework-reference/html/validation.html#validation-beanvalidation-overview">
+       		JSR-303 Bean Validation 
+       		</ulink> 관련 Annotation 을 적용 할 수 있다.
+    	</para>
+    	
+   		<programlisting language="java">
+package com.yourcompany.yourproject.foo;
+
+@Springfield
+@Entity
+public class Foo{
+	
+	@Id 
+	@NotNull
+	private String name;
+	
+	@NotNull
+	private Integer age;
+	...
+}
+    	</programlisting>
+
+    </section>

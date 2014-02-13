@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	
+	<section>
+		<title>Config</title>
+		<para>
+    		<xref linkend="springfield.modules"/>는   
+    		<ulink url="http://docs.spring.io/spring-security/site/docs/3.1.4.RELEASE/reference/springsecurity.html">
+       		spring security 
+       		</ulink> 관련 설정값을 properties-ref 로  변경 할 수 있다.  
+    		properties-ref 가 선언되지 않은 경우 디폴트 값이 사용된다. 
+       	</para>
+		<programlisting language="xml">
+&lt;beans&gt;
+
+	&lt;util:properties id="yourProp" 
+		location="classpath:com/yourcompany/yourproject/config.properties" />
+
+
+	&lt;jdbc:embedded-database id="yourDataSource" type="HSQL"/&gt;  	
+	
+	&lt;springfield:modules base-package="com.yourcompany.yourproject" 
+			data-source-ref="yourDataSource"
+			properties-ref="yourProp"
+	/&gt;
+	...
+&lt;/beans&gt;
+		</programlisting>
+		<programlisting language="text">
+#
+# com/yourcompany/yourproject/config.properties
+#
+springfield.security.formPage=/security/user/loginForm.html
+springfield.security.formUsername=j_username
+springfield.security.formPassword=j_password
+springfield.security.formRememberme=_spring_security_remember_me
+springfield.security.loginUrl=/j_spring_security_check
+springfield.security.logoutUrl=/j_spring_security_logout
+		</programlisting>
+		
+	</section>

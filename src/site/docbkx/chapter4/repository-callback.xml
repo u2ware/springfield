@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	<section id="repository-query-callback">
+		<title>TemplateCallback</title>
+		
+		<para>
+			<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/TemplateCallback.html">
+			<interfacename>TemplateCallback</interfacename>
+			</ulink> 
+			을 이용하면 
+			<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/EntityRepository.html">
+			<interfacename>EntityRepository</interfacename>
+			</ulink>
+			에서 로우레벨의 ORM 관련 객체에 바로 접근 할 수 있다. 
+		</para>
+		<programlisting language="java">
+public interface EntityRepository&lt;T, ID extends Serializable&gt; {
+
+	...
+		
+	public &lt;R, X&gt; R execute(TemplateCallback&lt;R, X&gt; callback);
+	
+}
+		</programlisting>
+		
+		
+		<para>
+			다음표는 자동 생성되는 
+			<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/EntityRepository.html">
+			<interfacename>EntityRepository</interfacename>
+			</ulink>
+			의 구현체별로 사용가능한 
+			<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/TemplateCallback.html">
+			<interfacename>TemplateCallback</interfacename>
+			</ulink> 
+			의 Generic Type 을 나타낸다.
+		</para>
+		
+		
+		<table>
+			<title>
+				TemplateCallback Generic Type
+			</title>
+			<tgroup cols="2">
+				<thead>
+					<row>
+						<entry>
+       						Repository Implementation
+			       		</entry>
+						<entry>
+       						TemplateCallback
+			       		</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jpa/JpaRepository.html">
+				       		<interfacename>JpaRepository</interfacename>
+				       		</ulink>
+			       		</entry>
+    					<entry>
+				       		<interfacename>TemplateCallback&lt;R, javax.persistence.EntityManager&gt;</interfacename>
+			       		</entry>
+					</row>
+
+
+					<row>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/hibernate/HibernateRepository.html">
+				       		<interfacename>HibernateRepository</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		<interfacename>TemplateCallback&lt;R, org.hibernate.Session&gt;</interfacename>
+			       		</entry>
+					</row>
+					<row>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/sqlsession/SqlSessionRepository.html">
+				       		<interfacename>SqlSessionRepository</interfacename>
+				       		</ulink>
+			       		</entry>
+		    			<entry>
+				       		<interfacename>TemplateCallback&lt;R, org.mybatis.spring.SqlSession&gt;</interfacename>
+			       		</entry>
+					</row>
+					<row>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jdbc/JdbcRepository.html">
+				       		<interfacename>JdbcRepository</interfacename>
+				       		</ulink>
+			       		</entry>
+    					<entry>
+				       		<interfacename>TemplateCallback&lt;R, org.springframework.jdbc.core.JdbcTemplate&gt;</interfacename>
+			       		</entry>
+					</row>
+					<row>
+						<entry>
+			       		</entry>
+    					<entry>
+				       		<interfacename>TemplateCallback&lt;R, java.sql.Connection&gt;</interfacename>
+			       		</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+
+		<itemizedlist spacing="compact">
+			<listitem>
+				working with javax.persistence.EntityManager instance
+				<programlisting language="java">
+				//Test Code...
+				List&lt;Foo&gt; result2 = fooRepository.execute(new TemplateCallback&lt;List&lt;Foo&gt;, EntityManager&gt;() {
+					public List&lt;Foo&gt; doInTemplate(EntityManager em) {
+		
+						//Using QueryDsl
+						Foo alias = Alias.alias(Foo.class, "foo");
+						EntityPath&lt;Foo&gt; foo = Alias.$(alias);
+						StringPath fooName = Alias.$(alias.getName());
+						NumberPath&lt;Integer&gt; fooAge = Alias.$(alias.getAge());
+						
+						JPAQuery query = new JPAQuery(em);
+						query.from(foo);
+						query.where(fooName.eq("a"));
+						query.where(fooAge.eq(1));
+		
+						return query.list(foo);
+					}
+				});
+				Assert.assertEquals(result2.size(), 1);
+				</programlisting>
+			</listitem>
+			<listitem>
+				working with org.hibernate.Session instance
+				<programlisting language="java">
+				//Test Code...
+				List&lt;Foo&gt; result2 = fooRepository.execute(new TemplateCallback&lt;List&lt;Foo&gt;, Session>() {
+		
+					@Override
+					public List&lt;Foo&gt; doInTemplate(Session session) {
+		
+						//Using Hibernate Criteria
+						Criteria criteria = session.createCriteria(Foo.class);
+						criteria.add(Restrictions.eq("name", "a"));
+						criteria.add(Restrictions.eq("age", 1));
+						return criteria.list();
+					}
+				});
+				Assert.assertEquals(result2.size(), 1);
+				</programlisting>
+			</listitem>
+
+		</itemizedlist>
+
+		
+	</section>

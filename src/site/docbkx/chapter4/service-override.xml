@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+  "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	<section>
+    	<title>Override</title>
+
+		<para>
+  			<xref linkend="springfield.example"/>
+  			 에서  자동 생성하는 Bean 중 
+       		Service 레이어에 에 해당하는  "fooService" Bean 을
+       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/AbstractEntityService.html">
+				<interfacename>AbstractEntityService</interfacename>
+			</ulink>
+			을 extends 한 MyFooService 와   			
+			&lt;context:component-scan&gt; 을 사용하여  
+			교체할수 있다.
+    	</para>
+ 
+
+
+		<programlistingco>
+			<areaspec>
+				<area id="j1" coords="4"/>
+				
+				<areaset id="j2" >
+					<area coords="15"/>
+					<area coords="20"/>
+				</areaset>
+				
+				<area id="j3" coords="29"/>
+				<area id="j4" coords="41"/>
+			</areaspec>
+			<programlisting language="java">
+package com.yourcompany.yourproject.foo;
+			
+@Service("fooService")
+public class MyFooService extends AbstractEntityService&lt;Foo, Foo&gt;{
+
+	@Autowired
+	@Qualifier("fooRepository")
+	private EntityRepository&lt;Foo, String&gt; fooRepository;
+
+	@Autowired 
+	private TransactionTemplate transactionTemplate;
+	
+	@Override
+	protected EntityRepository&lt;Foo, String&gt; getRepository() {
+		return fooRepository;
+	}
+
+	@Override
+	protected TransactionTemplate getTransactionTemplate() {
+		return transactionTemplate;
+	}
+	
+	@Override
+	public Foo create(Foo entity) {
+		return getTransactionTemplate().execute(new TransactionCallback&lt;Foo&gt;() {
+			public ExtendsBean doInTransaction(TransactionStatus status) {
+				
+				//your service logic..	
+
+				ExtendsBean result = getRepository().save(entity);
+				return result;
+			}
+		});
+	}
+	
+	@Override
+	@Transactional
+	public Foo read(Foo entity) {
+		
+		//your service logic..	
+
+		ExtendsBean result = getRepository().save(entity);
+		return result;
+	}
+}
+			</programlisting>
+			
+			<calloutlist>
+				<callout arearefs="j1">
+					<para>
+						등록 되는 레이어의 Bean Name 은 <xref linkend="springfield.modules"/> 를 에 따라 
+						"{@Springfield class short name}Service" 가 되어야 한다.
+					</para>
+				</callout>
+				<callout arearefs="j2">
+					<para>
+						MyFooService 의 기본 동작을 위해,
+						getRepository() 와 
+						getTransactionTemplate() 를  
+						override 하여야 한다.
+					</para>
+				</callout>
+				<callout arearefs="j3">
+					<para>
+						getTransactionTemplate() 을 이용하여 Transaction 을 수행 할 수 있다.
+					</para>
+				</callout>
+				<callout arearefs="j4">
+					<para>
+						<interfacename>@Transactional</interfacename>을 이용하여 Transaction 을 수행 할 수 있다.
+					</para>
+				</callout>
+			</calloutlist>			
+		</programlistingco>
+			
+		<programlistingco>
+			<areaspec>
+				<area id="x1" coords="5"/>
+			</areaspec>
+
+			<programlisting language="xml">
+&lt;beans&gt;
+	&lt;jdbc:embedded-database id="yourDataSource" type="HSQL"/&gt;  	
+
+	&lt;context:component-scan base-package="com.yourcompany.yourproject"/&gt;  
+	
+	&lt;springfield:modules base-package="com.yourcompany.yourproject" 
+			data-source-ref="yourDataSource"
+	/&gt;
+	...
+&lt;/beans&gt;
+			</programlisting>
+			<calloutlist>
+				<callout arearefs="x1">
+					<para>
+						Bean 을 교체하기 위해 
+						&lt;springfield:modules&gt; 보다 앞서
+						&lt;context:component-scan&gt; 으로  MyFooService 를 등록 하여야 한다.
+					</para>
+				</callout>
+			</calloutlist>			
+		</programlistingco>
+   	
+    </section>

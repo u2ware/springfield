@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+  "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+ 	<section>
+		<title>EntityRepository</title>
+
+    	<para>
+    		Layered Architecture 에서 Repository Layer 역할을 수행하는  
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/EntityRepository.html">
+       		<interfacename>EntityRepository</interfacename>
+       		</ulink> 는 
+
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityService.html">
+       		<interfacename>EntityService</interfacename>
+       		</ulink> 
+       		의 service method 에 대응하는 repository method 가 정의되어 있으며 
+
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityServiceImpl.html">
+       		<interfacename>EntityServiceImpl</interfacename>
+       		</ulink> 
+       		에 의해 해당 메소드가 호출된다.
+
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/EntityRepository.html">
+       		<interfacename>EntityRepository</interfacename>
+       		</ulink>  
+       		의 구현체인 
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jpa/JpaRepository.html">
+       		<interfacename>JpaRepository</interfacename>
+       		</ulink> , 
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/hibernate/HibernateRepository.html">
+       		<interfacename>HibernateRepository</interfacename>
+       		</ulink> , 
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/sqlsession/SqlSessionRepository.html">
+       		<interfacename>SqlSessionRepository</interfacename>
+       		</ulink> , 
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jdbc/JdbcRepository.html">
+       		<interfacename>JdbcRepository</interfacename>
+       		</ulink> 
+       		는 관련된 ORM 객체를 주입 받아서 동작한다.
+		</para>
+		<programlisting language="java">
+public interface EntityRepository&lt;T, ID extends Serializable&gt; {
+
+	public boolean exists(T entity);
+	public boolean exists(ID id);//CrudRepository
+
+	public T findOne(T entity);
+	public T findOne(ID id);//CrudRepository
+
+	public &lt;S extends T&gt; S save(S entity);//CrudRepository
+	public &lt;S extends T&gt; Iterable&lt;S&gt; save(Iterable&lt;S&gt; entities);//CrudRepository
+
+	public void delete(ID id);//CrudRepository
+	public void delete(T entity);//CrudRepository
+	public void delete(Iterable&lt;? extends T&gt; entities);//CrudRepository
+
+
+	public long deleteAll();//CrudRepository
+	public long count();//CrudRepository
+	public List&lt;T&gt; findAll();//CrudRepository
+	//public Iterable&lt;T&gt; findAll(Iterable&lt;ID&gt; ids);//CrudRepository
+	public Iterable&lt;T&gt; findAll(Sort sort); //PagingAndSortingRepository
+	public Page&lt;T&gt; findAll(Pageable pageable); //PagingAndSortingRepository
+	
+	
+	public long deleteAll(Object queryMethod);
+	public long count(Object queryMethod);
+	public List&lt;T&gt; findAll(Object queryMethod);
+	public List&lt;T&gt; findAll(Object queryMethod, Sort sort);
+	public Page&lt;T&gt; findAll(Object queryMethod, Pageable pageable);
+	
+	public &lt;R, X&gt; R execute(TemplateCallback&lt;R, X&gt; callback);
+}
+		</programlisting>
+
+	</section>

@@ -1,13 +1,12 @@
 package com.u2ware.springfield.view.multipart;
 
 
-public interface MultipartFileBean {
+
+public interface MultipartFileBean extends DownloadBean{
 
 	public String getContentFile();
-	public String getContentName();
 	public String getContentType();
 	public Long getContentSize();
-	public boolean isDownload();
 	
 	
 }

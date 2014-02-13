@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+  "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+  	<section>
+		<title>EntityValidator</title>
+    	<para>
+    		Layered Architecture 에서 Validator Layer 역할을 수행하는  
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/validator/EntityValidator.html">
+       		<interfacename>EntityValidator</interfacename>
+       		</ulink> 
+       		는  
+       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html">
+       		<interfacename>EntityController</interfacename>
+       		</ulink> 
+       		의 handle method 에 대응하는 validation method 가 정의되어 있으며 
+       		
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html">
+       		<interfacename>EntityControllerImpl</interfacename>
+       		</ulink> 
+       		에 의해 해당 메소드가 호출된다.
+    	</para>
+		<programlisting language="java">
+public interface EntityValidator&lt;T,Q&gt; {
+
+	public void find(Q target, Errors errors);
+	
+	public void read(T target, Errors errors);
+	
+	public void createForm(T target, Errors errors) ;
+	
+	public void create(T target, Errors errors);
+	
+	public void updateForm(T target, Errors errors);
+	
+	public void update(T target, Errors errors);
+	
+	public void delete(T target, Errors errors) ;	
+}
+ 		</programlisting>   	
+    </section>

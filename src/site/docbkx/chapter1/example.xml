@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+<section id="springfield.example">
+	<title>Springfield Example</title>
+
+		<para>root-context.xml</para>
+		<programlisting language="xml">
+&lt;beans&gt;  
+	&lt;jdbc:embedded-database id="yourDataSource" type="HSQL"/&gt;  	
+	
+	&lt;springfield:modules base-package="com.yourcompany.yourproject" 
+			data-source-ref="yourDataSource"
+	/&gt;
+&lt;/beans&gt;
+		</programlisting>
+
+
+
+		<para>Foo.java</para>
+		<programlisting language="java">
+package com.yourcompany.yourproject.foo;
+
+@Springfield
+@Entity
+public class Foo{
+	@Id
+	private String name;
+	private Integer age;
+	...
+}
+		</programlisting>
+		
+		
+		
+		<para>Bar.java</para>
+		<programlisting language="java">
+package com.yourcompany.yourproject.bar;
+
+@Entity
+public class Bar{
+	@Id
+	private Integer seq;
+	...
+}
+		</programlisting>
+
+
+		<para>BarSearch.java</para>
+		<programlisting language="java">
+package com.yourcompany.yourproject.bar;
+
+@Springfield(
+	entity=Bar.class,
+	topLevelMapping="/a/b/c/d"
+)
+public class BarSearch{
+	...
+}
+		</programlisting>
+
+
+</section>

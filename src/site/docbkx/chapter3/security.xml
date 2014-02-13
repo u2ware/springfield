@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	<section>
+		<title>Navigation</title>
+
+		<para> 
+			<xref linkend="springfield.modules"/>은  
+			basePackage 를 기준으로  "/**/navigation.xml" 을 자동 스캔한다.
+			다음 예시의 navigation_ko.xml 과  navigation_en.xml 파일이 
+			basePackage 내에 어떤 위치라도 존재한다면 별도의 설정없이 이를 load 한다.
+		</para>
+
+		<itemizedlist>
+			<listitem>navigation_ko.xml
+				<programlisting language="text">
+&lt;navigation&gt;
+	&lt;navigation	path="/foo"  name="회사" pattern="/foo/**"  access="hasRole('ADMIN')" /&gt;
+	...	
+&lt;/navigation&gt;			
+				</programlisting>
+			
+			</listitem>
+			<listitem>navigation_en.xml
+				<programlisting language="text">
+&lt;navigation&gt;
+	&lt;navigation	path="/foo"  name="yourcompany" pattern="/foo/**"  access="hasRole('ADMIN')" /&gt;
+	...	
+&lt;/navigation&gt;			
+				</programlisting>
+			</listitem>
+		</itemizedlist>
+
+		<table>
+			<title>navigation element</title>
+			<tgroup cols="2">
+				<thead>
+					<row>
+						<entry>Attribute</entry>
+						<entry>Desc</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>path</entry>
+						<entry>
+							Menu Link.
+						</entry>
+					</row>
+					<row>
+						<entry>name</entry>
+						<entry>
+							Menu Display Name.
+						</entry>
+					</row>
+					<row>
+						<entry>pattern</entry>
+						<entry>
+							<ulink url="http://docs.spring.io/spring-security/site/docs/3.1.4.RELEASE/reference/security-filter-chain.html#request-matching">
+							Spring-Security Request-matching
+							</ulink>
+						</entry>
+					</row>
+					<row>
+						<entry>access</entry>
+						<entry>
+							<ulink url="http://docs.spring.io/spring-security/site/docs/3.1.4.RELEASE/reference/el-access.html">
+							Spring-Security Common built-in expressions 
+							</ulink>
+						</entry>
+					</row>
+				</tbody>
+	       	</tgroup> 
+		</table>
+
+
+	</section>
+
+

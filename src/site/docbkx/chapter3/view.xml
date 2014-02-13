@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+    	<para>
+    		<xref linkend="springfield.modules"/>에 의해  
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html">
+       		<interfacename>EntityController</interfacename>
+       		</ulink> 
+       		가 등록되는 경우 ViewName 을 랜더링하기 위해 다음 과 같은 View Resolver Bean 들이 자동 등록된다.
+			
+			ViewName 의 확장자를  추출하여, 해당하는  View Resolver 를 찾아서 랜더링을 위임한다. 
+			확장자가 없는 경우, <ulink url="http://www.thymeleaf.org/">
+			Thymeleaf 
+			</ulink>
+			가 디폴트로 적용된다.
+
+			<table id="controller-view">
+				<title>Extension Based Resolving views</title>
+				<tgroup cols="3">
+					<thead>
+						<row>
+							<entry>Extension</entry>
+							<entry>View Resolver Bean Name</entry>
+							<entry>operations</entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>*.html</entry>
+							<entry>springfieldWebmvcRenderThymeleafViewResolver</entry>
+							<entry>
+								<ulink url="http://www.thymeleaf.org/">
+								Thymeleaf 
+								</ulink>
+							</entry>
+						</row>
+						<row>
+							<entry>*.jstl</entry>
+							<entry>springfieldWebmvcRenderJstlViewResolver</entry>
+							<entry>
+								JSP 
+							</entry>
+						</row>
+						<row>
+							<entry>*.tiles</entry>
+							<entry>springfieldWebmvcRenderTilesViewResolver</entry>
+							<entry>
+								<ulink url="https://tiles.apache.org/2.2/framework/index.html">
+									Tiles2 
+								</ulink>	
+							</entry>
+						</row>
+						<row>
+							<entry>*.json</entry>
+							<entry>springfieldWebmvcRenderJsonViewResolver</entry>
+							<entry>
+								JSON View
+							</entry>
+						</row>
+						<row>
+							<entry>*.xml</entry>
+							<entry>springfieldWebmvcRenderXmlViewResolver</entry>
+							<entry>
+								XML View
+							</entry>
+						</row>
+						<row>
+							<entry>*.xls</entry>
+							<entry>springfieldWebmvcRenderXlsViewResolver</entry>
+							<entry>
+								Excel View
+							</entry>
+						</row>
+						<row>
+							<entry>*.csv</entry>
+							<entry>springfieldWebmvcRenderCsvViewResolver</entry>
+							<entry>
+								CSV View
+							</entry>
+						</row>
+						<row>
+							<entry>*.download</entry>
+							<entry>springfieldWebmvcRenderDownloadViewResolver</entry>
+							<entry>
+								File Download View
+							</entry>
+						</row>
+						<row>
+							<entry>*.stream</entry>
+							<entry>springfieldWebmvcRenderStreamViewResolver</entry>
+							<entry>
+								File Streaming View
+							</entry>
+						</row>
+					</tbody>
+				</tgroup>
+			</table>
+
+		</para>       		
+
+
+	

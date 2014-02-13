@@ -2,155 +2,142 @@ package com.u2ware.springfield.support.resource;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-public class ResourcePatternResolverBean implements ResourceLoaderAware, InitializingBean{
+public class ResourcePatternResolverBean implements ResourceLoaderAware, BeanNameAware{
 
-	private static final Logger logger = LoggerFactory.getLogger(ResourcePatternResolverBean.class);
-
-
-	private String targetName;
-	private String[] packageToScan = new String[]{""};
-	private String[] locationPatterns;
-	private ResourcePatternResolver resourcePatternResolver;
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	
+	private String beanName;
+	private String[] packagesToScan;
+	private String[] resourcePatterns;
+	private ResourcePatternResolver resolver;
 	
-	public void setPackageToScan(String[] packageToScan) {
-		this.packageToScan = packageToScan;
+	public void setPackagesToScan(String... packagesToScan) {
+		this.packagesToScan = packagesToScan;
 	}
-	public void setLocationPatterns(String[] locationPatterns) {
-		this.locationPatterns = locationPatterns;
+	public void setResourcePatterns(String... resourcePatterns) {
+		this.resourcePatterns = resourcePatterns;
 	}
 	public void setResourceLoader(ResourceLoader resourceLoader) {
-		this.resourcePatternResolver = ResourcePatternUtils.getResourcePatternResolver(resourceLoader);
-		//this.resourcePatternResolverBeanSupport = new ResourcePatternResolverBeanSupport(resourceLoader);
+		this.resolver = ResourcePatternUtils.getResourcePatternResolver(resourceLoader);
 	}
-	public void setTargetName(String targetName) {
-		this.targetName = targetName;
+	public void setBeanName(String beanName) {
+		this.beanName = beanName;
+	}
+	public String[] getPackagesToScan() {
+		return packagesToScan;
+	}
+	public String[] getResourcePatterns() {
+		return resourcePatterns;
 	}
 
-	///////////////////////////////////////////////
-	//
-	//////////////////////////////////////////////
-	private HashSet<Resource> resourcesSet;
-	private Resource[] resources;
-	private String[] locations;
-	private String[] basenames;
-
-	public Set<Resource> getResourcesSet() {
+	
+	
+	
+	public String[] getFilenames() {
+		try{
+			Set<Resource> resources = findResources(beanName, resolver, packagesToScan, resourcePatterns);
+			if(resources == null) return null;
+			String[] result = new String[resources.size()];
+			int i = 0;
+			for(Resource r : resources){
+				result[i] = StringUtils.stripFilenameExtension(r.getURL().toString());
+				logger.warn(beanName+" Configuration: "+result[i]);
+				i++;
+			}
+			return result;
+		}catch(IOException e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public String[] getLocations() {
+		try{
+			Set<Resource> resources = findResources(beanName, resolver, packagesToScan, resourcePatterns);
+			if(resources == null) return null;
+			String[] result = new String[resources.size()];
+			int i = 0;
+			for(Resource r : resources){
+				result[i] = r.getURI().toString();
+				logger.warn(beanName+" Configuration: "+result[i]);
+				i++;
+			}
+			return result;
+		}catch(IOException e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public Resource[] getResources() {
+		try{
+			Set<Resource> resources = findResources(beanName, resolver, packagesToScan, resourcePatterns);
+			if(resources == null) return null;
+			Resource[] result = new Resource[resources.size()];
+			int i = 0;
+			for(Resource r : resources){
+				result[i] = r;
+				logger.warn(beanName+" Configuration: "+result[i]);
+				i++;
+			}
+			return result;
+		}catch(IOException e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
+	
+	
+	private Set<Resource> findResources(String title, ResourcePatternResolver resolver, String[] packages, String[] parttens)throws IOException {
+		
+		if(resolver == null || packages == null || parttens == null ) return null;
+		
+		HashSet<Resource> resourcesSet = new HashSet<Resource>();
+		for(String packageToScan : packages){
+			
+			String classBasedResourcePath = "classpath:"+ClassUtils.convertClassNameToResourcePath(packageToScan);
+			String webappBasedResourcePath = "/WEB-INF/"+ClassUtils.convertClassNameToResourcePath(packageToScan);
+			
+			for(String partten : parttens){
+				addResources(title, resolver, resourcesSet, classBasedResourcePath+partten);
+				addResources(title, resolver, resourcesSet, webappBasedResourcePath+partten);
+			}
+		}
+		if(resourcesSet.size() < 1) return null;
+		
 		return resourcesSet;
 	}
-	public Resource[] getResources() {
-		return resources;
-	}
-	public String[] getLocations() {
-		return locations;
-	}
-	public String[] getBasenames() {
-		return basenames;
-	}
-	///////////////////////////////////////////////
-	//
-	//////////////////////////////////////////////
-	private int addResources(HashSet<Resource> resourcesSet, String pattern){
-		logger.warn(targetName+" Pattern: "+pattern);
-		int count = 0;
+
+	private void addResources(String title, ResourcePatternResolver resolver, HashSet<Resource> resourcesSet, String pattern) throws IOException {
+		logger.warn(title+ " Pattern : "+pattern);
 		try{
-			Resource[] resources = resourcePatternResolver.getResources(pattern);
+			Resource[] resources = resolver.getResources(pattern);
 			for(Resource r : resources){
 				if(r.exists()){
-					resourcesSet.add(r);
-					logger.warn(targetName+" Adding: "+r);
-					count++;
-				}else{
-					//logger.fatal(r);
+					if(! resourcesSet.contains(r)){
+						logger.warn(title+ " Resource : "+r);
+						resourcesSet.add(r);
+					}
 				}
 			}
 		}catch(Exception e){
-			//e.printStackTrace();
-		}
-		return count;
-	}
-	
-	public void afterPropertiesSet() throws Exception {
-		
-		if (ObjectUtils.isEmpty(locationPatterns)) return;
-
-		resourcesSet = new HashSet<Resource>();
-
-		for(String packageToScanPath : packageToScan){
 			
-			String classBasedResourcePath = "classpath:"+ClassUtils.convertClassNameToResourcePath(packageToScanPath);
-			String webappBasedResourcePath = "/WEB-INF/"+ClassUtils.convertClassNameToResourcePath(packageToScanPath);
-			
-			for(String locationPattern : locationPatterns){
-				int r1 = addResources(resourcesSet, classBasedResourcePath+locationPattern);
-				int r2 = addResources(resourcesSet, webappBasedResourcePath+locationPattern);
-				if(r1 + r2 < 1){
-					addResources(resourcesSet, locationPattern);
-				}
-			}
 		}
-		
-		
+	}
 
-		if(resourcesSet.size() < 1) return;
-
-		logger.warn(targetName+": "+resourcesSet.size()+" file(s) configurated");
-		
-		resources = new Resource[resourcesSet.size()];
-		locations = new String[resourcesSet.size()];
-		basenames = new String[resourcesSet.size()];
-		int i = 0;
-		for(Resource r : resourcesSet){
-			resources[i] = r;
-			locations[i] = r.getURL().toString();
-			basenames[i] = StringUtils.stripFilenameExtension(locations[i]);
-			i++;
-		}
-	}
-	
-	public String getLocation(Locale locale, String location){
-		
-		String language = locale.getLanguage();
-		String country = locale.getCountry();
-		
-		StringBuilder result = new StringBuilder();
-		result.append(StringUtils.stripFilenameExtension(location));
-		if(StringUtils.hasText(language)){
-			result.append("_");
-			result.append(language);
-		}
-		if(StringUtils.hasText(country)){
-			result.append("_");
-			result.append(country);
-		}
-		result.append(".");
-		result.append(StringUtils.getFilenameExtension(location));
-		return result.toString();
-	}
-	public Resource getResource(Locale locale, Resource resource) throws IOException{
-		
-		String src = resource.getURL().toString();
-		String location = getLocation(locale, src); 
-		
-		Resource dest = resourcePatternResolver.getResource(location);
-		if(dest.exists()){
-			return dest;
-		}
-		return resource;
-	}
 }

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	<section>
+		<title>Unit Test</title>
+
+		<para>
+			<xref linkend="springfield.modules"/> 가 제공하는 
+			<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/MultipartHandler.html">
+				<interfacename>MultipartFileHandler</interfacename>
+			</ulink>
+			는 File Upload , Download 를 지원한다. 
+		</para>
+		
+		<programlistingco>
+			<areaspec>
+				<area id="x1" coords="12"/>
+				<area id="x2" coords="13"/>
+				<area id="x3" coords="20"/>
+				<area id="x4" coords="24"/>
+			</areaspec>
+			<programlisting language="java">
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations="file:src/main/webapp/WEB-INF/spring/root-context.xml")
+public class MultipartFileHandlerTest {
+			
+	@Autowired
+	protected MultipartFileHandler multipartFileHandler;
+	
+	@Test
+	public void test() throws Exception {
+
+		String contentFile1 = multipartFileHandler.uploadFile(f);
+		String contentFile2 = multipartFileHandler.uploadFile(f, new UploadFileNameResolver() {
+			@Override
+			public String resolveFileName(MultipartFile multipartFile) throws IOException {
+				return "Your Prefix"+multipartFile.getOriginalFilename()+"Your Suffix";
+			}
+		});
+
+		File uploadedFile = multipartFileHandler.findFile(contentFile1);
+		Assert.assertEquals(true, uploadedFile.exists());
+
+		multipartFileHandler.deleteFile(contentFile1);
+		Assert.assertEquals(false, uploadedFile.exists());
+	}
+			</programlisting>
+			<calloutlist>
+				<callout arearefs="x1">
+					<para>
+						지정돤 경로로 업로드하고 contentFile(저장된 파일의 이름)을 리턴한다. See <xref linkend=""/>
+					</para>
+					<para>
+						contentFile 은 디폴트로 {System.currentTimeMillis}_{Original Filename} 로 결정된다.
+					</para>
+				</callout>
+				<callout arearefs="x2">
+					<para>
+						<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/UploadFileNameResolver.html">
+							<interfacename>UploadFileNameResolver</interfacename>
+						</ulink>
+						를 사용하여 contentFile 을 변경 할수 있다.
+					</para>
+				</callout>
+				<callout arearefs="x3">
+					<para>
+						contentFile 로 물리적인 파일 객체를 리턴받을 수 있다.
+					</para>
+				</callout>
+				<callout arearefs="x4">
+					<para>
+						contentFile 로 물리적인 파일을 삭제 할 수 있다.
+					</para>
+				</callout>
+			</calloutlist>			
+		</programlistingco>		
+		
+		
+		
+	</section>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+        "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<book xmlns:xi="http://www.w3.org/2001/XInclude">
+
+    <bookinfo>
+        <title>Springfield - Reference Documentation</title>
+        <releaseinfo>&version;</releaseinfo>
+
+        <authorgroup>
+            <author>
+                <firstname>u2ware</firstname>
+                <surname>Developer</surname>
+                <email>u2waremanager@gmail.com</email>
+            </author>
+        </authorgroup>
+
+        <legalnotice>
+            <para>
+                Copies of this document may be made for your own use and for distribution
+                to others, provided that you do not charge any fee for such copies and
+                further provided that each copy contains this Copyright Notice, whether
+                distributed in print or electronically.
+            </para>
+        </legalnotice>
+    </bookinfo>
+
+    <toc/>
+
+    <xi:include href="preface.xml"/>
+
+		<chapter>
+			<title>Intro</title>
+			<xi:include href="chapter1/maven.xml"/>
+			<xi:include href="chapter1/annotation.xml"/>
+			<xi:include href="chapter1/modules.xml"/>
+			<xi:include href="chapter1/example.xml"/>
+		</chapter>
+
+		<chapter>
+			<title>Core Concept</title>
+			<important>
+				<xref linkend="springfield.modules"/>은
+				application 구성에 필요한 bean 을 자동으로 생성 등록 한다. 
+			</important>
+			<section>
+				<title>Architecture Support Beans</title>
+				<xi:include href="chapter2/layered.xml"/>
+				<xi:include href="chapter2/layered-controller.xml"/>
+				<xi:include href="chapter2/layered-validator.xml"/>
+				<xi:include href="chapter2/layered-service.xml"/>
+				<xi:include href="chapter2/layered-repository.xml"/>
+			</section>
+			<section>
+				<title>ORM Support Beans</title>
+				<xi:include href="chapter2/orm-jpa.xml"/>
+				<xi:include href="chapter2/orm-hibernate.xml"/>
+				<xi:include href="chapter2/orm-mybatis.xml"/>
+				<xi:include href="chapter2/orm-jdbc.xml"/>
+				<xi:include href="chapter2/orm-transaction.xml"/>
+			</section>
+			<section>
+				<title>Web Support Beans</title>
+				<xi:include href="chapter2/web-messages.xml"/>
+				<xi:include href="chapter2/web-locale.xml"/>
+				<xi:include href="chapter2/web-validation.xml"/>
+				<xi:include href="chapter2/web-multipart.xml"/>
+				<xi:include href="chapter2/web-view.xml"/>
+				<xi:include href="chapter2/web-security.xml"/>
+			</section>
+		</chapter>
+
+		<chapter>
+			<title>WebMVC</title>
+			<xi:include href="chapter3/web.xml"/>
+			
+			<section>
+				<title>Request Mapping</title>
+				<xi:include href="chapter3/mapping-top.xml"/>
+				<xi:include href="chapter3/mapping-method.xml"/>
+			</section>
+			<section>
+				<title>Resolving View</title>
+				<xi:include href="chapter3/view.xml"/>
+				<xi:include href="chapter3/view-thymeleaf.xml"/>
+				<xi:include href="chapter3/view-json.xml"/>
+				<xi:include href="chapter3/view-xls.xml"/>
+			</section>
+
+			<xi:include href="chapter3/security.xml"/>
+		</chapter>
+
+		<chapter>
+			<title>Architecture</title>
+			<section>
+				<title>Controller</title>
+				<xi:include href="chapter4/controller-test.xml"/> 
+			</section>
+			<section>
+				<title>Validator</title>
+				<xi:include href="chapter4/validator-override.xml"/> 
+			</section>
+			<section>
+				<title>Service</title>
+				<xi:include href="chapter4/service-override.xml"/> 
+				<xi:include href="chapter4/service-dto.xml"/> 
+			</section>
+			<section>
+				<title>Repository</title>
+				<xi:include href="chapter4/repository-test.xml"/> 
+				<xi:include href="chapter4/repository-method.xml"/> 
+				<xi:include href="chapter4/repository-callback.xml"/> 
+			</section>
+			<section>
+				<title>Multipart</title>
+				<xi:include href="chapter4/multipart-test.xml"/> 
+				<xi:include href="chapter4/multipart-example.xml"/> 
+			</section>
+			<section>
+				<title>Security</title>
+				<xi:include href="chapter4/security-config.xml"/>
+				<xi:include href="chapter4/security-register.xml"/>
+				<xi:include href="chapter4/security-login.xml"/>
+			</section>
+		</chapter>
+
+
+
+	<!-- 
+    <part id="webmvc">
+        <title>WebMVC Support</title>
+        <partintro>
+            <para>Working with Springfield</para>
+        </partintro>
+		<xi:include href="chapter.xml"/>
+	</part>
+
+	<part id="reference">
+		<title>Reference Documentation</title>
+	</part>
+
+	<part id="appendix">
+		<title>Appendix</title>
+		<appendix>
+			<title>Hello World</title>
+		
+		</appendix>
+	</part>
+	-->
+	
+
+
+</book>

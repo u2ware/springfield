@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	<section>
+		<title>Transaction</title>
+		<para>
+			<xref linkend="springfield.modules"/> 
+			은
+			<interfacename>@EnableTransactionManagement </interfacename> 
+			를  이용하여 
+			<interfacename>@Transactional</interfacename> 
+			을 활성화 시켜 놓는다. 
+		</para>
+		<programlistingco>
+			<areaspec>
+				<area id="t1" coords="4"/>
+				<area id="t2" coords="7"/>
+			</areaspec>
+			<programlisting language="java">
+public class TransactionalService {
+
+    @Transactional("yourDataSourceJpaTransactionManager")
+    public void doSomething() { ... }
+
+    @Transactional
+    public void setSomething() { ... }
+}
+			</programlisting>
+			<calloutlist>
+				<callout arearefs="t1">
+					<para>
+						<interfacename>@Transactional</interfacename> 의 value 속성에 
+						Bean Name 을 지정하여 
+						사용할 <interfacename>TransactionManager</interfacename> 를  결정 할수 있다.
+					</para>
+				</callout>
+				<callout arearefs="t2">
+					<para>
+						<xref linkend="springfield.modules"/> 에 의해 는 가장 먼저 등록된 
+						<interfacename>TransactionManager</interfacename> 가  
+						디폴트 <interfacename>@Transactional</interfacename>로 결정된다.
+					</para>
+				</callout>
+			</calloutlist>
+		</programlistingco>
+
+	</section>

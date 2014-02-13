@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	<section>
+		<title>web.xml</title>
+
+    	<para>
+	    	다국어 지원을 위해 UTF-8 을 기본 Encoding 으로,  
+	    	<interfacename>org.springframework.web.filter.CharacterEncodingFilter</interfacename>
+	    	을 등록 한다. 
+	    	만약 Tomcat 을 사용하는 경우, server.xml 의  &lt;Connector&gt;에 URIEncoding="UTF-8" 요소도 추가하여야 한다.
+	    </para>
+		<programlisting language="xml">
+&lt;!-- 
+##########################################
+#	CharacterEncodingFilter
+##########################################
+--&gt;
+&lt;filter&gt;
+	&lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;
+	&lt;filter-class&gt;org.springframework.web.filter.CharacterEncodingFilter&lt;/filter-class&gt;
+	&lt;init-param&gt;
+		&lt;param-name&gt;encoding&lt;/param-name&gt;
+		&lt;param-value&gt;utf-8&lt;/param-value&gt;
+	&lt;/init-param&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+	&lt;filter-name&gt;encodingFilter&lt;/filter-name&gt;
+	&lt;servlet-name&gt;appServlet&lt;/servlet-name&gt;
+&lt;/filter-mapping&gt;	
+		</programlisting>
+
+    	<para>
+	    	RESTful URL을 사용하기 위해,   
+	    	<interfacename>org.springframework.web.filter.HiddenHttpMethodFilter</interfacename>
+	    	을 등록 한다. 
+	    </para>
+
+		<programlisting language="xml">
+&lt;!-- 
+##########################################
+#	http MethodFilter
+##########################################
+--&gt;
+&lt;filter&gt;
+	&lt;filter-name&gt;httpMethodFilter&lt;/filter-name&gt;
+	&lt;filter-class&gt;org.springframework.web.filter.HiddenHttpMethodFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+	&lt;filter-name&gt;httpMethodFilter&lt;/filter-name&gt;
+	&lt;servlet-name&gt;appServlet&lt;/servlet-name&gt;
+&lt;/filter-mapping&gt;
+		</programlisting>
+		
+    	<para>
+	    	multipart 지원을 위해 
+	    	<interfacename>org.springframework.web.multipart.support.MultipartFilter</interfacename>
+	    	을 등록 한다. 
+	    </para>
+		<programlisting language="xml">
+&lt;!-- 
+##########################################
+#	MultipartFilter
+##########################################
+--&gt;
+&lt;filter&gt;
+	&lt;filter-name&gt;multipartFilter&lt;/filter-name&gt;
+	&lt;filter-class&gt;org.springframework.web.multipart.support.MultipartFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+	&lt;filter-name&gt;multipartFilter&lt;/filter-name&gt;
+	&lt;servlet-name&gt;appServlet&lt;/servlet-name&gt;
+&lt;/filter-mapping&gt;
+		</programlisting>
+	
+	
+    	<para>
+	    	Spring Context 와 
+	    	<ulink url="http://docs.spring.io/spring-security/site/docs/3.1.4.RELEASE/reference/springsecurity.html">
+			Spring-Security 
+			</ulink>의 Locale 설정을 통일하기 위해  
+			<interfacename>com.u2ware.springfield.support.i18n.LocaleChangeFilter</interfacename>
+	    	을 등록 한다. 
+	    </para>
+		<programlisting language="xml">
+&lt;!-- 
+##########################################
+#	LocaleChangeFilter
+##########################################
+--&gt;
+&lt;filter&gt;
+	&lt;filter-name&gt;localeChangeFilter&lt;/filter-name&gt;
+	&lt;filter-class&gt;com.u2ware.springfield.support.i18n.LocaleChangeFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+	&lt;filter-name&gt;localeChangeFilter&lt;/filter-name&gt;
+	&lt;servlet-name&gt;appServlet&lt;/servlet-name&gt;
+&lt;/filter-mapping&gt;
+		</programlisting>
+	
+
+    	<para>
+	    	<ulink url="http://docs.spring.io/spring-security/site/docs/3.1.4.RELEASE/reference/springsecurity.html">
+			Spring-Security 
+			</ulink> 지원을 위해 
+			<interfacename>org.springframework.web.filter.DelegatingFilterProxy</interfacename>
+	    	을 등록 한다. 
+	    </para>
+		<programlisting language="xml">
+&lt;!-- 
+##########################################
+#	springSecurityFilterChain
+##########################################
+--&gt;
+&lt;filter&gt;
+	&lt;filter-name&gt;springSecurityFilterChain&lt;/filter-name&gt;
+	&lt;filter-class&gt;org.springframework.web.filter.DelegatingFilterProxy&lt;/filter-class&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+	&lt;filter-name&gt;springSecurityFilterChain&lt;/filter-name&gt;
+	&lt;servlet-name&gt;appServlet&lt;/servlet-name&gt;
+&lt;/filter-mapping&gt;
+		</programlisting>
+		
+	</section>
+	
+	
+	

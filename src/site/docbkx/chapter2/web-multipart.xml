@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	
+	<section>
+		<title>Multipart</title>
+		<para>
+    		<xref linkend="springfield.modules"/>는   
+    		File Upload , Download 를 위해 다음 Bean 을 등록 한다. 
+       	</para>
+       	<table>
+       		<title>Auto Register Beans for Multipart Support</title>
+			<tgroup cols="2">
+				<thead>
+					<colspec colsep="1*"/>
+					<colspec colsep="1*"/>
+					<row>
+						<entry>Bean Name</entry>
+						<entry>Bean Object</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>filterMultipartResolver</entry>
+						<entry><interfacename>org.springframework.web.multipart.commons.CommonsMultipartResolver</interfacename></entry>
+					</row>
+					<row>
+						<entry>springfieldBaseMultipartFileHandler</entry>
+						<entry>
+				    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/MultipartHandlerImpl.html">
+								<interfacename>MultipartFileHandlerImpl</interfacename>
+				       		</ulink> 
+				       	</entry>
+					</row>
+				</tbody>
+	       	</tgroup> 
+      	</table>
+
+		<para>
+    		<xref linkend="springfield.modules"/>는   
+    		파일 저장 위치를 properties-ref 로  설정 할 수 있다.  
+    		properties-ref 가 선언되지 않은 경우 디폴트 파일 저장 위치를 사용한다. 
+       	</para>
+		<programlisting language="xml">
+&lt;beans&gt;
+
+	&lt;util:properties id="yourProp" 
+		location="classpath:com/yourcompany/yourproject/config.properties" />
+
+
+	&lt;jdbc:embedded-database id="yourDataSource" type="HSQL"/&gt;  	
+	
+	&lt;springfield:modules base-package="com.yourcompany.yourproject" 
+			data-source-ref="yourDataSource"
+			properties-ref="yourProp"
+	/&gt;
+	...
+&lt;/beans&gt;
+		</programlisting>
+		<programlisting language="text">
+#
+# com/yourcompany/yourproject/config.properties
+#
+springfield.multipart.location=/yourLocation
+springfield.multipart.size=1024
+		</programlisting>
+		
+		<important>
+			<para>
+				<xref linkend="springfield.modules"/> 의 properties-ref 를 선언하면 
+				<xref linkend="springfield.modules"/> 의 각종 설정 값을 변경할수 있다. 
+			</para>
+		</important>
+	
+	</section>

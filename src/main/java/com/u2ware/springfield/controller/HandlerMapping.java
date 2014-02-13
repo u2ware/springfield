@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.PatternMatchUtils;
@@ -29,15 +27,12 @@ import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondit
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
 
+import com.u2ware.springfield.security.authorization.Navigation;
+
 
 
 
 public class HandlerMapping extends RequestMappingInfoHandlerMapping{
-	
-	private static final Logger logger = LoggerFactory.getLogger(HandlerMapping.class);
-
-	private final String REQUEST_MAPPING_INFO_MAP_KEY = "com.u2ware.springfield.domain.EntityInformation";
-	
 	
 	protected Map<String,String> m = new LinkedHashMap<String,String>(new HashMap<String,String>());
 
@@ -47,7 +42,7 @@ public class HandlerMapping extends RequestMappingInfoHandlerMapping{
 
 	protected void initHandlerMethods() {
 		super.initHandlerMethods();
-		getServletContext().setAttribute(REQUEST_MAPPING_INFO_MAP_KEY, m);			
+		getServletContext().setAttribute(Navigation.OBJECT_NAME, m);			
 	}
 	
 	

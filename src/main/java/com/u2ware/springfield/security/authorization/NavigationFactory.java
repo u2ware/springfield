@@ -6,100 +6,73 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.util.ClassUtils;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.ServletContextAware;
+import org.springframework.web.context.support.WebApplicationObjectSupport;
 
 import com.thoughtworks.xstream.XStream;
 
-public class NavigationFactory implements ServletContextAware, ResourceLoaderAware{
+public class NavigationFactory extends WebApplicationObjectSupport  {
 
-	private static final Logger logger = LoggerFactory.getLogger(NavigationFactory.class);
-
-	private final String REQUEST_MAPPING_INFO_MAP_KEY = "com.u2ware.springfield.domain.EntityInformation";
-
-	private Resource[] resources;
-	private ServletContext servletContext;
-	private ResourceLoader resourceLoader;
-	
-	private Navigation defaultNavigation;
+	private Resource configLocation;
 	private Map<Locale,Navigation> navigationMap = new HashMap<Locale,Navigation>();
 
-	public void setResources(Resource[] resources) {
-		this.resources = resources;
-	}
-	
-	public void setServletContext(ServletContext servletContext) {
-		this.servletContext = servletContext;
-	}
-	public void setResourceLoader(ResourceLoader resourceLoader) {
-		this.resourceLoader = resourceLoader;
+	public void setConfigLocation(Resource configLocation) {
+		this.configLocation = configLocation;
 	}
 
+	
+	
+	
 	/////////////////////////////////////////////////////
 	//
 	////////////////////////////////////////////////////
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Navigation resolveNavigation(ServletRequest request) throws Exception{
 		
-		request.setAttribute(Navigation.OBJECT_NAME, null);
-
+		Navigation navigation = null;
+		
 		Locale current = LocaleContextHolder.getLocale();
-
 		Locale[] locales = parseLocale(current);
 		for(Locale locale : locales){
 
-			Navigation navigation = navigationMap.get(locale);
-			
-			if(navigation != null){
-				logger.debug("Navigation Find : "+locale+" "+navigation);
-				request.setAttribute(Navigation.OBJECT_NAME, navigation);			
-				return navigation;
-
+			if(navigationMap.containsKey(locale)){
+				navigation = navigationMap.get(locale);
+				logger.warn("Navigation Find : "+locale);
 			}else{
-				Resource resource = getResource(locale);
-				if(resource != null){
+				Resource resource = getResource(configLocation, locale);
+				if(resource != null && resource.exists()){
 
 					navigation = this.buildNavigation(resource);
+					logger.warn("Navigation Parse : "+locale+" "+resource);
 					navigationMap.put(locale, navigation);
-					
-					logger.debug("Navigation Parse : "+locale+" "+resource);
-					request.setAttribute(Navigation.OBJECT_NAME, navigation);			
-					return navigation;
 				}
 			}
 		}
-		
-		
-		if(defaultNavigation == null){
 
-			if(ObjectUtils.isEmpty(resources)){
-				Object value = servletContext.getAttribute(REQUEST_MAPPING_INFO_MAP_KEY);
-				
-				if(ClassUtils.isAssignableValue(Map.class, value)){
-					this.defaultNavigation = this.buildNavigation((Map)value);
-					logger.debug("Default Navigation Create: "+value);
-				}
-				
+		if(navigation == null){
+			if(configLocation != null){
+				navigation = this.buildNavigation(configLocation);
+				logger.warn("Navigation Parse: "+current+" "+configLocation);
+
 			}else{
-				this.defaultNavigation = this.buildNavigation(resources[0]);
-				logger.debug("Default Navigation Parse: "+resources[0]);
+				Object value = getServletContext().getAttribute(Navigation.OBJECT_NAME);
+				navigation = this.buildNavigation((Map)value);
+				logger.warn("Navigation Create: "+current+" "+value);
 			}
+			navigationMap.put(current, navigation);
 		}
 		
-		logger.debug("Navigation Default : "+current+" "+defaultNavigation);
-		request.setAttribute(Navigation.OBJECT_NAME, defaultNavigation);			
-		return defaultNavigation;
+		try{
+			request.setAttribute(Navigation.OBJECT_NAME, navigation);
+		}catch(Exception e){
+			getServletContext().setAttribute(Navigation.OBJECT_NAME, navigation);
+		}
+		
+		return navigation;
 	}
 	
 	//////////////////////////////////////////////////////////////////
@@ -124,11 +97,11 @@ public class NavigationFactory implements ServletContextAware, ResourceLoaderAwa
 		}
 	}
 
-	private Resource getResource(Locale locale) throws IOException{
+	private Resource getResource(Resource resource, Locale locale) throws IOException{
 		
-		if(resources == null) return null;
+		if(resource == null) return null;
 		
-		String location = resources[0].getURL().toString();
+		String location = resource.getURL().toString();
 		
 		String language = locale.getLanguage();
 		String country = locale.getCountry();
@@ -151,7 +124,7 @@ public class NavigationFactory implements ServletContextAware, ResourceLoaderAwa
 		r.append(".");
 		r.append(StringUtils.getFilenameExtension(location));
 		
-		Resource result = resourceLoader.getResource(r.toString());
+		Resource result = getWebApplicationContext().getResource(r.toString());
 		if(result.exists()){
 			return result;
 		}
@@ -160,6 +133,8 @@ public class NavigationFactory implements ServletContextAware, ResourceLoaderAwa
 	
 
 	private Navigation buildNavigation(Resource resource) throws IOException{
+
+		if(resource == null) return null;
 
 		XStream xstream = new XStream();
 		xstream.autodetectAnnotations(true);
@@ -171,6 +146,7 @@ public class NavigationFactory implements ServletContextAware, ResourceLoaderAwa
 	}
 	private Navigation buildNavigation(Map<String,String> mappingInfo) {
 		
+		
 		if(mappingInfo == null) {
 			return null;
 		}
@@ -178,7 +154,7 @@ public class NavigationFactory implements ServletContextAware, ResourceLoaderAwa
 		HandlerMappingNavigation root = new HandlerMappingNavigation();
 		root.setPath("/");
 		root.setPattern("/**");
-		root.setName("root.title");
+		root.setName("Springfield");
 
 		for(String mapping : mappingInfo.keySet()){
 			
@@ -239,5 +215,6 @@ public class NavigationFactory implements ServletContextAware, ResourceLoaderAwa
 			}
 		}
 	}
+
 	
 }

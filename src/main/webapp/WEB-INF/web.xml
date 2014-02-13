@@ -11,16 +11,6 @@
 			org.springframework.web.context.ContextLoaderListener
 		</listener-class>
   </listener>
-  <filter>
-    <filter-name>localeChangeFilter</filter-name>
-    <filter-class>
-			com.u2ware.springfield.support.i18n.LocaleChangeFilter
-		</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>localeChangeFilter</filter-name>
-    <servlet-name>appServlet</servlet-name>
-  </filter-mapping>
   <listener>
     <listener-class>
 			org.springframework.security.web.session.HttpSessionEventPublisher
@@ -50,16 +40,25 @@
     <filter-name>encodingFilter</filter-name>
     <servlet-name>appServlet</servlet-name>
   </filter-mapping>
+  
+  
   <filter>
     <filter-name>multipartFilter</filter-name>
     <filter-class>
 			org.springframework.web.multipart.support.MultipartFilter
 		</filter-class>
+		<init-param>
+			<param-name>multipartResolverBeanName</param-name>
+			<param-value></param-value>
+		</init-param>
   </filter>
   <filter-mapping>
     <filter-name>multipartFilter</filter-name>
     <servlet-name>appServlet</servlet-name>
   </filter-mapping>
+  
+  
+  
   <filter>
     <filter-name>httpMethodFilter</filter-name>
     <filter-class>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+  "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+ 	<section>
+		<title>EntityController</title>
+    	<para>
+    		Layered Architecture 에서 Controller Layer 역할을 수행하는  
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html">
+       		<interfacename>EntityController</interfacename>
+       		</ulink> 
+       		는  handle method 가 정의되어 있어서 
+       		<xref linkend="springfield.modules"/> 에 의해 request mapping 된다. 
+
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html">
+       		<interfacename>EntityController</interfacename>
+       		</ulink> 
+       		의 구현체인 
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html">
+       		<interfacename>EntityControllerImpl</interfacename>
+       		</ulink> 
+       		는  
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityService.html">
+       		<interfacename>EntityService</interfacename>
+       		</ulink> 
+       		와   
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/validator/EntityValidator.html">
+       		<interfacename>EntityValidator</interfacename>
+       		</ulink> 
+       		를 주입 받아서 동작한다.
+    	</para>
+
+		<programlisting language="java">
+public interface class EntityController&lt;T,Q&gt; {
+
+	public String find(Boolean pageEnable, Model model, Pageable pageable, Q query, BindingResult errors) throws Exception;
+	
+	public String read(Model model, T entity, BindingResult errors) throws Exception;
+	
+	public String createForm(Model model, T entity, BindingResult errors) throws Exception;
+	
+	public String create(Model model, T entity, BindingResult errors) throws Exception;
+	
+	public String updateForm(Model model, T entity, BindingResult errors) throws Exception;
+	
+	public String update(Model model, T entity, BindingResult errors) throws Exception;
+	
+	public String delete(Model model, T entity, BindingResult errors) throws Exception;
+}	
+			</programlisting>			
+
+
+  	</section>
