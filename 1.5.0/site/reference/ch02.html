@@ -1,0 +1,688 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>2.&nbsp;Core Concept</title><link rel="stylesheet" type="text/css" href="css/manual-multipage.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="Springfield - Reference Documentation"><link rel="up" href="index.html" title="Springfield - Reference Documentation"><link rel="prev" href="ch01.html" title="1.&nbsp;Intro"><link rel="next" href="ch03.html" title="3.&nbsp;WebMVC"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">2.&nbsp;Core Concept</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch01.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="ch03.html">Next</a></td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="d0e266"></a>2.&nbsp;Core Concept</h1></div></div></div><div class="important" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Important"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="./images/important.png"></td><th align="left">Important</th></tr><tr><td align="left" valign="top"><a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a>&#51008;
+				application &#44396;&#49457;&#50640; &#54596;&#50836;&#54620; bean &#51012; &#51088;&#46041;&#51004;&#47196; &#49373;&#49457; &#46321;&#47197; &#54620;&#45796;. 
+			</td></tr></table></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e272"></a>2.1&nbsp;Architecture Support Beans</h2></div></div></div><p>
+
+		</p><p>
+            <a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a> &#51008;  basePackage &#47484; &#44592;&#51456;&#51004;&#47196;  
+            <a class="xref" href="ch01.html#springfield.annotation" title="1.2&nbsp;@Springfield">Section&nbsp;1.2, &#8220;@Springfield&#8221;</a> &#47484; &#49828;&#52884;&#54616;&#50668;  
+			Layered Architecture &#50640;&#49436; &#44033; &#47112;&#51060;&#50612;&#50640; &#54644;&#45817;&#54616;&#45716; Bean &#46308;&#51012; &#51088;&#46041; &#49373;&#49457;, &#46321;&#47197;&#54620;&#45796;. 
+			&#46321;&#47197;&#46104;&#45716; Bean Name &#44284; Bean Type &#51008; &#45796;&#51020;&#44284; &#44057;&#45796;.
+		</p><p>
+		</p><div class="table"><a name="d0e284"></a><p class="title"><b>Table&nbsp;2.1.&nbsp;Auto Register Bean Name &amp; Type</b></p><div class="table-contents"><table summary="Auto Register Bean Name &amp; Type" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col><col><col></colgroup><thead><tr><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Layer</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Name</th><th style="border-bottom: 0.5pt solid ; ">Bean Type</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Controller Layer</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">{@Springfield class short name}Repository</td><td style="border-bottom: 0.5pt solid ; ">
+							<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html" target="_top">
+			                	<code class="interfacename">EntityController&lt;T, Q&gt;</code>
+				            </a>
+						</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Validator Layer</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">{@Springfield class short name}Validator</td><td style="border-bottom: 0.5pt solid ; ">
+				<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html" target="_top">
+                	<code class="interfacename">EntityValidator&lt;T, Q&gt;</code>
+	            </a>
+						</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Service Layer</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">{@Springfield class short name}Service</td><td style="border-bottom: 0.5pt solid ; ">
+							<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html" target="_top">
+			                	<code class="interfacename">EntityService&lt;T, Q&gt;</code>
+				            </a>
+						</td></tr><tr><td style="border-right: 0.5pt solid ; ">Repository Layer</td><td style="border-right: 0.5pt solid ; ">{Entity class short name}Repository</td><td style="">
+							<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html" target="_top">
+			                	<code class="interfacename">EntityRepository&lt;T, ID&gt;</code>
+				            </a>
+						</td></tr></tbody></table></div></div><p><br class="table-break">
+			
+			
+		</p><p>
+			&#46321;&#47197; &#46104;&#45716; Bean (implementation) Object &#45716; 
+			<a class="xref" href="ch01.html#springfield.annotation" title="1.2&nbsp;@Springfield">Section&nbsp;1.2, &#8220;@Springfield&#8221;</a> &#51032; strategy &#49549;&#49457;&#50640; &#46384;&#46972; &#44208;&#51221;&#46108;&#45796;.	
+			strategy &#49549;&#49457;&#51060; &#50630;&#45796;&#47732; <a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a> &#51032;  default-strategy &#49549;&#49457;&#51012; &#46384;&#47480;&#45796;.
+    		default-strategy &#46020; &#49440;&#50616;&#46104;&#51648; &#50506;&#50520;&#45796;&#47732;, 
+			<code class="interfacename">Strategy.JPA </code>
+			&#47196; &#49444;&#51221;&#46108;&#45796;.
+		</p><p>
+		
+		</p><div class="table"><a name="d0e360"></a><p class="title"><b>Table&nbsp;2.2.&nbsp;
+				Auto Register Bean (implementation) Object
+			</b></p><div class="table-contents"><table summary="&#xA;Auto Register Bean (implementation) Object&#xA;" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col><col><col><col><col></colgroup><thead><tr><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				               <code class="interfacename">Springfield.Strategy</code>
+						</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">		
+			                	<code class="interfacename">EntityController&lt;T, Q&gt;</code>
+			       		</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+			                	<code class="interfacename">EntityValidator&lt;T, Q&gt;</code>
+			       		</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+			                	<code class="interfacename">EntityService&lt;T, Q&gt;</code>
+			       		</th><th style="border-bottom: 0.5pt solid ; ">
+			                	<code class="interfacename">EntityRepository&lt;T, Q&gt;</code>
+			       		</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">JPA</code> (Default)
+						</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html" target="_top">
+				       		<code class="interfacename">EntityControllerImpl&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/validation/EntityValidatorImpl.html" target="_top">
+				       		<code class="interfacename">EntityValidatorImpl&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityServiceImpl.html" target="_top">
+				       		<code class="interfacename">EntityServiceImpl&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jpa/JpaRepository.html" target="_top">
+				       		<code class="interfacename">JpaRepository&lt;T, ID&gt;</code>
+				       		</a>
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">JPA_REPOSITORY_ONLY</code>
+						</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		-
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		-
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		-
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jpa/JpaRepository.html" target="_top">
+				       		<code class="interfacename">JpaRepository&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">HIBERNATE</code>
+						</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html" target="_top">
+				       		<code class="interfacename">EntityControllerImpl&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/validation/EntityValidatorImpl.html" target="_top">
+				       		<code class="interfacename">EntityValidatorImpl&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityServiceImpl.html" target="_top">
+				       		<code class="interfacename">EntityServiceImpl&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/hibernate/HibernateRepository.html" target="_top">
+				       		<code class="interfacename">HibernateRepository&lt;T, ID&gt;</code>
+				       		</a>
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">HIBERNATE_REPOSITORY_ONLY</code>
+						</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		-
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		-
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		-
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/hibernate/HibernateRepository.html" target="_top">
+				       		<code class="interfacename">HibernateRepository&lt;T, ID&gt;</code>
+				       		</a>
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">SQLSESSION</code>
+						</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html" target="_top">
+				       		<code class="interfacename">EntityControllerImpl&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/validation/EntityValidatorImpl.html" target="_top">
+				       		<code class="interfacename">EntityValidatorImpl&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityServiceImpl.html" target="_top">
+				       		<code class="interfacename">EntityServiceImpl&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/sqlsession/SqlSessionRepository.html" target="_top">
+				       		<code class="interfacename">SqlSessionRepository&lt;T, ID&gt;</code>
+				       		</a>
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">SQLSESSION_REPOSITORY_ONLY</code>
+						</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		-
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		-
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		-
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/sqlsession/SqlSessionRepository.html" target="_top">
+				       		<code class="interfacename">SqlSessionRepository&lt;T, ID&gt;</code>
+				       		</a>
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">JDBC</code>
+						</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html" target="_top">
+				       		<code class="interfacename">EntityControllerImpl&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/validation/EntityValidatorImpl.html" target="_top">
+				       		<code class="interfacename">EntityValidatorImpl&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityServiceImpl.html" target="_top">
+				       		<code class="interfacename">EntityServiceImpl&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jdbc/JdbcRepository.html" target="_top">
+				       		<code class="interfacename">JdbcRepository&lt;T, ID&gt;</code>
+				       		</a>
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">JDBC_REPOSITORY_ONLY</code>
+						</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		-
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		-
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		-
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jdbc/JdbcRepository.html" target="_top">
+				       		<code class="interfacename">JdbcRepository&lt;T, ID&gt;</code>
+				       		</a>
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; ">
+							<code class="interfacename">DTO</code>
+						</td><td style="border-right: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html" target="_top">
+				       		<code class="interfacename">EntityControllerImpl&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td><td style="border-right: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/validation/EntityValidatorImpl.html" target="_top">
+				       		<code class="interfacename">EntityValidatorImpl&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td><td style="border-right: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityServiceImpl.html" target="_top">
+				       		<code class="interfacename">EntityServiceImpl&lt;T, Q&gt;</code>
+				       		</a>
+			       		</td><td style="">
+				       		-
+			       		</td></tr></tbody></table></div></div><p><br class="table-break">
+
+
+		</p><p>
+            <a class="xref" href="ch01.html#springfield.example" title="1.4&nbsp;Springfield Example">Section&nbsp;1.4, &#8220;Springfield Example&#8221;</a> &#50640;&#49436; &#46321;&#47197;&#46104;&#45716; Bean &#51008; &#45796;&#51020;&#44284; &#44057;&#45796;.
+		</p><p>
+
+
+		</p><div class="table"><a name="d0e662"></a><p class="title"><b>Table&nbsp;2.3.&nbsp;
+				<a class="xref" href="ch01.html#springfield.example" title="1.4&nbsp;Springfield Example">Section&nbsp;1.4, &#8220;Springfield Example&#8221;</a> Auto Register Bean (implementation) Object
+			</b></p><div class="table-contents"><table summary="&#xA; Auto Register Bean (implementation) Object&#xA;" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col><col><col></colgroup><thead><tr><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Name</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Type</th><th style="border-bottom: 0.5pt solid ; ">Bean Object</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">fooController</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">EntityController</code>&lt;Foo, Foo&gt;
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">EntityControllerImpl</code>&lt;Foo, Foo&gt;
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">fooValidator</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">EntityValidator</code>&lt;Foo, Foo&gt;
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">EntityValidatorImpl</code>&lt;Foo, Foo&gt;
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">fooService</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">EntityService</code>&lt;Foo, Foo&gt;
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">EntityServiceImpl</code>&lt;Foo, Foo&gt;
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">fooRepository</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">EntityRepository</code>&lt;Foo, String&gt;
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">JpaRepository</code>&lt;Foo, String&gt;
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">~
+			       		</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">~
+			       		</td><td style="border-bottom: 0.5pt solid ; ">~
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">barSearchController</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">EntityController</code>&lt;Bar, BarSearch&gt;
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">EntityControllerImpl</code>&lt;Bar, BarSearch&gt;
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">barSearchValidator</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">EntityValidator</code>&lt;Bar, BarSearch&gt;
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">EntityValidatorImpl</code>&lt;Bar, BarSearch&gt;
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">barSearchService</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">EntityService</code>&lt;Bar, BarSearch&gt;
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">EntityServiceImpl</code>&lt;Bar, BarSearch&gt;
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; ">barRepository</td><td style="border-right: 0.5pt solid ; ">
+				       		<code class="interfacename">EntityRepository</code>&lt;Bar, Integer&gt;
+			       		</td><td style="">
+				       		<code class="interfacename">JpaRepository</code>&lt;Bar, Integer&gt;
+			       		</td></tr></tbody></table></div></div><p><br class="table-break">
+	
+		</p><div class="important" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Important"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="./images/important.png"></td><th align="left">Important</th></tr><tr><td align="left" valign="top"><a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a>&#44032; Bean &#46308;&#51012; &#51088;&#46041; &#49373;&#49457; , &#46321;&#47197;&#54616;&#45716; &#44284;&#51221;&#50640;&#49436;, 
+			
+			&#54644;&#45817; &#51060;&#47492;&#51012; &#44032;&#51652; Bean &#51060; &#51060;&#48120; &#46321;&#47197; &#46104;&#50612; &#51080;&#45796;&#47732;, 
+			<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a> &#51008; Bean &#51012; &#49373;&#49457; &#54616;&#51648; &#50506;&#44256; &#52280;&#51312;&#47564; &#54616;&#44172; &#46108;&#45796;.
+			&#51060;&#45716; &#44033; &#47112;&#51060;&#50612;&#51032; Bean &#47484; customizing &#54624; &#49688; &#51080;&#45716; &#48169;&#49885;&#51004;&#47196; &#49324;&#50857;&#46108;&#45796;. 
+		</td></tr></table></div><p>  
+    	</p><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e795"></a>2.1.1&nbsp;EntityController</h3></div></div></div><p>
+    		Layered Architecture &#50640;&#49436; Controller Layer &#50669;&#54624;&#51012; &#49688;&#54665;&#54616;&#45716;  
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html" target="_top">
+       		<code class="interfacename">EntityController</code>
+       		</a> 
+       		&#45716;  handle method &#44032; &#51221;&#51032;&#46104;&#50612; &#51080;&#50612;&#49436; 
+       		<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a> &#50640; &#51032;&#54644; request mapping &#46108;&#45796;. 
+
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html" target="_top">
+       		<code class="interfacename">EntityController</code>
+       		</a> 
+       		&#51032; &#44396;&#54788;&#52404;&#51064; 
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html" target="_top">
+       		<code class="interfacename">EntityControllerImpl</code>
+       		</a> 
+       		&#45716;  
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityService.html" target="_top">
+       		<code class="interfacename">EntityService</code>
+       		</a> 
+       		&#50752;   
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/validator/EntityValidator.html" target="_top">
+       		<code class="interfacename">EntityValidator</code>
+       		</a> 
+       		&#47484; &#51452;&#51077; &#48155;&#50500;&#49436; &#46041;&#51089;&#54620;&#45796;.
+    	</p><pre class="programlisting">
+<span class="hl-keyword">public</span> <span class="hl-keyword">interface</span> <span class="hl-keyword">class</span> EntityController&lt;T,Q&gt; {
+
+	<span class="hl-keyword">public</span> String find(Boolean pageEnable, Model model, Pageable pageable, Q query, BindingResult errors) <span class="hl-keyword">throws</span> Exception;
+	
+	<span class="hl-keyword">public</span> String read(Model model, T entity, BindingResult errors) <span class="hl-keyword">throws</span> Exception;
+	
+	<span class="hl-keyword">public</span> String createForm(Model model, T entity, BindingResult errors) <span class="hl-keyword">throws</span> Exception;
+	
+	<span class="hl-keyword">public</span> String create(Model model, T entity, BindingResult errors) <span class="hl-keyword">throws</span> Exception;
+	
+	<span class="hl-keyword">public</span> String updateForm(Model model, T entity, BindingResult errors) <span class="hl-keyword">throws</span> Exception;
+	
+	<span class="hl-keyword">public</span> String update(Model model, T entity, BindingResult errors) <span class="hl-keyword">throws</span> Exception;
+	
+	<span class="hl-keyword">public</span> String delete(Model model, T entity, BindingResult errors) <span class="hl-keyword">throws</span> Exception;
+}	
+			</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e834"></a>2.1.2&nbsp;EntityValidator</h3></div></div></div><p>
+    		Layered Architecture &#50640;&#49436; Validator Layer &#50669;&#54624;&#51012; &#49688;&#54665;&#54616;&#45716;  
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/validator/EntityValidator.html" target="_top">
+       		<code class="interfacename">EntityValidator</code>
+       		</a> 
+       		&#45716;  
+       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html" target="_top">
+       		<code class="interfacename">EntityController</code>
+       		</a> 
+       		&#51032; handle method &#50640; &#45824;&#51025;&#54616;&#45716; validation method &#44032; &#51221;&#51032;&#46104;&#50612; &#51080;&#51004;&#47728; 
+       		
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html" target="_top">
+       		<code class="interfacename">EntityControllerImpl</code>
+       		</a> 
+       		&#50640; &#51032;&#54644; &#54644;&#45817; &#47700;&#49548;&#46300;&#44032; &#54840;&#52636;&#46108;&#45796;.
+    	</p><pre class="programlisting">
+<span class="hl-keyword">public</span> <span class="hl-keyword">interface</span> EntityValidator&lt;T,Q&gt; {
+
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> find(Q target, Errors errors);
+	
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> read(T target, Errors errors);
+	
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> createForm(T target, Errors errors) ;
+	
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> create(T target, Errors errors);
+	
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> updateForm(T target, Errors errors);
+	
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> update(T target, Errors errors);
+	
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> delete(T target, Errors errors) ;	
+}
+ 		</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e859"></a>2.1.3&nbsp;EntityService</h3></div></div></div><p>
+    		Layered Architecture &#50640;&#49436; Service Layer &#50669;&#54624;&#51012; &#49688;&#54665;&#54616;&#45716;  
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityService.html" target="_top">
+       		<code class="interfacename">EntityService</code>
+       		</a> 
+			&#45716;  
+       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html" target="_top">
+       		<code class="interfacename">EntityController</code>
+       		</a> 
+       		&#51032; handle method &#50640; &#45824;&#51025;&#54616;&#45716; service method &#44032; &#51221;&#51032;&#46104;&#50612; &#51080;&#51004;&#47728; 
+       		
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html" target="_top">
+       		<code class="interfacename">EntityControllerImpl</code>
+       		</a> 
+       		&#50640; &#51032;&#54644; &#54644;&#45817; &#47700;&#49548;&#46300;&#44032; &#54840;&#52636;&#46108;&#45796;.
+       		
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityService.html" target="_top">
+       		<code class="interfacename">EntityService</code>
+       		</a> 
+       		&#51032; &#44396;&#54788;&#52404;&#51064; 
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityServiceImpl.html" target="_top">
+       		<code class="interfacename">EntityServiceImpl</code>
+       		</a> 
+       		&#45716;  
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/EntityRepository.html" target="_top">
+       		<code class="interfacename">EntityRepository</code>
+       		</a> 
+			&#50752;
+       		<code class="interfacename">org.springframework.transaction.support.TransactionTemplate</code>
+       		&#47484; &#51452;&#51077; &#48155;&#50500;&#49436; &#46041;&#51089;&#54620;&#45796;.
+    	</p><pre class="programlisting">
+<span class="hl-keyword">public</span> <span class="hl-keyword">interface</span> EntityService&lt;T, Q&gt;{
+	
+	<span class="hl-keyword">public</span> Iterable&lt;?&gt; find(Q query, Pageable pageable);
+
+	<span class="hl-keyword">public</span> T read(T entity);
+	
+	<span class="hl-keyword">public</span> T createForm(T entity);
+	
+	<span class="hl-keyword">public</span> T create(T entity) ;
+	
+	<span class="hl-keyword">public</span> T updateForm(T entity);
+	
+	<span class="hl-keyword">public</span> T update(T entity);
+	
+	<span class="hl-keyword">public</span> T delete(T entity);
+
+}
+ 		</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e905"></a>2.1.4&nbsp;EntityRepository</h3></div></div></div><p>
+    		Layered Architecture &#50640;&#49436; Repository Layer &#50669;&#54624;&#51012; &#49688;&#54665;&#54616;&#45716;  
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/EntityRepository.html" target="_top">
+       		<code class="interfacename">EntityRepository</code>
+       		</a> &#45716; 
+
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityService.html" target="_top">
+       		<code class="interfacename">EntityService</code>
+       		</a> 
+       		&#51032; service method &#50640; &#45824;&#51025;&#54616;&#45716; repository method &#44032; &#51221;&#51032;&#46104;&#50612; &#51080;&#51004;&#47728; 
+
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityServiceImpl.html" target="_top">
+       		<code class="interfacename">EntityServiceImpl</code>
+       		</a> 
+       		&#50640; &#51032;&#54644; &#54644;&#45817; &#47700;&#49548;&#46300;&#44032; &#54840;&#52636;&#46108;&#45796;.
+
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/EntityRepository.html" target="_top">
+       		<code class="interfacename">EntityRepository</code>
+       		</a>  
+       		&#51032; &#44396;&#54788;&#52404;&#51064; 
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jpa/JpaRepository.html" target="_top">
+       		<code class="interfacename">JpaRepository</code>
+       		</a> , 
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/hibernate/HibernateRepository.html" target="_top">
+       		<code class="interfacename">HibernateRepository</code>
+       		</a> , 
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/sqlsession/SqlSessionRepository.html" target="_top">
+       		<code class="interfacename">SqlSessionRepository</code>
+       		</a> , 
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jdbc/JdbcRepository.html" target="_top">
+       		<code class="interfacename">JdbcRepository</code>
+       		</a> 
+       		&#45716; &#44288;&#47144;&#46108; ORM &#44061;&#52404;&#47484; &#51452;&#51077; &#48155;&#50500;&#49436; &#46041;&#51089;&#54620;&#45796;.
+		</p><pre class="programlisting">
+<span class="hl-keyword">public</span> <span class="hl-keyword">interface</span> EntityRepository&lt;T, ID <span class="hl-keyword">extends</span> Serializable&gt; {
+
+	<span class="hl-keyword">public</span> <span class="hl-keyword">boolean</span> exists(T entity);
+	<span class="hl-keyword">public</span> <span class="hl-keyword">boolean</span> exists(ID id);<span class="hl-comment">//CrudRepository</span>
+
+	<span class="hl-keyword">public</span> T findOne(T entity);
+	<span class="hl-keyword">public</span> T findOne(ID id);<span class="hl-comment">//CrudRepository</span>
+
+	<span class="hl-keyword">public</span> &lt;S <span class="hl-keyword">extends</span> T&gt; S save(S entity);<span class="hl-comment">//CrudRepository</span>
+	<span class="hl-keyword">public</span> &lt;S <span class="hl-keyword">extends</span> T&gt; Iterable&lt;S&gt; save(Iterable&lt;S&gt; entities);<span class="hl-comment">//CrudRepository</span>
+
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> delete(ID id);<span class="hl-comment">//CrudRepository</span>
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> delete(T entity);<span class="hl-comment">//CrudRepository</span>
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> delete(Iterable&lt;? <span class="hl-keyword">extends</span> T&gt; entities);<span class="hl-comment">//CrudRepository</span>
+
+
+	<span class="hl-keyword">public</span> <span class="hl-keyword">long</span> deleteAll();<span class="hl-comment">//CrudRepository</span>
+	<span class="hl-keyword">public</span> <span class="hl-keyword">long</span> count();<span class="hl-comment">//CrudRepository</span>
+	<span class="hl-keyword">public</span> List&lt;T&gt; findAll();<span class="hl-comment">//CrudRepository</span>
+	<span class="hl-comment">//public Iterable&lt;T&gt; findAll(Iterable&lt;ID&gt; ids);//CrudRepository</span>
+	<span class="hl-keyword">public</span> Iterable&lt;T&gt; findAll(Sort sort); <span class="hl-comment">//PagingAndSortingRepository</span>
+	<span class="hl-keyword">public</span> Page&lt;T&gt; findAll(Pageable pageable); <span class="hl-comment">//PagingAndSortingRepository</span>
+	
+	
+	<span class="hl-keyword">public</span> <span class="hl-keyword">long</span> deleteAll(Object queryMethod);
+	<span class="hl-keyword">public</span> <span class="hl-keyword">long</span> count(Object queryMethod);
+	<span class="hl-keyword">public</span> List&lt;T&gt; findAll(Object queryMethod);
+	<span class="hl-keyword">public</span> List&lt;T&gt; findAll(Object queryMethod, Sort sort);
+	<span class="hl-keyword">public</span> Page&lt;T&gt; findAll(Object queryMethod, Pageable pageable);
+	
+	<span class="hl-keyword">public</span> &lt;R, X&gt; R execute(TemplateCallback&lt;R, X&gt; callback);
+}
+		</pre></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e960"></a>2.2&nbsp;ORM Support Beans</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e963"></a>2.2.1&nbsp;Using JPA</h3></div></div></div><p>
+			<a class="ulink" href="http://docs.spring.io/spring-framework/docs/3.2.5.RELEASE/spring-framework-reference/html/orm.html#orm-jpa" target="_top">
+			JPA</a>&#51012; &#51648;&#50896;&#54616;&#44256; 
+			<code class="interfacename">Spring @Transactional</code> &#51012;  &#54876;&#49457;&#54868;&#54616;&#44592;  &#50948;&#54644; 
+			<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a>&#51008;  &#54596;&#50836;&#54620; Bean &#51012; &#46321;&#47197;&#54620;&#45796;.
+		</p><pre class="programlisting">
+<span class="hl-comment">&lt;!-- case 1 --&gt;</span>
+<span class="hl-tag">&lt;beans&gt;</span>
+	<span class="hl-tag">&lt;jdbc:embedded-database</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourDataSource"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"HSQL"</span><span class="hl-tag">/&gt;</span>  	
+	   
+	<span class="hl-tag">&lt;springfield:modules</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span> 
+			<span class="hl-attribute">data-source-ref</span>=<span class="hl-value">"yourDataSource"</span><span class="hl-tag"> 
+	/&gt;</span>
+<span class="hl-tag">&lt;/beans&gt;</span>
+
+<span class="hl-comment">&lt;!-- case 2 --&gt;</span>
+<span class="hl-tag">&lt;beans&gt;</span>
+	<span class="hl-tag">&lt;bean</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourEntityManager"</span> <span class="hl-attribute">class</span>=<span class="hl-value">"org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"</span><span class="hl-tag">&gt;</span> 
+		...
+	<span class="hl-tag">&lt;bean/&gt;</span> 
+	   
+	<span class="hl-tag">&lt;springfield:modules</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span> 
+			<span class="hl-attribute">entity-manager-factory-ref</span>=<span class="hl-value">"yourEntityManager"</span><span class="hl-tag">
+	/&gt;</span>
+<span class="hl-tag">&lt;/beans&gt;</span>
+		</pre><div class="table"><a name="d0e978"></a><p class="title"><b>Table&nbsp;2.4.&nbsp;Auto Register Beans for JPA</b></p><div class="table-contents"><table summary="Auto Register Beans for JPA" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col><col><col></colgroup><thead><tr><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Name &lt;!-- case 1 --&gt;</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Name &lt;!-- case 2 --&gt;</th><th style="border-bottom: 0.5pt solid ; ">Bean Object</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">yourDataSourceJpa</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">-</td><td style="border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">org.springframework.orm.jpa. LocalContainerEntityManagerFactoryBean</code>
+						</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">yourDataSourceJpaTransactionManager</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">yourEntityManagerTransactionManager</td><td style="border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">org.springframework.orm.jpa. JpaTransactionManager</code>
+						</td></tr><tr><td style="border-right: 0.5pt solid ; ">yourDataSourceJpaTransactionTemplate</td><td style="border-right: 0.5pt solid ; ">yourEntityManagerTransactionTemplate</td><td style="">
+							<code class="interfacename">org.springframework.transaction.support. TransactionTemplate</code>
+						</td></tr></tbody></table></div></div><br class="table-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1021"></a>2.2.2&nbsp;Using Hibernate</h3></div></div></div><p>
+			<a class="ulink" href="http://docs.spring.io/spring-framework/docs/3.2.5.RELEASE/spring-framework-reference/html/orm.html#orm-hibernate" target="_top">
+			Hibernate</a>&#51012; &#51648;&#50896;&#54616;&#44256; 
+			<code class="interfacename">Spring @Transactional</code> &#51012;  &#54876;&#49457;&#54868;&#54616;&#44592;  &#50948;&#54644; 
+			<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a>&#51008;  &#54596;&#50836;&#54620; Bean &#51012; &#46321;&#47197;&#54620;&#45796;.
+		</p><pre class="programlisting">
+<span class="hl-comment">&lt;!-- case 1 --&gt;</span>
+<span class="hl-tag">&lt;beans&gt;</span>
+	<span class="hl-tag">&lt;jdbc:embedded-database</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourDataSource"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"HSQL"</span><span class="hl-tag">/&gt;</span>  	
+	   
+	<span class="hl-tag">&lt;springfield:modules</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span> 
+			<span class="hl-attribute">data-source-ref</span>=<span class="hl-value">"yourDataSource"</span><span class="hl-tag"> 
+	/&gt;</span>
+<span class="hl-tag">&lt;/beans&gt;</span>
+
+<span class="hl-comment">&lt;!-- case 2 --&gt;</span>
+<span class="hl-tag">&lt;beans&gt;</span>
+	<span class="hl-tag">&lt;bean</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourSessionFactory"</span> <span class="hl-attribute">class</span>=<span class="hl-value">"org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"</span><span class="hl-tag">&gt;</span> 
+		...
+	<span class="hl-tag">&lt;bean/&gt;</span> 
+	   
+	<span class="hl-tag">&lt;springfield:modules</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span> 
+			<span class="hl-attribute">session-factory-ref</span>=<span class="hl-value">"yourSessionFactory"</span><span class="hl-tag">
+	/&gt;</span>
+<span class="hl-tag">&lt;/beans&gt;</span>
+		</pre><div class="table"><a name="d0e1036"></a><p class="title"><b>Table&nbsp;2.5.&nbsp;Auto Register Beans for Hibernate</b></p><div class="table-contents"><table summary="Auto Register Beans for Hibernate" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col><col><col></colgroup><thead><tr><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Name &lt;!-- case 1 --&gt;</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Name &lt;!-- case 2 --&gt;</th><th style="border-bottom: 0.5pt solid ; ">Bean Object</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">yourDataSourceHibernate</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">-</td><td style="border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">org.springframework.orm.hibernate3.annotation. AnnotationSessionFactoryBean</code>
+						</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">yourDataSourceHibernateTransactionManager</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">yourSessionFactoryTransactionManager</td><td style="border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">org.springframework.orm.hibernate3. HibernateTransactionManager</code>
+						</td></tr><tr><td style="border-right: 0.5pt solid ; ">yourDataSourceHibernateTransactionTemplate</td><td style="border-right: 0.5pt solid ; ">yourSessionFactoryTransactionTemplate</td><td style="">
+							<code class="interfacename">org.springframework.transaction.support. TransactionTemplate</code>
+						</td></tr></tbody></table></div></div><br class="table-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1079"></a>2.2.3&nbsp;Using Mybatis</h3></div></div></div><p>
+			<a class="ulink" href="http://docs.spring.io/spring-framework/docs/3.2.5.RELEASE/spring-framework-reference/html/orm.html#orm-ibatis" target="_top">
+			Mybatis</a>&#51012; &#51648;&#50896;&#54616;&#44256; 
+			<code class="interfacename">Spring @Transactional</code> &#51012;  &#54876;&#49457;&#54868;&#54616;&#44592;  &#50948;&#54644; 
+			<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a>&#51008;  &#54596;&#50836;&#54620; Bean &#51012; &#46321;&#47197;&#54620;&#45796;.
+		</p><pre class="programlisting">
+<span class="hl-comment">&lt;!-- case 1 --&gt;</span>
+<span class="hl-tag">&lt;beans&gt;</span>
+	<span class="hl-tag">&lt;jdbc:embedded-database</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourDataSource"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"HSQL"</span><span class="hl-tag">/&gt;</span>  	
+	   
+	<span class="hl-tag">&lt;springfield:modules</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span> 
+			<span class="hl-attribute">data-source-ref</span>=<span class="hl-value">"yourDataSource"</span><span class="hl-tag"> 
+	/&gt;</span>
+<span class="hl-tag">&lt;/beans&gt;</span>
+
+<span class="hl-comment">&lt;!-- case 2 --&gt;</span>
+<span class="hl-tag">&lt;beans&gt;</span>
+	<span class="hl-tag">&lt;jdbc:embedded-database</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourDataSource"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"HSQL"</span><span class="hl-tag">/&gt;</span>  	
+	
+	<span class="hl-tag">&lt;bean</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourSqlSessionFactory"</span> <span class="hl-attribute">class</span>=<span class="hl-value">"org.mybatis.spring.SqlSessionFactoryBean"</span><span class="hl-tag">&gt;</span> 
+		<span class="hl-tag">&lt;property</span> <span class="hl-attribute">name</span>=<span class="hl-value">"dataSource"</span> <span class="hl-attribute">ref</span>=<span class="hl-value">"yourDataSource"</span><span class="hl-tag">/&gt;</span> 
+		...
+	<span class="hl-tag">&lt;bean/&gt;</span> 
+	   
+	<span class="hl-tag">&lt;springfield:modules</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span> 
+			<span class="hl-attribute">data-source-ref</span>=<span class="hl-value">"yourDataSource"</span>
+			<span class="hl-attribute">sql-session-factory-ref</span>=<span class="hl-value">"yourSqlSessionFactory"</span><span class="hl-tag">
+	/&gt;</span>
+<span class="hl-tag">&lt;/beans&gt;</span>
+		</pre><div class="table"><a name="d0e1094"></a><p class="title"><b>Table&nbsp;2.6.&nbsp;Auto Register Beans for Mybatis</b></p><div class="table-contents"><table summary="Auto Register Beans for Mybatis" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col><col><col></colgroup><thead><tr><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Name &lt;!-- case 1 --&gt;</th><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Name &lt;!-- case 2 --&gt;</th><th style="border-bottom: 0.5pt solid ; ">Bean Object</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">yourDataSourceMybatis</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">-</td><td style="border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">org.mybatis.spring.SqlSessionFactoryBean</code>
+						</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">yourDataSourceTransactionManager</td><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">yourDataSourceTransactionManager</td><td style="border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">org.springframework.jdbc.datasource. DataSourceTransactionManager</code>
+						</td></tr><tr><td style="border-right: 0.5pt solid ; ">yourDataSourceTransactionTemplate</td><td style="border-right: 0.5pt solid ; ">yourDataSourceTransactionTemplate</td><td style="">
+							<code class="interfacename">org.springframework.transaction.support. TransactionTemplate</code>
+						</td></tr></tbody></table></div></div><br class="table-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1137"></a>2.2.4&nbsp;Using JdbcTemplate</h3></div></div></div><p>
+			<code class="interfacename">org.springframework.jdbc.core.JdbcTemplate</code>&#51012; &#51648;&#50896;&#54616;&#44256;
+			<code class="interfacename">Spring @Transactional</code> &#51012;  &#54876;&#49457;&#54868;&#54616;&#44592;  &#50948;&#54644; 
+			<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a>&#51008;  &#54596;&#50836;&#54620; Bean &#51012; &#46321;&#47197;&#54620;&#45796;.
+		</p><pre class="programlisting">
+<span class="hl-tag">&lt;beans&gt;</span>
+	<span class="hl-tag">&lt;jdbc:embedded-database</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourDataSource"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"HSQL"</span><span class="hl-tag">/&gt;</span>  	
+	   
+	<span class="hl-tag">&lt;springfield:modules</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span> 
+			<span class="hl-attribute">data-source-ref</span>=<span class="hl-value">"yourDataSource"</span><span class="hl-tag"> 
+	/&gt;</span>
+<span class="hl-tag">&lt;/beans&gt;</span>
+		</pre><div class="table"><a name="d0e1152"></a><p class="title"><b>Table&nbsp;2.7.&nbsp;Auto Register Beans for JdbcTemplate</b></p><div class="table-contents"><table summary="Auto Register Beans for JdbcTemplate" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col><col></colgroup><thead><tr><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Name</th><th style="border-bottom: 0.5pt solid ; ">Bean Object</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">yourDataSourceJdbcTemplate</td><td style="border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">org.springframework.jdbc.core.JdbcTemplate</code>,
+						</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">yourDataSourceTransactionManager</td><td style="border-bottom: 0.5pt solid ; ">
+							<code class="interfacename">org.springframework.jdbc.datasource.DataSourceTransactionManager</code>,
+						</td></tr><tr><td style="border-right: 0.5pt solid ; ">yourDataSourceTransactionTemplate</td><td style="">
+							<code class="interfacename">org.springframework.transaction.support.TransactionTemplate</code>
+						</td></tr></tbody></table></div></div><br class="table-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1187"></a>2.2.5&nbsp;Transaction</h3></div></div></div><p>
+			<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a> 
+			&#51008;
+			<code class="interfacename">@EnableTransactionManagement </code> 
+			&#47484;  &#51060;&#50857;&#54616;&#50668; 
+			<code class="interfacename">@Transactional</code> 
+			&#51012; &#54876;&#49457;&#54868; &#49884;&#53020; &#45459;&#45716;&#45796;. 
+		</p><div class="programlistingco"><pre class="programlisting">
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> TransactionalService {
+
+    <em><span class="hl-annotation" style="color: gray">@Transactional("yourDataSourceJpaTransactionManager")</span></em>                                                              <span class="co" id="t1"><img src="images/callouts/1.png" alt="(1)"></span>
+    <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> doSomething() { ... }
+
+    <em><span class="hl-annotation" style="color: gray">@Transactional</span></em>                                                                                                     <span class="co" id="t2"><img src="images/callouts/2.png" alt="(2)"></span>
+    <span class="hl-keyword">public</span> <span class="hl-keyword">void</span> setSomething() { ... }
+}
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						<code class="interfacename">@Transactional</code> &#51032; value &#49549;&#49457;&#50640; 
+						Bean Name &#51012; &#51648;&#51221;&#54616;&#50668; 
+						&#49324;&#50857;&#54624; <code class="interfacename">TransactionManager</code> &#47484;  &#44208;&#51221; &#54624;&#49688; &#51080;&#45796;.
+					</p></td></tr><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/2.png" alt="2" border="0"></span></p></td><td valign="top" align="left"><p>
+						<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a> &#50640; &#51032;&#54644; &#45716; &#44032;&#51109; &#47676;&#51200; &#46321;&#47197;&#46108; 
+						<code class="interfacename">TransactionManager</code> &#44032;  
+						&#46356;&#54260;&#53944; <code class="interfacename">@Transactional</code>&#47196; &#44208;&#51221;&#46108;&#45796;.
+					</p></td></tr></table></div></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e1227"></a>2.3&nbsp;Web Support Beans</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1230"></a>2.3.1&nbsp;Message</h3></div></div></div><p>
+			<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a>&#45716;   
+			message &#52376;&#47532;&#47484; &#50948;&#54644; &#45796;&#51020; bean &#51012; &#46321;&#47197; &#54620;&#45796;.
+		</p><div class="table"><a name="d0e1237"></a><p class="title"><b>Table&nbsp;2.8.&nbsp;Auto Register Beans for Message Support</b></p><div class="table-contents"><table summary="Auto Register Beans for Message Support" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col><col></colgroup><thead><tr><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Name</th><th style="border-bottom: 0.5pt solid ; ">Bean Object</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">messageSource</td><td style="border-bottom: 0.5pt solid ; "><code class="interfacename">org.springframework.context.MessageSource</code></td></tr><tr><td style="border-right: 0.5pt solid ; ">messageSourceAccessor</td><td style=""><code class="interfacename">org.springframework.context.support.MessageSourceAccessor</code></td></tr></tbody></table></div></div><br class="table-break"><p>
+			<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a>&#51008; 
+			basePackage &#47484; &#44592;&#51456;&#51004;&#47196;  "/**/messages" &#51012; &#51088;&#46041; &#49828;&#52884;&#54620;&#45796;. 
+			&#45796;&#51020; &#50696;&#49884;&#51032; messages_ko.xml &#50752; messages_en.xml &#54028;&#51068;&#51060; 
+			basePackage &#45236;&#50640; &#50612;&#46500; &#50948;&#52824;&#46972;&#46020; &#51316;&#51116;&#54620;&#45796;&#47732; &#48324;&#46020;&#51032; &#49444;&#51221;&#50630;&#51060; &#51060;&#47484; load &#54620;&#45796;.
+		</p><div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; "><li class="listitem">messages_ko.xml
+				<pre class="programlisting">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd"&gt;
+&lt;properties&gt;
+	&lt;entry key="foo.title"&gt;&lt;![CDATA[&#54620;&#44544;&#51228;&#47785;]]&gt;&lt;/entry&gt;
+	...	
+&lt;/properties&gt;			
+				</pre></li><li class="listitem">messages_en.xml
+				<pre class="programlisting">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd"&gt;
+&lt;properties&gt;
+	&lt;entry key="foo.title"&gt;&lt;![CDATA[Foooooo]]&gt;&lt;/entry&gt;
+	...	
+&lt;/properties&gt;			
+				</pre></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1273"></a>2.3.2&nbsp;Locale</h3></div></div></div><p>
+    		<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a>&#50640; &#51032;&#54644; &#54620; &#44060; &#51060;&#49345;&#51032; 
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html" target="_top">
+       		<code class="interfacename">EntityController</code>
+       		</a> &#44032; &#46321;&#47197;&#46104;&#45716; &#44221;&#50864;, 
+    		Locale &#48320;&#44221; &#48143; &#50976;&#51648;&#47484; &#50948;&#54644; &#45796;&#51020; Bean &#51012; &#46321;&#47197; &#54620;&#45796;. 
+       		&#50836;&#52397; &#54028;&#46972;&#48120;&#53552;(?locale=ko)&#47484; &#51204;&#45804;&#54616;&#50668; Locale &#48320;&#44221;&#51060; &#44032;&#45733; &#54616;&#45796;.
+       	</p><div class="table"><a name="d0e1286"></a><p class="title"><b>Table&nbsp;2.9.&nbsp;Auto Register Beans for Locale Support</b></p><div class="table-contents"><table summary="Auto Register Beans for Locale Support" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col><col></colgroup><thead><tr><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Name</th><th style="border-bottom: 0.5pt solid ; ">Bean Object</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">localeResolver</td><td style="border-bottom: 0.5pt solid ; "><code class="interfacename">org.springframework.web.servlet.i18n.CookieLocaleResolver</code></td></tr><tr><td style="border-right: 0.5pt solid ; ">springfieldWebmvcMappedLocaleChangeInterceptor</td><td style=""><code class="interfacename">org.springframework.web.servlet.i18n.LocaleChangeInterceptor</code></td></tr></tbody></table></div></div><br class="table-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1311"></a>2.3.3&nbsp;Validation</h3></div></div></div><p>
+			<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a>&#45716;   
+			Validation &#52376;&#47532;&#47484; &#50948;&#54644; &#45796;&#51020; bean &#51012; &#46321;&#47197; &#54620;&#45796;.
+		</p><div class="table"><a name="d0e1318"></a><p class="title"><b>Table&nbsp;2.10.&nbsp;Auto Register Beans for Validation Support</b></p><div class="table-contents"><table summary="Auto Register Beans for Validation Support" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col><col></colgroup><thead><tr><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Name</th><th style="border-bottom: 0.5pt solid ; ">Bean Object</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid ; ">springfieldWebmvcValidator</td><td style=""><code class="interfacename">org.springframework.validation.beanvalidation.LocalValidatorFactoryBean</code></td></tr></tbody></table></div></div><br class="table-break"><p>
+       		&#46020;&#47700;&#51064; &#53364;&#47000;&#49828;&#50640; <a class="ulink" href="http://docs.spring.io/spring-framework/docs/3.2.5.RELEASE/spring-framework-reference/html/validation.html#validation-beanvalidation-overview" target="_top">
+       		JSR-303 Bean Validation 
+       		</a> &#44288;&#47144; Annotation &#51012; &#51201;&#50857; &#54624; &#49688; &#51080;&#45796;.
+    	</p><pre class="programlisting">
+<span class="hl-keyword">package</span> com.yourcompany.yourproject.foo;
+
+<em><span class="hl-annotation" style="color: gray">@Springfield</span></em>
+<em><span class="hl-annotation" style="color: gray">@Entity</span></em>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> Foo{
+	
+	<em><span class="hl-annotation" style="color: gray">@Id</span></em> 
+	<em><span class="hl-annotation" style="color: gray">@NotNull</span></em>
+	<span class="hl-keyword">private</span> String name;
+	
+	<em><span class="hl-annotation" style="color: gray">@NotNull</span></em>
+	<span class="hl-keyword">private</span> Integer age;
+	...
+}
+    	</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1342"></a>2.3.4&nbsp;Multipart</h3></div></div></div><p>
+    		<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a>&#45716;   
+    		File Upload , Download &#47484; &#50948;&#54644; &#45796;&#51020; Bean &#51012; &#46321;&#47197; &#54620;&#45796;. 
+       	</p><div class="table"><a name="d0e1349"></a><p class="title"><b>Table&nbsp;2.11.&nbsp;Auto Register Beans for Multipart Support</b></p><div class="table-contents"><table summary="Auto Register Beans for Multipart Support" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col><col></colgroup><thead><tr><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Name</th><th style="border-bottom: 0.5pt solid ; ">Bean Object</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">filterMultipartResolver</td><td style="border-bottom: 0.5pt solid ; "><code class="interfacename">org.springframework.web.multipart.commons.CommonsMultipartResolver</code></td></tr><tr><td style="border-right: 0.5pt solid ; ">springfieldBaseMultipartFileHandler</td><td style="">
+				    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/MultipartHandlerImpl.html" target="_top">
+								<code class="interfacename">MultipartFileHandlerImpl</code>
+				       		</a> 
+				       	</td></tr></tbody></table></div></div><br class="table-break"><p>
+    		<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a>&#45716;   
+    		&#54028;&#51068; &#51200;&#51109; &#50948;&#52824;&#47484; properties-ref &#47196;  &#49444;&#51221; &#54624; &#49688; &#51080;&#45796;.  
+    		properties-ref &#44032; &#49440;&#50616;&#46104;&#51648; &#50506;&#51008; &#44221;&#50864; &#46356;&#54260;&#53944; &#54028;&#51068; &#51200;&#51109; &#50948;&#52824;&#47484; &#49324;&#50857;&#54620;&#45796;. 
+       	</p><pre class="programlisting">
+<span class="hl-tag">&lt;beans&gt;</span>
+
+	<span class="hl-tag">&lt;util:properties</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourProp"</span> 
+		<span class="hl-attribute">location</span>=<span class="hl-value">"classpath:com/yourcompany/yourproject/config.properties"</span><span class="hl-tag"> /&gt;</span>
+
+
+	<span class="hl-tag">&lt;jdbc:embedded-database</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourDataSource"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"HSQL"</span><span class="hl-tag">/&gt;</span>  	
+	
+	<span class="hl-tag">&lt;springfield:modules</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span> 
+			<span class="hl-attribute">data-source-ref</span>=<span class="hl-value">"yourDataSource"</span>
+			<span class="hl-attribute">properties-ref</span>=<span class="hl-value">"yourProp"</span><span class="hl-tag">
+	/&gt;</span>
+	...
+<span class="hl-tag">&lt;/beans&gt;</span>
+		</pre><pre class="programlisting">
+#
+# com/yourcompany/yourproject/config.properties
+#
+springfield.multipart.location=/yourLocation
+springfield.multipart.size=1024
+		</pre><div class="important" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Important"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="./images/important.png"></td><th align="left">Important</th></tr><tr><td align="left" valign="top"><p>
+				<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a> &#51032; properties-ref &#47484; &#49440;&#50616;&#54616;&#47732; 
+				<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a> &#51032; &#44033;&#51333; &#49444;&#51221; &#44050;&#51012; &#48320;&#44221;&#54624;&#49688; &#51080;&#45796;. 
+			</p></td></tr></table></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1394"></a>2.3.5&nbsp;ViewResolver</h3></div></div></div><p>
+    		<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a>&#50640; &#51032;&#54644; &#54620; &#44060; &#51060;&#49345;&#51032; 
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html" target="_top">
+       		<code class="interfacename">EntityController</code>
+       		</a> &#44032; &#46321;&#47197;&#46104;&#45716; &#44221;&#50864;, 
+			ViewName &#51012; &#47004;&#45908;&#47553;&#54616;&#44592; &#50948;&#54644; &#45796;&#51020; &#44284; &#44057;&#51008; View Resolver Bean &#46308;&#51060; &#51088;&#46041; &#46321;&#47197;&#46108;&#45796;.
+		</p><div class="table"><a name="d0e1407"></a><p class="title"><b>Table&nbsp;2.12.&nbsp;Auto Register Beans for Resolving View </b></p><div class="table-contents"><table summary="Auto Register Beans for Resolving View " style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col><col></colgroup><thead><tr><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Name</th><th style="border-bottom: 0.5pt solid ; ">Bean Object</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">springfieldWebmvcRenderThymeleafViewResolver</td><td style="border-bottom: 0.5pt solid ; ">~
+						</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">springfieldWebmvcRenderJstlViewResolver</td><td style="border-bottom: 0.5pt solid ; ">~
+						</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">springfieldWebmvcRenderTilesViewResolver</td><td style="border-bottom: 0.5pt solid ; ">~
+						</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">springfieldWebmvcRenderJsonViewResolver</td><td style="border-bottom: 0.5pt solid ; ">~
+						</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">springfieldWebmvcRenderXmlViewResolver</td><td style="border-bottom: 0.5pt solid ; ">~
+						</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">springfieldWebmvcRenderXlsViewResolver</td><td style="border-bottom: 0.5pt solid ; ">~
+						</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">springfieldWebmvcRenderCsvViewResolver</td><td style="border-bottom: 0.5pt solid ; ">~
+						</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">springfieldWebmvcRenderDownloadViewResolver</td><td style="border-bottom: 0.5pt solid ; ">~
+						</td></tr><tr><td style="border-right: 0.5pt solid ; ">springfieldWebmvcRenderStreamViewResolver</td><td style="">~
+						</td></tr></tbody></table></div></div><br class="table-break"></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e1463"></a>2.3.6&nbsp;Security</h3></div></div></div><p>
+    		<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a>&#50640; &#51032;&#54644; &#54620; &#44060; &#51060;&#49345;&#51032; 
+    		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html" target="_top">
+       		<code class="interfacename">EntityController</code>
+       		</a> &#44032; &#46321;&#47197;&#46104;&#45716; &#44221;&#50864;, 
+			
+			<a class="ulink" href="http://docs.spring.io/spring-security/site/docs/3.1.4.RELEASE/reference/springsecurity.html" target="_top">
+       		spring security 
+       		</a> &#47484; &#49324;&#50857;&#54616;&#45716; &#45796;&#51020; bean &#51012; &#46321;&#47197; &#54620;&#45796;. 
+		</p><div class="table"><a name="d0e1479"></a><p class="title"><b>Table&nbsp;2.13.&nbsp;Auto Register Beans for Security Support</b></p><div class="table-contents"><table summary="Auto Register Beans for Security Support" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col><col></colgroup><thead><tr><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">Bean Name</th><th style="border-bottom: 0.5pt solid ; ">Bean Object</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">springfieldWebmvcSecurityNavigationFactory</td><td style="border-bottom: 0.5pt solid ; ">
+    						<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/security/authorization/NavigationFactory.html" target="_top">
+								<code class="interfacename">NavigationFactory</code>
+				       		</a> 
+						</td></tr><tr><td style="border-right: 0.5pt solid ; ">springfieldWebmvcSecurityConfiguration</td><td style="">
+							<a class="ulink" href="http://docs.spring.io/spring-security/site/docs/3.1.4.RELEASE/reference/springsecurity.html" target="_top">
+							Spring-Security 
+							</a>
+							Support Beans ... </td></tr></tbody></table></div></div><br class="table-break"></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch01.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="ch03.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">1.&nbsp;Intro&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;3.&nbsp;WebMVC</td></tr></table></div></body></html>

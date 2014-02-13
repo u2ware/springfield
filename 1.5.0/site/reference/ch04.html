@@ -1,0 +1,836 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>4.&nbsp;Architecture</title><link rel="stylesheet" type="text/css" href="css/manual-multipage.css"><meta name="generator" content="DocBook XSL Stylesheets V1.78.1"><link rel="home" href="index.html" title="Springfield - Reference Documentation"><link rel="up" href="index.html" title="Springfield - Reference Documentation"><link rel="prev" href="ch03.html" title="3.&nbsp;WebMVC"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">4.&nbsp;Architecture</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch03.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;</td></tr></table><hr></div><div class="chapter"><div class="titlepage"><div><div><h1 class="title"><a name="d0e2249"></a>4.&nbsp;Architecture</h1></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e2252"></a>4.1&nbsp;Controller</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e2255"></a>4.1.1&nbsp;Unit Test</h3></div></div></div><p>
+			
+			<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html" target="_top">
+       		<code class="interfacename">EntityController</code>
+       		</a>&#51032;  &#53580;&#49828;&#53944; &#53076;&#46300;&#45716; &#45796;&#51020;&#44284; &#44057;&#45796;.
+
+			</p><pre class="programlisting">
+<em><span class="hl-annotation" style="color: gray">@RunWith(SpringJUnit4ClassRunner.class)</span></em>
+<em><span class="hl-annotation" style="color: gray">@ContextConfiguration(locations="file:src/main/webapp/WEB-INF/spring/root-context.xml")</span></em>
+<em><span class="hl-annotation" style="color: gray">@WebAppConfiguration</span></em>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> ControllerTest{
+
+	<span class="hl-keyword">protected</span> <span class="hl-keyword">final</span> Logger logger = LoggerFactory.getLogger(getClass());
+
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em>
+	<span class="hl-keyword">protected</span> WebApplicationContext applicationContext;
+
+	<span class="hl-keyword">protected</span> MockMvc mockMvc;
+
+	<em><span class="hl-annotation" style="color: gray">@Before</span></em>
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> setup() <span class="hl-keyword">throws</span> Exception {
+		<span class="hl-keyword">if</span>(mockMvc == null){
+			<span class="hl-keyword">this</span>.mockMvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
+		}
+		<span class="hl-keyword">super</span>.setup();
+	}
+
+	<em><span class="hl-annotation" style="color: gray">@Test</span></em>
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> testMethod() <span class="hl-keyword">throws</span> Exception{
+		<span class="hl-keyword">this</span>.mockMvc.perform(
+				get(<span class="hl-string">"/foo/find"</span>)
+			)
+			.andDo(print())
+			.andExpect(status().isOk());
+	}
+}
+			</pre><p>
+
+		</p></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e2269"></a>4.2&nbsp;Validator</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e2272"></a>4.2.1&nbsp;Override</h3></div></div></div><p>
+  			<a class="xref" href="ch01.html#springfield.example" title="1.4&nbsp;Springfield Example">Section&nbsp;1.4, &#8220;Springfield Example&#8221;</a>
+  			 &#50640;&#49436;  &#51088;&#46041; &#49373;&#49457;&#54616;&#45716; Bean &#51473; 
+       		Validator &#47112;&#51060;&#50612;&#50640; &#50640; &#54644;&#45817;&#54616;&#45716;  "fooValidator" Bean &#51012;   
+       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/validation/AbstractEntityValidator.html" target="_top">
+				<code class="interfacename">AbstractEntityValidator</code>
+			</a>
+			&#51012; extends &#54620; MyFooValidator &#50752;   			
+			&lt;context:component-scan&gt; &#51012; &#49324;&#50857;&#54616;&#50668;  
+			&#44368;&#52404;&#54624;&#49688; &#51080;&#45796;.
+    	</p><div class="programlistingco"><pre class="programlisting">
+<span class="hl-keyword">package</span> com.yourcompany.yourproject.foo;
+                                                                                                                       <span class="co" id="j1"><img src="images/callouts/1.png" alt="(1)"></span>
+<em><span class="hl-annotation" style="color: gray">@Component("fooValidator")</span></em>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> MyFooValidator <span class="hl-keyword">extends</span> AbstractEntityValidator&lt;Foo, Foo&gt;{
+
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em>
+	<em><span class="hl-annotation" style="color: gray">@Qualifier("fooRepository")</span></em>
+	<span class="hl-keyword">private</span> EntityRepository&lt;Foo, String&gt; fooRepository;
+
+	<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+	<em><span class="hl-annotation" style="color: gray">@Transactional</span></em>
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> create(ExtendsBean target, Errors errors) {
+		<span class="hl-comment">//your validation logic...</span>                                                                                           <span class="co" id="j2"><img src="images/callouts/2.png" alt="(2)"></span>
+	}
+}
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						&#46321;&#47197; &#46104;&#45716; MyFooValidator &#51032; Bean Name &#51008; <a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a> &#47484; &#50640; &#46384;&#46972; 
+						"{@Springfield class short name}Validator" &#44032; &#46104;&#50612;&#50556; &#54620;&#45796;.
+					</p></td></tr><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/3.png" alt="3" border="0"></span></p></td><td valign="top" align="left"><p>
+						validation logic &#51012; &#50948;&#54644; DAO &#44032; &#54596;&#50836;&#54616;&#45796;&#47732;, Bean &#51012; &#51452;&#51077;&#48155;&#45716;&#45796;. 
+						&#54644;&#45817; &#47700;&#49548;&#46300;&#50640; <code class="interfacename">@Transactional</code> &#51012; &#49440;&#50616;&#54616;&#47732; Transaction &#51060; &#44032;&#45733;&#54616;&#45796;.
+					</p></td></tr></table></div></div><div class="programlistingco"><pre class="programlisting">
+<span class="hl-tag">&lt;beans&gt;</span>
+	<span class="hl-tag">&lt;jdbc:embedded-database</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourDataSource"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"HSQL"</span><span class="hl-tag">/&gt;</span>  	
+
+	<span class="hl-tag">&lt;context:component-scan</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span><span class="hl-tag">/&gt;</span>                                                  <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span>
+	
+	<span class="hl-tag">&lt;springfield:modules</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span> 
+			<span class="hl-attribute">data-source-ref</span>=<span class="hl-value">"yourDataSource"</span><span class="hl-tag">
+	/&gt;</span>
+	...
+<span class="hl-tag">&lt;/beans&gt;</span>
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						Bean &#51012; &#44368;&#52404;&#54616;&#44592; &#50948;&#54644; 
+						&lt;springfield:modules&gt; &#48372;&#45796; &#50526;&#49436;
+						&lt;context:component-scan&gt; &#51004;&#47196;  MyFooValidator &#47484; &#46321;&#47197; &#54616;&#50668;&#50556; &#54620;&#45796;.
+					</p></td></tr></table></div></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e2312"></a>4.3&nbsp;Service</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e2315"></a>4.3.1&nbsp;Override</h3></div></div></div><p>
+  			<a class="xref" href="ch01.html#springfield.example" title="1.4&nbsp;Springfield Example">Section&nbsp;1.4, &#8220;Springfield Example&#8221;</a>
+  			 &#50640;&#49436;  &#51088;&#46041; &#49373;&#49457;&#54616;&#45716; Bean &#51473; 
+       		Service &#47112;&#51060;&#50612;&#50640; &#50640; &#54644;&#45817;&#54616;&#45716;  "fooService" Bean &#51012;
+       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/AbstractEntityService.html" target="_top">
+				<code class="interfacename">AbstractEntityService</code>
+			</a>
+			&#51012; extends &#54620; MyFooService &#50752;   			
+			&lt;context:component-scan&gt; &#51012; &#49324;&#50857;&#54616;&#50668;  
+			&#44368;&#52404;&#54624;&#49688; &#51080;&#45796;.
+    	</p><div class="programlistingco"><pre class="programlisting">
+<span class="hl-keyword">package</span> com.yourcompany.yourproject.foo;
+			
+<em><span class="hl-annotation" style="color: gray">@Service("fooService")</span></em>                                                                                                 <span class="co" id="j1"><img src="images/callouts/1.png" alt="(1)"></span>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> MyFooService <span class="hl-keyword">extends</span> AbstractEntityService&lt;Foo, Foo&gt;{
+
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em>
+	<em><span class="hl-annotation" style="color: gray">@Qualifier("fooRepository")</span></em>
+	<span class="hl-keyword">private</span> EntityRepository&lt;Foo, String&gt; fooRepository;
+
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em> 
+	<span class="hl-keyword">private</span> TransactionTemplate transactionTemplate;
+	
+	<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+	<span class="hl-keyword">protected</span> EntityRepository&lt;Foo, String&gt; getRepository() {                                                             <span class="co" id=""><img src="images/callouts/2.png" alt="(2)"></span>
+		<span class="hl-keyword">return</span> fooRepository;
+	}
+
+	<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+	<span class="hl-keyword">protected</span> TransactionTemplate getTransactionTemplate() {                                                              <span class="co" id=""><img src="images/callouts/2.png" alt="(2)"></span>
+		<span class="hl-keyword">return</span> transactionTemplate;
+	}
+	
+	<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+	<span class="hl-keyword">public</span> Foo create(Foo entity) {
+		<span class="hl-keyword">return</span> getTransactionTemplate().execute(<span class="hl-keyword">new</span> TransactionCallback&lt;Foo&gt;() {
+			<span class="hl-keyword">public</span> ExtendsBean doInTransaction(TransactionStatus status) {
+				
+				<span class="hl-comment">//your service logic..	</span>                                                                                            <span class="co" id="j3"><img src="images/callouts/3.png" alt="(3)"></span>
+
+				ExtendsBean result = getRepository().save(entity);
+				<span class="hl-keyword">return</span> result;
+			}
+		});
+	}
+	
+	<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+	<em><span class="hl-annotation" style="color: gray">@Transactional</span></em>
+	<span class="hl-keyword">public</span> Foo read(Foo entity) {
+		
+		<span class="hl-comment">//your service logic..	</span>                                                                                              <span class="co" id="j4"><img src="images/callouts/4.png" alt="(4)"></span>
+
+		ExtendsBean result = getRepository().save(entity);
+		<span class="hl-keyword">return</span> result;
+	}
+}
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						&#46321;&#47197; &#46104;&#45716; &#47112;&#51060;&#50612;&#51032; Bean Name &#51008; <a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a> &#47484; &#50640; &#46384;&#46972; 
+						"{@Springfield class short name}Service" &#44032; &#46104;&#50612;&#50556; &#54620;&#45796;.
+					</p></td></tr><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/2.png" alt="2" border="0"></span></p></td><td valign="top" align="left"><p>
+						MyFooService &#51032; &#44592;&#48376; &#46041;&#51089;&#51012; &#50948;&#54644;,
+						getRepository() &#50752; 
+						getTransactionTemplate() &#47484;  
+						override &#54616;&#50668;&#50556; &#54620;&#45796;.
+					</p></td></tr><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/3.png" alt="3" border="0"></span></p></td><td valign="top" align="left"><p>
+						getTransactionTemplate() &#51012; &#51060;&#50857;&#54616;&#50668; Transaction &#51012; &#49688;&#54665; &#54624; &#49688; &#51080;&#45796;.
+					</p></td></tr><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/4.png" alt="4" border="0"></span></p></td><td valign="top" align="left"><p>
+						<code class="interfacename">@Transactional</code>&#51012; &#51060;&#50857;&#54616;&#50668; Transaction &#51012; &#49688;&#54665; &#54624; &#49688; &#51080;&#45796;.
+					</p></td></tr></table></div></div><div class="programlistingco"><pre class="programlisting">
+<span class="hl-tag">&lt;beans&gt;</span>
+	<span class="hl-tag">&lt;jdbc:embedded-database</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourDataSource"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"HSQL"</span><span class="hl-tag">/&gt;</span>  	
+
+	<span class="hl-tag">&lt;context:component-scan</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span><span class="hl-tag">/&gt;</span>                                                  <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span>
+	
+	<span class="hl-tag">&lt;springfield:modules</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span> 
+			<span class="hl-attribute">data-source-ref</span>=<span class="hl-value">"yourDataSource"</span><span class="hl-tag">
+	/&gt;</span>
+	...
+<span class="hl-tag">&lt;/beans&gt;</span>
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						Bean &#51012; &#44368;&#52404;&#54616;&#44592; &#50948;&#54644; 
+						&lt;springfield:modules&gt; &#48372;&#45796; &#50526;&#49436;
+						&lt;context:component-scan&gt; &#51004;&#47196;  MyFooService &#47484; &#46321;&#47197; &#54616;&#50668;&#50556; &#54620;&#45796;.
+					</p></td></tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e2365"></a>4.3.2&nbsp;DTO</h3></div></div></div><p>
+			<a class="xref" href="ch01.html#springfield.annotation" title="1.2&nbsp;@Springfield">Section&nbsp;1.2, &#8220;@Springfield&#8221;</a> &#51032; strategy &#49549;&#49457;&#51060;
+			<code class="interfacename">Strategy.DTO</code> &#51064; &#44221;&#50864; 
+			Repository &#47112;&#51060;&#50612;&#44032; &#49373;&#49457;&#46104;&#51648; &#50506;&#45716;&#45796;. &#46384;&#46972;&#49436; &#50500;&#47924; &#46041;&#51089;&#46020; &#54616;&#51648; &#50506;&#45716;  Service &#47112;&#51060;&#50612; &#44032; &#49373;&#49457;&#46108;&#45796;. 
+			&#51060; &#44221;&#50864; Service &#47112;&#51060;&#50612; &#45716;		
+       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityService.html" target="_top">
+				<code class="interfacename">EntityService</code>
+			</a> &#47484; implements &#54620; Bean &#51004;&#47196; &#44368;&#52404;&#54616;&#50668;&#50556; &#54620;&#45796;.
+		</p><div class="important" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Important"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="./images/important.png"></td><th align="left">Important</th></tr><tr><td align="left" valign="top"><code class="interfacename">Strategy.DTO</code> &#48169;&#49885;&#51008; WebMVC &#51032; &#50836;&#52397;&#54028;&#46972;&#48120;&#53552; Command &#44061;&#52404;&#50752; 
+			&#46020;&#47700;&#51064; &#44061;&#52404;&#47484; &#48516;&#47532;&#54616;&#44592; &#50948;&#54644; &#49324;&#50857;&#46104;&#45716; &#48169;&#49885;&#51060;&#45796;. 
+		</td></tr></table></div><div class="programlistingco"><pre class="programlisting">
+<span class="hl-keyword">package</span> com.yourcompany.yourproject.dto;
+		
+<em><span class="hl-annotation" style="color: gray">@Springfield(
+	strategy=Strategy.DTO, </span></em>                                                                                               <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span><em><span class="hl-annotation" style="color: gray">
+	identity="param1")</span></em>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> DtoBean {
+
+	<span class="hl-keyword">private</span> String param1;
+	<span class="hl-keyword">private</span> Integer param2;
+	
+	<span class="hl-comment">//...</span>
+}
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						<code class="interfacename">Strategy.DTO</code> &#51064; &#44221;&#50864; RESTful URL &#44396;&#49457;&#51012; &#50948;&#54644; 
+						identity &#49549;&#49457;&#51012; &#51221;&#51032; &#54616;&#50668;&#50556; &#54620;&#45796;.
+					</p></td></tr></table></div></div><div class="programlistingco"><pre class="programlisting">
+<span class="hl-keyword">package</span> com.yourcompany.yourproject.dto;
+
+<em><span class="hl-annotation" style="color: gray">@Service("dtoBeanService")</span></em>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> DtoBeanService <span class="hl-keyword">implements</span> EntityService&lt;DtoBean, DtoBean&gt;{
+
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em> <em><span class="hl-annotation" style="color: gray">@Qualifier("fooRepository")</span></em>
+	<span class="hl-keyword">private</span> EntityRepository&lt;Foo, String&gt; fooRepository;
+
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em> <em><span class="hl-annotation" style="color: gray">@Qualifier("barRepository")</span></em>
+	<span class="hl-keyword">private</span> EntityRepository&lt;Bar, Integer&gt; barRepository;
+	
+	<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+	<em><span class="hl-annotation" style="color: gray">@Transactional</span></em>
+	<span class="hl-keyword">public</span> DtoBean create(DtoBean entity) {                                                                               <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span>
+
+		Foo foo = <span class="hl-keyword">new</span> Foo();
+		foo.setName(entity.getParam1());
+		foo.setAge(entity.getParam2());
+		fooRepository.save(foo);
+
+		Bar bar = <span class="hl-keyword">new</span> Bar();
+		bar.setSeq(entity.getParam2());
+		bar.setDesc(entity.getParam1());
+		barRepository.save(bar);
+		
+		<span class="hl-keyword">return</span> entity;
+	}
+
+	....
+}
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						<code class="interfacename">@Transactional</code> &#49440;&#50616;&#51004;&#47196; transaction &#51012; &#49688;&#54665;&#54616;&#44256; 
+						Repository &#47112;&#51060;&#50612;&#47484; &#51452;&#51077;&#48155;&#50500;&#49436; &#49436;&#48708;&#49828; &#47196;&#51649;&#51012; &#44396;&#54788;&#54624;&#49688; &#51080;&#45796;.
+					</p></td></tr></table></div></div><div class="programlistingco"><pre class="programlisting">
+<span class="hl-tag">&lt;beans&gt;</span>
+	<span class="hl-tag">&lt;jdbc:embedded-database</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourDataSource"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"HSQL"</span><span class="hl-tag">/&gt;</span>  	
+
+	<span class="hl-tag">&lt;context:component-scan</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span><span class="hl-tag">/&gt;</span>                                                  <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span>
+	
+	<span class="hl-tag">&lt;springfield:modules</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span> 
+			<span class="hl-attribute">data-source-ref</span>=<span class="hl-value">"yourDataSource"</span><span class="hl-tag">
+	/&gt;</span>
+	...
+<span class="hl-tag">&lt;/beans&gt;</span>
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						Bean &#51012; &#44368;&#52404;&#54616;&#44592; &#50948;&#54644; 
+						&lt;springfield:modules&gt; &#48372;&#45796; &#50526;&#49436;
+						&lt;context:component-scan&gt; &#51004;&#47196;  MyFooService &#47484; &#46321;&#47197; &#54616;&#50668;&#50556; &#54620;&#45796;.
+					</p></td></tr></table></div></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e2418"></a>4.4&nbsp;Repository</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e2421"></a>4.4.1&nbsp;Unit Test</h3></div></div></div><p>
+			
+			<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/EntityRepository.html" target="_top">
+       		<code class="interfacename">EntityRepository</code>
+       		</a>&#51032;  &#53580;&#49828;&#53944; &#53076;&#46300;&#45716; &#45796;&#51020;&#44284; &#44057;&#45796;.
+
+			</p><pre class="programlisting">
+<em><span class="hl-annotation" style="color: gray">@RunWith(SpringJUnit4ClassRunner.class)</span></em>
+<em><span class="hl-annotation" style="color: gray">@ContextConfiguration(locations="file:src/main/webapp/WEB-INF/spring/root-context.xml")</span></em>
+<em><span class="hl-annotation" style="color: gray">@Transactional</span></em>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> RepositoryTest{
+
+	<span class="hl-keyword">protected</span> <span class="hl-keyword">final</span> Logger logger = LoggerFactory.getLogger(getClass());
+
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em>
+	<em><span class="hl-annotation" style="color: gray">@Qualifier("fooRepository")</span></em>
+	<span class="hl-keyword">private</span> EntityRepository&lt;Foo, String&gt; fooRepository;
+
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em>
+	<em><span class="hl-annotation" style="color: gray">@Qualifier("barRepository")</span></em>
+	<span class="hl-keyword">private</span> EntityRepository&lt;Bar, Integer&gt; barRepository;
+
+	<em><span class="hl-annotation" style="color: gray">@Test</span></em>
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> testMethod() <span class="hl-keyword">throws</span> Exception{
+		<span class="hl-comment">//Test Code...</span>
+	}
+}
+			</pre><p>
+
+		</p></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="repository-query-method"></a>4.4.2&nbsp;Query Keyword</h3></div></div></div><p>
+			QueryMethod Argument &#46976; 
+			<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/EntityRepository.html" target="_top">
+			<code class="interfacename">EntityRepository</code>
+			</a>
+			&#47700;&#49548;&#46300;&#51032; argument &#47484; &#51032;&#48120;&#54620;&#45796;.
+		</p><pre class="programlisting">
+<span class="hl-keyword">public</span> <span class="hl-keyword">interface</span> EntityRepository&lt;T, ID <span class="hl-keyword">extends</span> Serializable&gt; {
+
+	...
+		
+	<span class="hl-keyword">public</span> <span class="hl-keyword">long</span> deleteAll(Object queryMethod);
+	<span class="hl-keyword">public</span> <span class="hl-keyword">long</span> count(Object queryMethod);
+	<span class="hl-keyword">public</span> List&lt;T&gt; findAll(Object queryMethod);
+	<span class="hl-keyword">public</span> List&lt;T&gt; findAll(Object queryMethod, Sort sort);
+	<span class="hl-keyword">public</span> Page&lt;T&gt; findAll(Object queryMethod, Pageable pageable);
+	
+}
+		</pre><p>
+			Query Keyword &#45716;  QueryMethod Argument &#51032;  Class Short Name &#51012; &#51032;&#48120;&#54620;&#45796;.
+			Query Keyword &#45716;  
+			<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/QueryMethod.html" target="_top">
+			<code class="interfacename">@QueryMethod</code>
+			</a> &#51012; &#51060;&#50857;&#54616;&#50668; &#48320;&#44221; &#54624; &#49688; &#51080;&#45796;. 
+			QueryKeyword &#45716;  "FindBy" &#47196;  &#49884;&#51089;&#54616;&#47728;, 
+			<a class="ulink" href="http://docs.spring.io/spring-data/jpa/docs/1.4.2.RELEASE/reference/html/jpa.repositories.html#jpa.query-methods.query-creation" target="_top">
+			Spring-data &#51032;  Query keyword</a>
+			 &#44508;&#52825;&#51012; &#46384;&#47480;&#45796;.
+		</p><pre class="programlisting">
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> FindByNameAndAgeOrderByAgeAsc{
+	<span class="hl-keyword">private</span> String name;
+	<span class="hl-keyword">private</span> Integer age;
+}
+
+<em><span class="hl-annotation" style="color: gray">@QueryMethod("findByNameAndAgeOrderByAgeAsc")</span></em>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> MyQuery{
+	<span class="hl-keyword">private</span> String name;
+	<span class="hl-keyword">private</span> Integer age;
+}
+		</pre><p>
+			QueryMethod Argument &#45716;  Query Keyword &#50640; &#46384;&#46972;  &#54596;&#50668;&#54620; property &#47484; &#49440;&#50616;&#54616;&#50668;&#50556; &#54620;&#45796;.
+			property &#44050;&#51032;  null &#50668;&#48512;&#50640; &#46384;&#46972; &#46041;&#51201;&#51004;&#47196; where &#51312;&#44148;&#51012; &#48148;&#44992;&#49688; &#51080;&#45796;.
+		</p><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc; "><li class="listitem">
+				select * from Person 
+				<pre class="programlisting">
+				<span class="hl-comment">//Test Code...</span>
+				
+				FindByNameAndAge queryMethod1 = <span class="hl-keyword">new</span> FindByNameAndAge();
+				<span class="hl-comment">//or </span>
+				<span class="hl-comment">//MyQuery queryMethod1 = new MyQuery();</span>
+		
+				List&lt;Person&gt; result1 = fooRepository.findAll(queryMethod1);
+				Assert.assertEquals(result1.size(), <span class="hl-number">3</span>);
+				</pre></li><li class="listitem">
+				select * from Person where name = 'a'
+				<pre class="programlisting">
+				<span class="hl-comment">//Test Code...</span>
+
+				FindByNameAndAge queryMethod2 = <span class="hl-keyword">new</span> FindByNameAndAge();
+				<span class="hl-comment">//or </span>
+				<span class="hl-comment">//MyQuery queryMethod2 = new MyQuery();</span>
+				
+				queryMethod2.setName(<span class="hl-string">"a"</span>);
+		
+				List&lt;Person&gt; result2 = fooRepository.findAll(queryMethod2);
+				Assert.assertEquals(result2.size(), <span class="hl-number">1</span>);
+				</pre></li><li class="listitem">
+				select * from Person where name = 'a' and age = 1
+				<pre class="programlisting">
+				<span class="hl-comment">//Test Code...</span>
+
+				FindByNameAndAge queryMethod3 = <span class="hl-keyword">new</span> FindByNameAndAge();
+				<span class="hl-comment">//or </span>
+				<span class="hl-comment">//MyQuery queryMethod3 = new MyQuery();</span>
+
+				queryMethod3.setName(<span class="hl-string">"a"</span>);
+				queryMethod3.setAge(<span class="hl-number">1</span>);
+		
+				List&lt;Person&gt; result3 = fooRepository.findAll(queryMethod3);
+				Assert.assertEquals(result3.size(), <span class="hl-number">1</span>);
+				</pre></li></ul></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="repository-query-callback"></a>4.4.3&nbsp;TemplateCallback</h3></div></div></div><p>
+			<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/TemplateCallback.html" target="_top">
+			<code class="interfacename">TemplateCallback</code>
+			</a> 
+			&#51012; &#51060;&#50857;&#54616;&#47732; 
+			<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/EntityRepository.html" target="_top">
+			<code class="interfacename">EntityRepository</code>
+			</a>
+			&#50640;&#49436; &#47196;&#50864;&#47112;&#48296;&#51032; ORM &#44288;&#47144; &#44061;&#52404;&#50640; &#48148;&#47196; &#51217;&#44540; &#54624; &#49688; &#51080;&#45796;. 
+		</p><pre class="programlisting">
+<span class="hl-keyword">public</span> <span class="hl-keyword">interface</span> EntityRepository&lt;T, ID <span class="hl-keyword">extends</span> Serializable&gt; {
+
+	...
+		
+	<span class="hl-keyword">public</span> &lt;R, X&gt; R execute(TemplateCallback&lt;R, X&gt; callback);
+	
+}
+		</pre><p>
+			&#45796;&#51020;&#54364;&#45716; &#51088;&#46041; &#49373;&#49457;&#46104;&#45716; 
+			<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/EntityRepository.html" target="_top">
+			<code class="interfacename">EntityRepository</code>
+			</a>
+			&#51032; &#44396;&#54788;&#52404;&#48324;&#47196; &#49324;&#50857;&#44032;&#45733;&#54620; 
+			<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/TemplateCallback.html" target="_top">
+			<code class="interfacename">TemplateCallback</code>
+			</a> 
+			&#51032; Generic Type &#51012; &#45208;&#53440;&#45240;&#45796;.
+		</p><div class="table"><a name="d0e2509"></a><p class="title"><b>Table&nbsp;4.1.&nbsp;
+				TemplateCallback Generic Type
+			</b></p><div class="table-contents"><table summary="&#xA;TemplateCallback Generic Type&#xA;" style="border-collapse: collapse;border-top: 0.5pt solid ; border-bottom: 0.5pt solid ; border-left: 0.5pt solid ; border-right: 0.5pt solid ; "><colgroup><col><col></colgroup><thead><tr><th style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+       						Repository Implementation
+			       		</th><th style="border-bottom: 0.5pt solid ; ">
+       						TemplateCallback
+			       		</th></tr></thead><tbody><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jpa/JpaRepository.html" target="_top">
+				       		<code class="interfacename">JpaRepository</code>
+				       		</a>
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">TemplateCallback&lt;R, javax.persistence.EntityManager&gt;</code>
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/hibernate/HibernateRepository.html" target="_top">
+				       		<code class="interfacename">HibernateRepository</code>
+				       		</a>
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">TemplateCallback&lt;R, org.hibernate.Session&gt;</code>
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/sqlsession/SqlSessionRepository.html" target="_top">
+				       		<code class="interfacename">SqlSessionRepository</code>
+				       		</a>
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">TemplateCallback&lt;R, org.mybatis.spring.SqlSession&gt;</code>
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; border-bottom: 0.5pt solid ; ">
+				       		<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jdbc/JdbcRepository.html" target="_top">
+				       		<code class="interfacename">JdbcRepository</code>
+				       		</a>
+			       		</td><td style="border-bottom: 0.5pt solid ; ">
+				       		<code class="interfacename">TemplateCallback&lt;R, org.springframework.jdbc.core.JdbcTemplate&gt;</code>
+			       		</td></tr><tr><td style="border-right: 0.5pt solid ; ">
+			       		</td><td style="">
+				       		<code class="interfacename">TemplateCallback&lt;R, java.sql.Connection&gt;</code>
+			       		</td></tr></tbody></table></div></div><br class="table-break"><div class="itemizedlist"><ul class="itemizedlist compact" style="list-style-type: disc; "><li class="listitem">
+				working with javax.persistence.EntityManager instance
+				<pre class="programlisting">
+				<span class="hl-comment">//Test Code...</span>
+				List&lt;Foo&gt; result2 = fooRepository.execute(<span class="hl-keyword">new</span> TemplateCallback&lt;List&lt;Foo&gt;, EntityManager&gt;() {
+					<span class="hl-keyword">public</span> List&lt;Foo&gt; doInTemplate(EntityManager em) {
+		
+						<span class="hl-comment">//Using QueryDsl</span>
+						Foo alias = Alias.alias(Foo.<span class="hl-keyword">class</span>, <span class="hl-string">"foo"</span>);
+						EntityPath&lt;Foo&gt; foo = Alias.$(alias);
+						StringPath fooName = Alias.$(alias.getName());
+						NumberPath&lt;Integer&gt; fooAge = Alias.$(alias.getAge());
+						
+						JPAQuery query = <span class="hl-keyword">new</span> JPAQuery(em);
+						query.from(foo);
+						query.where(fooName.eq(<span class="hl-string">"a"</span>));
+						query.where(fooAge.eq(<span class="hl-number">1</span>));
+		
+						<span class="hl-keyword">return</span> query.list(foo);
+					}
+				});
+				Assert.assertEquals(result2.size(), <span class="hl-number">1</span>);
+				</pre></li><li class="listitem">
+				working with org.hibernate.Session instance
+				<pre class="programlisting">
+				<span class="hl-comment">//Test Code...</span>
+				List&lt;Foo&gt; result2 = fooRepository.execute(<span class="hl-keyword">new</span> TemplateCallback&lt;List&lt;Foo&gt;, Session&gt;() {
+		
+					<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+					<span class="hl-keyword">public</span> List&lt;Foo&gt; doInTemplate(Session session) {
+		
+						<span class="hl-comment">//Using Hibernate Criteria</span>
+						Criteria criteria = session.createCriteria(Foo.<span class="hl-keyword">class</span>);
+						criteria.add(Restrictions.eq(<span class="hl-string">"name"</span>, <span class="hl-string">"a"</span>));
+						criteria.add(Restrictions.eq(<span class="hl-string">"age"</span>, <span class="hl-number">1</span>));
+						<span class="hl-keyword">return</span> criteria.list();
+					}
+				});
+				Assert.assertEquals(result2.size(), <span class="hl-number">1</span>);
+				</pre></li></ul></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e2593"></a>4.5&nbsp;Multipart</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e2596"></a>4.5.1&nbsp;Unit Test</h3></div></div></div><p>
+			<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a> &#44032; &#51228;&#44277;&#54616;&#45716; 
+			<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/MultipartHandler.html" target="_top">
+				<code class="interfacename">MultipartFileHandler</code>
+			</a>
+			&#45716; File Upload , Download &#47484; &#51648;&#50896;&#54620;&#45796;. 
+		</p><div class="programlistingco"><pre class="programlisting">
+<em><span class="hl-annotation" style="color: gray">@RunWith(SpringJUnit4ClassRunner.class)</span></em>
+<em><span class="hl-annotation" style="color: gray">@ContextConfiguration(locations="file:src/main/webapp/WEB-INF/spring/root-context.xml")</span></em>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> MultipartFileHandlerTest {
+			
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em>
+	<span class="hl-keyword">protected</span> MultipartFileHandler multipartFileHandler;
+	
+	<em><span class="hl-annotation" style="color: gray">@Test</span></em>
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> test() <span class="hl-keyword">throws</span> Exception {
+
+		String contentFile1 = multipartFileHandler.uploadFile(f);                                                            <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span>
+		String contentFile2 = multipartFileHandler.uploadFile(f, <span class="hl-keyword">new</span> UploadFileNameResolver() {                              <span class="co" id="x2"><img src="images/callouts/2.png" alt="(2)"></span>
+			<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+			<span class="hl-keyword">public</span> String resolveFileName(MultipartFile multipartFile) <span class="hl-keyword">throws</span> IOException {
+				<span class="hl-keyword">return</span> <span class="hl-string">"Your Prefix"</span>+multipartFile.getOriginalFilename()+<span class="hl-string">"Your Suffix"</span>;
+			}
+		});
+
+		File uploadedFile = multipartFileHandler.findFile(contentFile1);                                                     <span class="co" id="x3"><img src="images/callouts/3.png" alt="(3)"></span>
+		Assert.assertEquals(true, uploadedFile.exists());
+
+		multipartFileHandler.deleteFile(contentFile1);
+		Assert.assertEquals(false, uploadedFile.exists());                                                                   <span class="co" id="x4"><img src="images/callouts/4.png" alt="(4)"></span>
+	}
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						&#51648;&#51221;&#46052; &#44221;&#47196;&#47196; &#50629;&#47196;&#46300;&#54616;&#44256; contentFile(&#51200;&#51109;&#46108; &#54028;&#51068;&#51032; &#51060;&#47492;)&#51012; &#47532;&#53556;&#54620;&#45796;. See <a class="xref" href="">???</a>
+					</p><p>
+						contentFile &#51008; &#46356;&#54260;&#53944;&#47196; {System.currentTimeMillis}_{Original Filename} &#47196; &#44208;&#51221;&#46108;&#45796;.
+					</p></td></tr><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/2.png" alt="2" border="0"></span></p></td><td valign="top" align="left"><p>
+						<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/UploadFileNameResolver.html" target="_top">
+							<code class="interfacename">UploadFileNameResolver</code>
+						</a>
+						&#47484; &#49324;&#50857;&#54616;&#50668; contentFile &#51012; &#48320;&#44221; &#54624;&#49688; &#51080;&#45796;.
+					</p></td></tr><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/3.png" alt="3" border="0"></span></p></td><td valign="top" align="left"><p>
+						contentFile &#47196; &#47932;&#47532;&#51201;&#51064; &#54028;&#51068; &#44061;&#52404;&#47484; &#47532;&#53556;&#48155;&#51012; &#49688; &#51080;&#45796;.
+					</p></td></tr><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/4.png" alt="4" border="0"></span></p></td><td valign="top" align="left"><p>
+						contentFile &#47196; &#47932;&#47532;&#51201;&#51064; &#54028;&#51068;&#51012; &#49325;&#51228; &#54624; &#49688; &#51080;&#45796;.
+					</p></td></tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e2640"></a>4.5.2&nbsp;Upload / Download</h3></div></div></div><p>
+			&#45796;&#51020;&#51008; Service &#47112;&#51060;&#50612;&#47484; &#48320;&#44221;&#54616;&#50668; &#54028;&#51068;&#51012; &#50629;&#47196;&#46300; &#54616;&#44256; &#47700;&#53440;&#51221;&#48372;&#47484; &#45936;&#51060;&#53552; &#48288;&#51060;&#49828;&#50640; &#51200;&#51109;&#54616;&#44256;,
+			&#50629;&#47196;&#46300;&#46108; &#54028;&#51068;&#51012; &#47532;&#49828;&#53944;&#50629;&#54616;&#44256; &#45796;&#50868;&#47196;&#46300;&#54616;&#45716; &#50696;&#51228;&#51060;&#45796;.
+		</p><div class="programlistingco"><pre class="programlisting">
+<span class="hl-keyword">package</span> com.yourcompany.yourproject.file;
+
+<em><span class="hl-annotation" style="color: gray">@Springfield(
+	methodLevelMapping={"find", "createForm", "create", "read.download","read.stream"})</span></em>                                   <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span>
+<em><span class="hl-annotation" style="color: gray">@Entity</span></em>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> FileBean <span class="hl-keyword">implements</span> MultipartFileBean{                                                                    <span class="co" id="x2"><img src="images/callouts/2.png" alt="(2)"></span>
+
+	<em><span class="hl-annotation" style="color: gray">@Id</span></em>
+	<span class="hl-keyword">public</span> String contentFile;
+	<span class="hl-keyword">public</span> String contentName;
+	<span class="hl-keyword">public</span> String contentType;
+	<span class="hl-keyword">public</span> Long contentSize;
+	
+	<em><span class="hl-annotation" style="color: gray">@Transient</span></em> 
+	<span class="hl-keyword">public</span> MultipartFile uploadFile;                                                                                      <span class="co" id="x3"><img src="images/callouts/3.png" alt="(3)"></span>
+	
+	<span class="hl-comment">//...</span>
+}
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						[GET:/file/{contentName}.download] &#46608;&#45716; [GET:/file/{contentName}.stream] &#50836;&#52397;&#51068; &#44221;&#50864; 
+						<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/MultipartHandler.html" target="_top">
+							<code class="interfacename">MultipartFileHandler</code>
+						</a>.findFile() &#51012; &#51060;&#50857;&#54616;&#50668; &#48120;&#47532; &#51200;&#51109; &#46608;&#45716; &#50629;&#47196;&#46300;&#46108; &#54028;&#51068;&#51012; Downloading &#54616;&#44144;&#45208; Streaming &#54620;&#45796;.
+					</p></td></tr><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/2.png" alt="2" border="0"></span></p></td><td valign="top" align="left"><p>
+						<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a> &#44032; &#51648;&#50896;&#54616;&#45716; 
+						&#54869;&#51109;&#51088;&#51473;, *.download , *.stream &#51008; 
+						&#46020;&#47700;&#51064; &#44061;&#52404;&#44032; 
+						<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/MultipartHandler.html" target="_top">
+							<code class="interfacename">MultipartFileBean</code>
+						</a>
+						&#51012; implements &#54620; &#44221;&#50864;&#50640;&#47564; &#46041;&#51089;&#44032;&#45733;&#54616;&#45796;.
+						
+
+						<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/MultipartHandler.html" target="_top">
+							<code class="interfacename">MultipartFileBean</code>
+						</a>&#51032; getContentFile() &#44050;&#51004;&#47196; 
+						
+						<a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/MultipartHandler.html" target="_top">
+							<code class="interfacename">MultipartFileHandler</code>
+						</a>.findFile() &#51012; &#51060;&#50857;&#54616;&#50668; &#48120;&#47532; &#51200;&#51109; &#46608;&#45716; &#50629;&#47196;&#46300;&#46108; &#54028;&#51068;&#51012; Downloading &#54616;&#44144;&#45208; Streaming &#54620;&#45796;.
+					</p></td></tr><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/3.png" alt="3" border="0"></span></p></td><td valign="top" align="left"><p>
+						&lt;form method="POST" enctype="multipart/form-data"&gt;
+						&#51032; &lt;input type="file" name="uploadFile"&gt; &#47484; 
+						&#46020;&#47700;&#51064; &#44061;&#52404;&#50640; &#45812;&#50500;&#46160;&#44592; &#50948;&#54644; &#54596;&#50836;&#54620; property &#51060;&#45796;. 
+						uploadFile &#51008; &#45936;&#51060;&#53552;&#48288;&#51060;&#49828;&#50640; &#51200;&#51109;&#54616;&#51648; &#50506;&#45716; &#54596;&#46300;&#51060;&#48064;&#47196; 
+						<code class="interfacename">@javax.persistence.Transient</code>
+						&#44032; &#49440;&#50616;&#46104;&#50632;&#45796;.
+					</p></td></tr></table></div></div><div class="programlistingco"><pre class="programlisting">
+<span class="hl-keyword">package</span> com.yourcompany.yourproject.file;
+
+<em><span class="hl-annotation" style="color: gray">@Service("fileBeanService")</span></em>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> FileBeanService <span class="hl-keyword">extends</span> AbstractEntityService&lt;FileBean,FileBean&gt;{
+
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em> <em><span class="hl-annotation" style="color: gray">@Qualifier("fileBeanRepository")</span></em>
+	<span class="hl-keyword">private</span> EntityRepository&lt;FileBean, String&gt; fileBeanRepository;
+
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em> 
+	<span class="hl-keyword">private</span> TransactionTemplate transactionTemplate;
+	
+	<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+	<span class="hl-keyword">protected</span> EntityRepository&lt;FileBean, String&gt; getRepository() {
+		<span class="hl-keyword">return</span> fileBeanRepository;
+	}
+
+	<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+	<span class="hl-keyword">protected</span> TransactionTemplate getTransactionTemplate() {
+		<span class="hl-keyword">return</span> transactionTemplate;
+	}
+	
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em> 
+	<span class="hl-keyword">private</span> MultipartFileHandler multipartFileHandler;
+	
+	<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+	<span class="hl-keyword">public</span> FileBean create(FileBean entity) {                                                                             <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span>
+		
+		MultipartFile f = entity.getUploadFile();
+		<span class="hl-keyword">try</span> {
+			String contentFile = multipartFileHandler.uploadFile(f);
+			String contentName = f.getOriginalFilename();
+			String contentType = f.getContentType();
+			Long contentSize = f.getSize();
+		
+			entity.setContentFile(contentFile);
+			entity.setContentName(contentName);
+			entity.setContentType(contentType);
+			entity.setContentSize(contentSize);
+			
+			<span class="hl-keyword">return</span> <span class="hl-keyword">super</span>.create(entity);
+
+		} <span class="hl-keyword">catch</span> (IOException e) {
+			<span class="hl-keyword">throw</span> <span class="hl-keyword">new</span> RuntimeException(e);
+		}
+	}
+}
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><a class="ulink" href="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/MultipartHandler.html" target="_top">
+						<code class="interfacename">MultipartFileHandler</code>
+					</a>
+					&#47484; &#51060;&#50857;&#54616;&#50668; &#54028;&#51068;&#51012; &#50629;&#47196;&#46300;&#54616;&#44256; &#47700;&#53440;&#51221;&#48372;&#47484; &#46020;&#47588;&#51064; &#44061;&#52404;&#50640; &#45812;&#50500;&#49436; &#51060;&#47484; &#45936;&#51060;&#53552;&#48288;&#51060;&#49828;&#50640; &#51200;&#51109;&#54620;&#45796;. 						
+				</td></tr></table></div></div><div class="programlistingco"><pre class="programlisting">
+<span class="hl-tag">&lt;beans&gt;</span>
+	<span class="hl-tag">&lt;jdbc:embedded-database</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourDataSource"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"HSQL"</span><span class="hl-tag">/&gt;</span>  	
+
+	<span class="hl-tag">&lt;context:component-scan</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span><span class="hl-tag">/&gt;</span>                                                  <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span>
+	
+	<span class="hl-tag">&lt;springfield:modules</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span> 
+			<span class="hl-attribute">data-source-ref</span>=<span class="hl-value">"yourDataSource"</span><span class="hl-tag">
+	/&gt;</span>
+	...
+<span class="hl-tag">&lt;/beans&gt;</span>
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						Bean &#51012; &#44368;&#52404;&#54616;&#44592; &#50948;&#54644; 
+						&lt;springfield:modules&gt; &#48372;&#45796; &#50526;&#49436;
+						&lt;context:component-scan&gt; &#51004;&#47196;  FileBeanService &#47484; &#46321;&#47197; &#54616;&#50668;&#50556; &#54620;&#45796;.
+					</p></td></tr></table></div></div></div></div><div class="section"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="d0e2713"></a>4.6&nbsp;Security</h2></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e2716"></a>4.6.1&nbsp;Config</h3></div></div></div><p>
+    		<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a>&#45716;   
+    		<a class="ulink" href="http://docs.spring.io/spring-security/site/docs/3.1.4.RELEASE/reference/springsecurity.html" target="_top">
+       		spring security 
+       		</a> &#44288;&#47144; &#49444;&#51221;&#44050;&#51012; properties-ref &#47196;  &#48320;&#44221; &#54624; &#49688; &#51080;&#45796;.  
+    		properties-ref &#44032; &#49440;&#50616;&#46104;&#51648; &#50506;&#51008; &#44221;&#50864; &#46356;&#54260;&#53944; &#44050;&#51060; &#49324;&#50857;&#46108;&#45796;. 
+       	</p><pre class="programlisting">
+<span class="hl-tag">&lt;beans&gt;</span>
+
+	<span class="hl-tag">&lt;util:properties</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourProp"</span> 
+		<span class="hl-attribute">location</span>=<span class="hl-value">"classpath:com/yourcompany/yourproject/config.properties"</span><span class="hl-tag"> /&gt;</span>
+
+
+	<span class="hl-tag">&lt;jdbc:embedded-database</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourDataSource"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"HSQL"</span><span class="hl-tag">/&gt;</span>  	
+	
+	<span class="hl-tag">&lt;springfield:modules</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span> 
+			<span class="hl-attribute">data-source-ref</span>=<span class="hl-value">"yourDataSource"</span>
+			<span class="hl-attribute">properties-ref</span>=<span class="hl-value">"yourProp"</span><span class="hl-tag">
+	/&gt;</span>
+	...
+<span class="hl-tag">&lt;/beans&gt;</span>
+		</pre><pre class="programlisting">
+#
+# com/yourcompany/yourproject/config.properties
+#
+springfield.security.formPage=/security/user/loginForm.html
+springfield.security.formUsername=j_username
+springfield.security.formPassword=j_password
+springfield.security.formRememberme=_spring_security_remember_me
+springfield.security.loginUrl=/j_spring_security_check
+springfield.security.logoutUrl=/j_spring_security_logout
+		</pre></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e2730"></a>4.6.2&nbsp;UserDetails</h3></div></div></div><p>
+    		&#45796;&#51020;&#51008; &#49324;&#50857;&#51088; &#44228;&#51221;&#51012; &#45936;&#51060;&#53552;&#48288;&#51060;&#49828;&#47196; &#44288;&#47532;&#54616;&#45716; &#50696;&#51228;&#51060;&#45796;.
+		</p><div class="programlistingco"><pre class="programlisting">
+<span class="hl-keyword">package</span> com.yourcompany.yourproject.security;
+		
+<em><span class="hl-annotation" style="color: gray">@Springfield</span></em>
+<em><span class="hl-annotation" style="color: gray">@Entity</span></em>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> User <span class="hl-keyword">implements</span> org.springframework.security.core.userdetails.UserDetails{                                <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span>
+
+	<em><span class="hl-annotation" style="color: gray">@Id</span></em> 
+	<span class="hl-keyword">private</span> String username;
+	<span class="hl-keyword">private</span> String password;
+	<span class="hl-keyword">private</span> <span class="hl-keyword">boolean</span> enabled = true;
+	<span class="hl-keyword">private</span> <span class="hl-keyword">boolean</span> accountNonExpired = true;
+	<span class="hl-keyword">private</span> <span class="hl-keyword">boolean</span> accountNonLocked = true;
+	<span class="hl-keyword">private</span> <span class="hl-keyword">boolean</span> credentialsNonExpired = true;
+	<span class="hl-keyword">private</span> String salt;
+	<span class="hl-keyword">private</span> String role;
+	
+	<span class="hl-comment">//getter / setter</span>
+
+	<em><span class="hl-annotation" style="color: gray">@Transient</span></em>
+	<span class="hl-keyword">public</span> Collection&lt;? <span class="hl-keyword">extends</span> GrantedAuthority&gt; getAuthorities() {
+		<span class="hl-keyword">return</span> Role.valueOf(role).getAuthorities();
+	}
+	
+	<span class="hl-keyword">public</span> enum Role {                                                                                                    <span class="co" id="x2"><img src="images/callouts/2.png" alt="(2)"></span>
+
+		USER(<span class="hl-keyword">new</span> SimpleGrantedAuthority(<span class="hl-string">"ROLE_ANONYMOUS"</span>), <span class="hl-keyword">new</span> SimpleGrantedAuthority(<span class="hl-string">"ROLE_USER"</span>)),
+		ADMIN(<span class="hl-keyword">new</span> SimpleGrantedAuthority(<span class="hl-string">"ROLE_ANONYMOUS"</span>), <span class="hl-keyword">new</span> SimpleGrantedAuthority(<span class="hl-string">"ROLE_USER"</span>), <span class="hl-keyword">new</span> SimpleGrantedAuthority(<span class="hl-string">"ROLE_ADMIN"</span>));
+		
+		<span class="hl-keyword">private</span> Collection&lt;GrantedAuthority&gt; grantedAuthorities = <span class="hl-keyword">new</span> HashSet&lt;GrantedAuthority&gt;();
+
+		Role(GrantedAuthority... authorities){
+			<span class="hl-keyword">for</span>(GrantedAuthority authority : authorities){
+				grantedAuthorities.add(authority);
+			}
+		}
+		<span class="hl-keyword">public</span> Collection&lt;? <span class="hl-keyword">extends</span> GrantedAuthority&gt; getAuthorities(){
+			<span class="hl-keyword">return</span> grantedAuthorities;
+		}
+	}
+}
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						&#49324;&#50857;&#51088; &#44228;&#51221;&#51012; &#45936;&#51060;&#53552;&#48288;&#51060;&#49828;&#47196;  &#44288;&#47532;&#54616;&#44592; &#50948;&#54644; 
+						<code class="interfacename">org.springframework.security.core.userdetails.UserDetails</code>
+						&#47484; implements &#54620; &#46020;&#47700;&#51064; &#44061;&#52404;&#44032; &#54596;&#50836;&#54616;&#45796;. 
+					</p></td></tr><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/2.png" alt="2" border="0"></span></p></td><td valign="top" align="left"><p>
+						&#44428;&#54620;&#51012; &#44032;&#51652; &#49324;&#50857;&#51088; ROLE &#51012; &#54596;&#50836;&#50640; &#46384;&#46972; &#51221;&#51032;&#54620;&#45796;. 
+					</p></td></tr></table></div></div><div class="programlistingco"><pre class="programlisting">
+<span class="hl-keyword">package</span> com.yourcompany.yourproject.security;
+	
+<em><span class="hl-annotation" style="color: gray">@Service("userService")</span></em>                                                                                                <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> UserService <span class="hl-keyword">extends</span> AbstractEntityService&lt;User, User&gt;{
+
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em>
+	<span class="hl-keyword">private</span> AuthenticationManager authenticationManager;
+
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em>
+	<span class="hl-keyword">private</span> PasswordEncoder passwordEncoder; 
+	
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em>
+	<span class="hl-keyword">private</span> SaltSource saltSource; 
+
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em> <em><span class="hl-annotation" style="color: gray">@Qualifier("userRepository")</span></em>
+	<span class="hl-keyword">private</span> EntityRepository&lt;User, String&gt; userRepository;
+
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em> 
+	<span class="hl-keyword">private</span> TransactionTemplate transactionTemplate;
+	
+	<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+	<span class="hl-keyword">protected</span> EntityRepository&lt;User, String&gt; getRepository() {
+		<span class="hl-keyword">return</span> userRepository;
+	}
+
+	<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+	<span class="hl-keyword">protected</span> TransactionTemplate getTransactionTemplate() {
+		<span class="hl-keyword">return</span> transactionTemplate;
+	}
+	
+	<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+	<em><span class="hl-annotation" style="color: gray">@Transactional</span></em>
+	<span class="hl-keyword">public</span> User create(User entity) {
+
+		String salt = <span class="hl-string">""</span>+System.currentTimeMillis();
+		String password = passwordEncoder.encodePassword(<span class="hl-string">"password"</span>, salt);                                                  <span class="co" id="x1"><img src="images/callouts/2.png" alt="(2)"></span>
+		
+		entity.setSalt(salt);
+		entity.setPassword(password);
+		entity.setRole(<span class="hl-string">"USER"</span>);
+		
+		<span class="hl-keyword">return</span> <span class="hl-keyword">super</span>.create(entity);
+	}
+}
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						&#46321;&#47197; &#46104;&#45716; Service &#47112;&#51060;&#50612;&#51032; Bean Name &#51008; <a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a> &#47484; &#50640; &#46384;&#46972; 
+						"{@Springfield class short name}Service" &#44032; &#46104;&#50612;&#50556; &#54620;&#45796;.
+					</p></td></tr><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/2.png" alt="2" border="0"></span></p></td><td valign="top" align="left"><p>
+						&#50516;&#54840;&#54868;&#46108; &#54056;&#49828;&#50892;&#46300;&#50752; password salt &#47484; &#51200;&#51109;&#54620;&#45796;.
+					</p></td></tr></table></div></div><div class="programlistingco"><pre class="programlisting">
+<span class="hl-tag">&lt;beans&gt;</span>
+	<span class="hl-tag">&lt;jdbc:embedded-database</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourDataSource"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"HSQL"</span><span class="hl-tag">/&gt;</span>  	
+
+	<span class="hl-tag">&lt;context:component-scan</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span><span class="hl-tag">/&gt;</span>                                                  <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span>
+	
+	<span class="hl-tag">&lt;springfield:modules</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span> 
+			<span class="hl-attribute">data-source-ref</span>=<span class="hl-value">"yourDataSource"</span><span class="hl-tag">
+	/&gt;</span>
+	...
+<span class="hl-tag">&lt;/beans&gt;</span>
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						Bean &#51012; &#44368;&#52404;&#54616;&#44592; &#50948;&#54644; 
+						&lt;springfield:modules&gt; &#48372;&#45796; &#50526;&#49436;
+						&lt;context:component-scan&gt; &#51004;&#47196;  UserService &#47484; &#46321;&#47197; &#54616;&#50668;&#50556; &#54620;&#45796;.
+					</p></td></tr></table></div></div></div><div class="section"><div class="titlepage"><div><div><h3 class="title"><a name="d0e2775"></a>4.6.3&nbsp;UserDetailsService</h3></div></div></div><p>
+       		<code class="interfacename">org.springframework.security.core.userdetails.UserDetailsService</code>
+       		&#47484; &#44396;&#54788;&#54620; Bean &#51060; &#46321;&#47197;&#46104;&#50612; &#51080;&#45796;&#47732;, 
+       		<a class="xref" href="ch01.html#springfield.modules" title="1.3&nbsp;<springfield:modules&gt;">Section&nbsp;1.3, &#8220;&lt;springfield:modules&gt;&#8221;</a> &#51060; &#46041;&#51201;&#51004;&#47196; &#51060; Bean &#51012; &#52628;&#51201;&#54616;&#50668; 
+    		<a class="ulink" href="http://docs.spring.io/spring-security/site/docs/3.1.4.RELEASE/reference/springsecurity.html" target="_top">
+       		spring security 
+       		</a> &#44032; &#47196;&#44536;&#51064;&#51012; &#52376;&#47532;&#54616;&#46020;&#47197; &#49444;&#51221;&#54620;&#45796;.
+			
+       		<code class="interfacename">org.springframework.security.web.authentication.AuthenticationSuccessHandler</code>
+       		&#47484; &#44396;&#54788;&#54620; Bean &#51060; &#46321;&#47197;&#46104;&#50612; &#51080;&#45796;&#47732;, &#47196;&#44536;&#51064; &#49457;&#44277; &#51060;&#48292;&#53944;&#47484; &#49688;&#49888;&#54624;&#49688; &#51080;&#51004;&#47728;, 
+       		<code class="interfacename">org.springframework.security.web.authentication.AuthenticationFailureHandler</code>
+       		&#47484; &#44396;&#54788;&#54620; Bean &#51060; &#46321;&#47197;&#46104;&#50612; &#51080;&#45796;&#47732;, &#47196;&#44536;&#51064; &#49892;&#54056; &#51060;&#48292;&#53944;&#47484; &#49688;&#49888;&#54624;&#49688; &#51080;&#51004;&#47728;, 
+		</p><div class="programlistingco"><pre class="programlisting">
+<span class="hl-keyword">package</span> com.yourcompany.yourproject.security;
+		
+<em><span class="hl-annotation" style="color: gray">@Component</span></em>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> LoginService <span class="hl-keyword">implements</span> org.springframework.security.core.userdetails.UserDetailsService{
+
+	<em><span class="hl-annotation" style="color: gray">@Autowired</span></em> <em><span class="hl-annotation" style="color: gray">@Qualifier("userRepository")</span></em>
+	<span class="hl-keyword">private</span> EntityRepository&lt;User, String&gt; userRepository;
+
+	<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+	<em><span class="hl-annotation" style="color: gray">@Transactional</span></em>
+	<span class="hl-keyword">public</span> UserDetails loadUserByUsername(String username) <span class="hl-keyword">throws</span> UsernameNotFoundException {
+		User user = userRepository.findOne(username);                                                                        <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span>
+		<span class="hl-keyword">if</span> (user == null) {
+			<span class="hl-keyword">throw</span> <span class="hl-keyword">new</span> DataRetrievalFailureException(<span class="hl-string">"Query returned no results for user '"</span> + username + <span class="hl-string">"'"</span>);
+		}
+		<span class="hl-keyword">return</span> user;
+	}
+}
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						&#49324;&#50857;&#51088; &#44228;&#51221;&#51012; &#45936;&#51060;&#53552;&#48288;&#51060;&#49828;&#50640;&#49436; &#51312;&#54924;&#54616;&#50668; &#47196;&#44536;&#51064; &#52376;&#47532; &#54620;&#45796;.
+					</p></td></tr></table></div></div><div class="programlistingco"><pre class="programlisting">
+<span class="hl-keyword">package</span> com.yourcompany.yourproject.security;
+		
+<em><span class="hl-annotation" style="color: gray">@Component</span></em>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> LoginSuccess <span class="hl-keyword">implements</span> org.springframework.security.web.authentication.AuthenticationSuccessHandler{
+
+	<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> onAuthenticationSuccess(HttpServletRequest request, 
+		HttpServletResponse response, 
+		Authentication authentication) <span class="hl-keyword">throws</span> IOException, ServletException {                                                <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span>
+		<span class="hl-comment">//&#47196;&#44536;&#51064; &#49457;&#44277; &#51060;&#48292;&#53944; </span>
+	}
+}
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						&#47196;&#44536;&#51064; &#49457;&#44277; &#51060;&#48292;&#53944;&#47484; &#49688;&#49888;&#54616;&#50668; &#47196;&#51649;&#51012; &#44396;&#54788;&#54624;&#49688; &#51080;&#45796;.
+					</p></td></tr></table></div></div><div class="programlistingco"><pre class="programlisting">
+<span class="hl-keyword">package</span> com.yourcompany.yourproject.security;
+		
+<em><span class="hl-annotation" style="color: gray">@Component</span></em>
+<span class="hl-keyword">public</span> <span class="hl-keyword">class</span> LoginFailure <span class="hl-keyword">implements</span> org.springframework.security.web.authentication.AuthenticationSuccessHandler{
+
+	<em><span class="hl-annotation" style="color: gray">@Override</span></em>
+	<span class="hl-keyword">public</span> <span class="hl-keyword">void</span> onAuthenticationFailure(HttpServletRequest request, 
+		HttpServletResponse response, 
+		AuthenticationException exception)<span class="hl-keyword">throws</span> IOException, ServletException {                                             <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span>
+		<span class="hl-comment">//&#47196;&#44536;&#51064; &#49892;&#54056; &#51060;&#48292;&#53944; </span>
+	}
+}
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						&#47196;&#44536;&#51064; &#49892;&#54056; &#51060;&#48292;&#53944;&#47484; &#49688;&#49888;&#54616;&#50668; &#47196;&#51649;&#51012; &#44396;&#54788;&#54624;&#49688; &#51080;&#45796;.
+					</p></td></tr></table></div></div><div class="programlistingco"><pre class="programlisting">
+<span class="hl-tag">&lt;beans&gt;</span>
+	<span class="hl-tag">&lt;jdbc:embedded-database</span> <span class="hl-attribute">id</span>=<span class="hl-value">"yourDataSource"</span> <span class="hl-attribute">type</span>=<span class="hl-value">"HSQL"</span><span class="hl-tag">/&gt;</span>  	
+
+	<span class="hl-tag">&lt;context:component-scan</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span><span class="hl-tag">/&gt;</span>                                                  <span class="co" id="x1"><img src="images/callouts/1.png" alt="(1)"></span>
+	
+	<span class="hl-tag">&lt;springfield:modules</span> <span class="hl-attribute">base-package</span>=<span class="hl-value">"com.yourcompany.yourproject"</span> 
+			<span class="hl-attribute">data-source-ref</span>=<span class="hl-value">"yourDataSource"</span><span class="hl-tag">
+	/&gt;</span>
+	...
+<span class="hl-tag">&lt;/beans&gt;</span>
+			</pre><div class="calloutlist"><table border="0" summary="Callout list"><tr><td width="5%" valign="top" align="left"><p><span><img src="images/callouts/1.png" alt="1" border="0"></span></p></td><td valign="top" align="left"><p>
+						&lt;context:component-scan&gt; &#51004;&#47196;  LoginService , LoginSuccess , LoginFailure &#47484; &#46321;&#47197; &#54616;&#50668;&#50556; &#54620;&#45796;. 
+					</p></td></tr></table></div></div></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch03.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;</td></tr><tr><td width="40%" align="left" valign="top">3.&nbsp;WebMVC&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;</td></tr></table></div></body></html>
