@@ -18,7 +18,7 @@
 
 	<bean id="servletContextBroker" class="com.u2ware.springfield.support.context.ServletContextBroker">
 	</bean>
-
+	 
 
 	<!-- 
 	#############################################################
@@ -33,10 +33,17 @@
 	#############################################################
 	# navigation
 	#############################################################
-	<bean id="navigation" class="com.u2ware.springfield.controller.NavigationFactoryBean">
-		<property name="location" value="#{prop['baseWebapp']}/navigation.xml"/>
-	</bean>
 	-->
+	<bean id="navigationResources" class="com.u2ware.springfield.support.resource.ResourcePatternResolverBean">
+		<property name="targetName" value="Navigation"/>
+		<property name="locationPatterns" value="
+			classpath:#{prop['basePackage'].replace('.','/')}#{prop['webmvc.navigation']},
+			#{prop['baseWebapp']}#{prop['webmvc.navigation']}
+		"/>
+	</bean>
+	<bean id="navigation" class="com.u2ware.springfield.security.NavigationFactory">
+		<property name="resources" value="#{navigationResources.locations}"/>
+	</bean>
 
 	<!-- 
 	#############################################################
@@ -46,7 +53,6 @@
 	<bean id="messageSourceBasenames" class="com.u2ware.springfield.support.resource.ResourcePatternResolverBean">
 		<property name="targetName" value="MessageSource"/>
 		<property name="locationPatterns" value="
-			classpath:com/u2ware/springfield/support/validation/messages.xml,
 			classpath:#{prop['basePackage'].replace('.','/')}#{prop['webmvc.messageBasenamesPattern']},
 			#{prop['baseWebapp']}#{prop['webmvc.messageBasenamesPattern']}
 		"/>
@@ -57,7 +63,7 @@
 		<property name="basenames" value="#{messageSourceBasenames.basenames}"/>
 	</bean>
 	
-
+	
 	<!-- 
 	#############################################################
 	# conversionService
@@ -80,7 +86,7 @@
 	 -->
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
 		<property name="messageInterpolator">
-			<bean class="com.u2ware.springfield.support.validation.ValidationMessageInterpolator" />
+			<bean class="com.u2ware.springfield.validation.ValidationMessageInterpolator" />
 		</property>
 	</bean>
 
@@ -118,7 +124,8 @@
 	 -->
 	<mvc:interceptors>
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>
-		<bean class="com.u2ware.springfield.controller.HandlerLoggingInterceptor"/>	
+		<bean class="com.u2ware.springfield.controller.HandlerInterceptor"/>	
+		<bean class="com.u2ware.springfield.security.authorization.AccessDecisionInterceptor"/>
 	</mvc:interceptors>
 
 	<!-- 

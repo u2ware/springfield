@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>Configuration</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+
+<body>
+    <section name="Configuration">
+		<ul>
+			<li><a href="./configuration-1.html">pom.xml</a> : maven pom</li>
+			<li><a href="./configuration-2.html">root-context.properties</a>: properties for root context</li>
+			<li><a href="./configuration-3.html">root-context.xml</a>: root context</li>
+			<li><a href="./configuration-4.html">servlet-context.xml</a>: /WEB-INF/servlet-context.xml</li>
+			<li><a href="./configuration-5.html">web.xml</a>: /WEB-INF/web.xml</li>
+			<li><a href="./configuration-6.html">logback.xml</a>: logging</li>
+		</ul>    
+    
+    	<dl>
+    		<dt>Note:</dt>
+    		<dd>
+    			<p>모든 예제에서 <a href="http://projectlombok.org/">projectlombok</a> 이 사용되므로 설치를 권장한다.</p>
+    			<p>모든 파일은 UTF-8 을 기본 content type 으로 한다.</p>
+    		</dd>
+    	</dl>	
+	</section>
+</body>
+</document>

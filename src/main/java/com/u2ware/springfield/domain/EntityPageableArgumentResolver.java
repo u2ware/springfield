@@ -1,9 +1,9 @@
 package com.u2ware.springfield.domain;
 
+import java.io.IOException;
+
 import javax.servlet.ServletRequest;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.PropertyValues;
 import org.springframework.core.MethodParameter;
 import org.springframework.validation.DataBinder;
@@ -12,19 +12,22 @@ import org.springframework.web.bind.ServletRequestParameterPropertyValues;
 import org.springframework.web.bind.support.WebArgumentResolver;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class EntityPageableArgumentResolver implements WebArgumentResolver{
 
-	protected final Log logger = LogFactory.getLog(getClass());
+	//protected final Log logger = LogFactory.getLog(getClass());
 
 	private static final String DEFAULT_PREFIX = "model_query_pageable";
 	private static final String DEFAULT_SEPARATOR = ".";
 
 	private String prefix = DEFAULT_PREFIX;
 	private String separator = DEFAULT_SEPARATOR;
-	private ObjectMapper objectMapper = new ObjectMapper();
+	//private ObjectMapper objectMapper = new ObjectMapper();
 
 	public void setPrefix(String prefix) {
 		this.prefix = null == prefix ? DEFAULT_PREFIX : prefix;
@@ -65,10 +68,10 @@ public class EntityPageableArgumentResolver implements WebArgumentResolver{
 		String[] values = servletRequest.getParameterValues(DEFAULT_PREFIX);
 		//logger.debug(values);
 		if(values == null || values.length != 1) return null;
-		logger.debug(values[0]);
+		//logger.debug(values[0]);
 		
 		try {
-			EntityPageRequest request = objectMapper.readValue(values[0], EntityPageRequest.class);
+			EntityPageRequest request = EntityPageableArgumentResolver.parseEntityPageRequest(values[0]);
 			//logger.debug(request);
 			return request;
 		} catch (Exception e) {
@@ -82,7 +85,7 @@ public class EntityPageableArgumentResolver implements WebArgumentResolver{
 		PropertyValues propertyValues = new ServletRequestParameterPropertyValues(servletRequest,
 				getPrefix(methodParameter), separator);
 
-		logger.debug(propertyValues);
+		//logger.debug(propertyValues);
 
 		DataBinder binder = new ServletRequestDataBinder(request);
 		binder.bind(propertyValues);
@@ -95,4 +98,13 @@ public class EntityPageableArgumentResolver implements WebArgumentResolver{
 		return request;
 	}
 	
+	
+	private static ObjectMapper objectMapper = new ObjectMapper();
+	static{
+		objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+		objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+	}
+	public static EntityPageRequest parseEntityPageRequest(String jsonText) throws JsonParseException, JsonMappingException, IOException {
+		return objectMapper.readValue(jsonText, EntityPageRequest.class);
+	}
 }

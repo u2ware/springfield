@@ -68,14 +68,14 @@ public class ResourcePatternResolverBean implements ResourceLoaderAware, Initial
 		resourcesSet = new HashSet<Resource>();
 		
 		for(String locationPattern : locationPatterns){
-			logger.info(targetName+" Pattern: "+locationPattern);
+			logger.warn(targetName+" Pattern: "+locationPattern);
 			
 			try{
 				Resource[] resources = resourcePatternResolver.getResources(locationPattern);
 				for(Resource r : resources){
 					if(r.exists()){
 						resourcesSet.add(r);
-						logger.info(targetName+" Adding: "+r);
+						logger.warn(targetName+" Adding: "+r);
 					}else{
 						//logger.fatal("Adding: ");
 						
@@ -88,7 +88,7 @@ public class ResourcePatternResolverBean implements ResourceLoaderAware, Initial
 
 		if(resourcesSet.size() < 1) return;
 
-		logger.info(targetName+": "+resourcesSet.size()+" file(s) configurated");
+		logger.warn(targetName+": "+resourcesSet.size()+" file(s) configurated");
 		
 		resources = new Resource[resourcesSet.size()];
 		locations = new String[resourcesSet.size()];

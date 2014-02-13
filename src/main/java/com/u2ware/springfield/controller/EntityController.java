@@ -5,16 +5,19 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.u2ware.springfield.domain.ValidationRejectableException;
 import com.u2ware.springfield.service.EntityService;
+import com.u2ware.springfield.validation.EntityValidator;
+import com.u2ware.springfield.validation.RejectableException;
 
 
 public abstract class EntityController<T,Q> {
@@ -40,65 +43,36 @@ public abstract class EntityController<T,Q> {
 	private HandlerMetamodel<T,Q> metamodel; 
 	private EntityValidator<T,Q> validator;
 
-	private String serviceName;
-	private String metamodelName;
-	private String validatorName;
-
-	public EntityController(EntityService<T,Q> service, HandlerMetamodel<T,Q> metamodel){
-		this.service = service;
-		this.metamodel = metamodel;
-	}
-
-	public EntityController(EntityService<T,Q> service, HandlerMetamodel<T,Q> metamodel, EntityValidator<T,Q> validator){
-		this.service = service;
-		this.metamodel = metamodel;
-		this.validator = validator;
-	}
-	public EntityController(String serviceName, EntityService<T,Q> service, String metamodelName, HandlerMetamodel<T,Q> metamodel){
-		this.serviceName = serviceName;
-		this.service = service;
-		this.metamodelName = metamodelName;
-		this.metamodel = metamodel;
-	}
-	public EntityController(String serviceName, EntityService<T,Q> service, String metamodelName, HandlerMetamodel<T,Q> metamodel, String validatorName, EntityValidator<T,Q> validator){
-		this.serviceName = serviceName;
-		this.service = service;
-		this.metamodelName = metamodelName;
-		this.metamodel = metamodel;
-		this.validatorName = validatorName;
-		this.validator = validator;
-	}
-
-	public EntityService<T,Q> getService() {
-		logger.info("service : "+getServiceName());
+	/////////////////////////////////////////
+	// 
+	////////////////////////////////////////
+	protected EntityService<T,Q> getService() {
 		return service;
 	}
-	public HandlerMetamodel<T, Q> getMetamodel() {
+	protected HandlerMetamodel<T, Q> getMetamodel() {
 		return metamodel;
 	}
-	public EntityValidator<T,Q> getValidator() {
-		logger.info("validator : "+getValidatorName());
+	protected EntityValidator<T,Q> getValidator() {
 		return validator;
 	}
-	public String getServiceName() {
-		return serviceName;
+	protected void setService(EntityService<T, Q> service) {
+		this.service = service;
 	}
-	public String getMetamodelName() {
-		return metamodelName;
+	protected void setMetamodel(HandlerMetamodel<T, Q> metamodel) {
+		this.metamodel = metamodel;
 	}
-	public String getValidatorName() {
-		return validatorName;
-	}
-
-	public void setValidatorName(String validatorName) {
-		this.validatorName = validatorName;
+	protected void setValidator(EntityValidator<T, Q> validator) {
+		this.validator = validator;
 	}
 
+	/////////////////////////////////////////
+	// 
+	////////////////////////////////////////
 	@ModelAttribute(MODEL_ENTITY)
 	public T createEntityObject(){
 		try {
-			T command = metamodel.getEntityClass().newInstance();
-			logger.info("@ModelAttribute("+MODEL_ENTITY+"): "+metamodel.getEntityClass());	
+			T command = getMetamodel().getEntityClass().newInstance();
+			logger.info("@ModelAttribute("+MODEL_ENTITY+"): "+getMetamodel().getEntityClass());	
 			return command;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,8 +82,8 @@ public abstract class EntityController<T,Q> {
 	@ModelAttribute(MODEL_QUERY)
 	public Q createQueryObject(){
 		try {
-			Q command = metamodel.getQueryClass().newInstance();
-			logger.info("@ModelAttribute("+MODEL_QUERY+"): "+metamodel.getQueryClass());	
+			Q command = getMetamodel().getQueryClass().newInstance();
+			logger.info("@ModelAttribute("+MODEL_QUERY+"): "+getMetamodel().getQueryClass());	
 			return command;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -117,20 +91,18 @@ public abstract class EntityController<T,Q> {
 		}
 	}
 
-	protected void validate(BindingResult errors, ValidationRejectableException e){
+	/////////////////////////////////////////
+	// 
+	////////////////////////////////////////
+	protected void validate(BindingResult errors, RejectableException e){
 		
-		String errorCode = e.getErrorCode();
 		String field = e.getField();
+		String errorCode = e.getErrorCode();
 		Object[] errorArgs = e.getErrorArgs();
 		String defaultMessage = e.getDefaultMessage();
-		
-		if(defaultMessage == null){
-			defaultMessage = errorCode;
-		}
+
 		if(field == null){
-			for(String id : metamodel.getIdentity()){
-				errors.rejectValue(id, errorCode, errorArgs, defaultMessage);
-			}
+			errors.reject(errorCode, errorArgs, defaultMessage);
 		}else{
 			errors.rejectValue(field, errorCode, errorArgs, defaultMessage);
 		}
@@ -138,16 +110,19 @@ public abstract class EntityController<T,Q> {
 	
 	
 	
-	protected String resolveViewName(Model model, BindingResult errors, String commandMethod,  T entity, Q query, Pageable pageable, Object queryResult)throws Exception{
+	protected String resolveViewName(Model model, BindingResult errors, String commandMethod,  Object entity, Object query, Pageable pageable, Object queryResult)throws Exception{
 		
 		if(errors.hasErrors()){
 			for(ObjectError objectError : errors.getAllErrors()){
 				logger.info(objectError);
 			}
 		}
+		if(entity == null && query == null) 
+			throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
+		
 		
 		model.addAttribute(MODEL_ENTITY, entity);
-		model.addAttribute(MODEL_ENTITY_METAMODEL, metamodel);
+		model.addAttribute(MODEL_ENTITY_METAMODEL, getMetamodel());
 		
 		model.addAttribute(MODEL_QUERY, query);
 		model.addAttribute(MODEL_QUERY_PAGEABLE, pageable);
@@ -166,25 +141,25 @@ public abstract class EntityController<T,Q> {
 ////			commandMethodAppend = "-mobile";
 ////		}
 
-		String commandId = entity != null ? metamodel.getIdentityUri(entity) : "";
+		String commandId = entity != null ? getMetamodel().getIdentityUri(entity) : "";
 		String requestUri = request.getRequestURI();
 		String extension = StringUtils.getFilenameExtension(requestUri);
-		String viewName = metamodel.getTopLevelMapping()+"/"
+		String viewName = getMetamodel().getTopLevelMapping()+"/"
 				+commandMethod+commandMethodAppend
 				+(StringUtils.hasText(extension) ? "."+extension : "");
 		
-		if(StringUtils.hasText(metamodel.getAttributesCSV())){
-			viewName = viewName + "?" + metamodel.getAttributesCSV();
+		if(StringUtils.hasText(getMetamodel().getAttributesCSV())){
+			viewName = viewName + "?" + getMetamodel().getAttributesCSV();
 		}
 		
 		//logger.info("command_seq: "+metamodel.getSeq());
-		logger.info("command_path: "+metamodel.getTopLevelMapping());
+		logger.info("command_path: "+getMetamodel().getTopLevelMapping());
 		logger.info("command_id: "+commandId);
 		logger.info("command_method: "+commandMethod);
 		logger.info("command_extension: "+extension);
 		logger.info("command_view: "+viewName);
 		
-		model.addAttribute(COMMAND_PATH , metamodel.getTopLevelMapping());
+		model.addAttribute(COMMAND_PATH , getMetamodel().getTopLevelMapping());
 		model.addAttribute(COMMAND_ID , commandId);
 		model.addAttribute(COMMAND_METHOD , commandMethod);
 		model.addAttribute(COMMAND_EXTENSION , extension ==  null ? "" : "."+extension);

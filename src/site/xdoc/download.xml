@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>@Springfield - Basic</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+
+<body>
+<section name="Download">
+	<subsection name="1.3.9">
+		<ul>
+			<li>Binary : <a href="./springfield-1.3.9.jar">springfield-1.3.9.jar</a></li>
+			<li>Source : <a href="./springfield-1.3.9-sources.jar">springfield-1.3.9-sources.jar</a></li>
+			<li>POM : <a href="./springfield-1.3.9-pom.xml">springfield-1.3.9-pom.xml</a></li>
+		</ul>
+	</subsection>
+
+	<subsection name="1.3.8">
+		<ul>
+			<li>Binary : <a href="./springfield-1.3.8.jar">springfield-1.3.8.jar</a></li>
+			<li>Source : <a href="./springfield-1.3.8-sources.jar">springfield-1.3.8-sources.jar</a></li>
+			<li>POM : <a href="./springfield-1.3.8-pom.xml">springfield-1.3.8-pom.xml</a></li>
+		</ul>
+	</subsection>
+
+	<subsection name="Install">
+		<source><![CDATA[
+mvn install:install-file -Dfile=springfield-1.3.9.jar 
+                         -DpomFile=springfield-1.3.9-pom.xml 
+                         -Dsources=springfield-1.3.9-sources.jar 
+                         -DgroupId=com.u2ware 
+                         -DartifactId=springfield 
+                         -Dversion=1.3.9 
+                         -Dpackaging=jar 
+		]]></source>
+	</subsection>
+
+
+
+</section>
+</body>
+</document>
+

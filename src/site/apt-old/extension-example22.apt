@@ -1,0 +1,144 @@
+ -----
+ WebMVC
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+Extension
+~~~~~~~~~~~~~~~~~~~~
+ 
+* FindByFloatValue
+~~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part2.step2;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import com.u2ware.springfield.config.Springfield;
+import com.u2ware.springfield.config.Springfield.Strategy;
+
+import example.u2ware.springfield.part2.step1.TargetBean;
+
+@Springfield(
+	strategy=Strategy.JPA,
+	entity=TargetBean.class,
+	topLevelMapping="/part2/step21"
+)
+public class FindByFloatValue {
+	
+	@Getter @Setter private Float floatValue;
+}
++------------------------------------------------------------------------+
+
+* FindByStringValue
+~~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part2.step2;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import com.u2ware.springfield.config.Springfield;
+import com.u2ware.springfield.config.Springfield.Strategy;
+
+import example.u2ware.springfield.part2.step1.TargetBean;
+
+@Springfield(
+	strategy=Strategy.JPA,
+	entity=TargetBean.class,
+	topLevelMapping="/part2/step22"
+)
+public class FindByStringValue {
+
+	@Getter @Setter private String stringValue;
+}
++------------------------------------------------------------------------+
+
+* @Springfield
+~~~~~~~~~~~~~~~~~~~
+
+ @Springfield(strategy=Strategy.JPA) 선언으로 다음 7개의 Bean 이 자동 생성, 등록 된다.
+
+*-----------------------------+----------------------------------------------------+------------------------------------+
+| bean name                   | bean type                                          | bean implements |
+*-----------------------------+----------------------------------------------------+------------------------------------+
+| "findByFloatValueController" | < EntityController\<TargetBean, FindByFloatValue\> >  | com.u2ware.springfield.controller. EntityHandler |
+*-----------------------------+----------------------------------------------------+------------------------------------+
+| "findByFloatValueValidator"  | < EntityValidator\<TargetBean, FindByFloatValue\> >   | com.u2ware.springfield.validation. EntityValidator  |
+*-----------------------------+----------------------------------------------------+------------------------------------+ 
+| "findByFloatValueService"    | < EntityService\<TargetBean, FindByFloatValue\> >     | com.u2ware.springfield.service. EntityServiceImpl    |
+*-----------------------------+----------------------------------------------------+------------------------------------+ 
+| "findByStringValueController"| < EntityController\<TargetBean, FindByStringValue\> > | com.u2ware.springfield.controller. EntityHandler |
+*-----------------------------+----------------------------------------------------+-----------------------------------+ 
+| "findByStringValueValidator" | < EntityValidator\<TargetBean, FindByStringValue\> >  | com.u2ware.springfield.validation. EntityValidator   |
+*-----------------------------+----------------------------------------------------+------------------------------------+
+| "findByStringValueService"   | < EntityService\<TargetBean, FindByStringValue\> >    | com.u2ware.springfield.service. EntityServiceImpl    |
+*-----------------------------+----------------------------------------------------+------------------------------------+
+| "targetBeanRepository"       | < EntityRepository\<TargetBean, Integer\> >  | com.u2ware.springfield.repository.jpa. EntityJpaRepository    |
+*-----------------------------+----------------------------------------------------+------------------------------------+
+
+	[Note:]
+	  	동일한 Entity 에 대해 RequestMapping 을 추가하고 여러가지 서로 다른 질의문을 정의할 수 있는 방법이다.
+
+
+
+* RequestMapping
+~~~~~~~~~~~~~~~~~~~
+ 
+*------+-------------*----------------------+------------------------+--------+
+|매핑 경로 | HTTP Method | Controller Method 이름  | 예제 Command 객체 |  예제 매핑 경로   |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/                        | GET    | home       | FindByFloatValue| /part3/step21/       |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>                         | GET    | findForm   | FindByFloatValue| /part3/step21        |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>                         | POST   | find       | FindByFloatValue| /part3/step21        |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>      | GET    | read       | TargetBean| /part3/step21/7      | 
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/new                     | GET    | createForm | TargetBean| /part3/step21/new    |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/new                     | POST   | create     | TargetBean| /part3/step21/new    | 
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | GET    | updateForm | TargetBean| /part3/step21/7/eidt |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | PUT    | update     | TargetBean| /part3/step21/7/eidt |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | DELETE | delete     | TargetBean| /part3/step21/7/eidt |
+*------+-------------*----------------------+------------------------+--------+
+
+
+*------+-------------*----------------------+------------------------+--------+
+|매핑 경로 | HTTP Method | Controller Method 이름  | 예제 Command 객체 |  예제 매핑 경로   |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/                        | GET    | home       | FindByStringValue  | /part3/step22/       |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>                         | GET    | findForm   | FindByStringValue | /part3/step22        |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>                         | POST   | find       | FindByStringValue | /part3/step22        |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>      | GET    | read       | TargetBean | /part3/step22/7      | 
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/new                     | GET    | createForm | TargetBean | /part3/step22/new    |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/new                     | POST   | create     | TargetBean | /part3/step22/new    | 
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | GET    | updateForm | TargetBean | /part3/step22/7/eidt |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | PUT    | update     | TargetBean | /part3/step22/7/eidt |
+*------+-------------*----------------------+------------------------+--------+
+| /<<<\{>>>topLevelMapping<<<\}>>>/<<<\{>>>id<<<\}>>>/edit | DELETE | delete     | TargetBean | /part3/step22/7/eidt |
+*------+-------------*----------------------+------------------------+--------+
+
+      [Note:]  
+          FindByStringValue 와  FindByStringValue 가 동일 package 내에 있으므로 경로가 topLevelMapping 이 중복된다.
+                        따라서 , topLevelMapping 을 직접지정하는 방식이 사용되었다.
+
+
+
+ 
+
+
+

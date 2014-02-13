@@ -1,0 +1,158 @@
+ -----
+ WebMVC
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+Extension
+~~~~~~~~~~~~~~~~~~~~
+ 
+* TargetBean
+~~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part2.step1;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
+
+import com.u2ware.springfield.config.Springfield;
+import com.u2ware.springfield.config.Springfield.Strategy;
+
+@Springfield(
+	strategy=Strategy.JPA
+)
+@Entity
+public class TargetBean {
+
+	@Id
+	@NotNull 
+	@Getter @Setter private Integer intValue;
+
+	@NotNull @NumberFormat(pattern="0.0000") 
+	@Getter @Setter private Float floatValue;	
+
+	@Getter @Setter private String stringValue;
+	
+	@Type(type="org.joda.time.contrib.hibernate.PersistentDateTime")
+	@NotNull @DateTimeFormat(pattern="yyyy-MM-dd") 
+	@Getter @Setter private DateTime dateTimeValue;	
+	
+	@NotNull
+	@Getter @Setter private EnumValue enumValue;	
+}
++------------------------------------------------------------------------+
+
+* TargetBeanValidator
+~~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part2.step1;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
+
+import com.u2ware.springfield.repository.EntityRepository;
+import com.u2ware.springfield.validation.EntityValidatorImpl;
+
+@Component
+public class TargetBeanValidator extends EntityValidatorImpl<TargetBean,TargetBean>{
+
+	protected final Log logger = LogFactory.getLog(getClass());
+
+	@Autowired @Qualifier("targetBeanRepository")
+	protected EntityRepository<TargetBean, Integer> targetBeanRepository;
+	
+
+	@Override
+	@Transactional
+	public void create(TargetBean target, Errors errors) {
+		super.create(target, errors);
+
+		if(target.getIntValue() != null && targetBeanRepository.exists(target)){
+			errors.rejectValue("intValue" , "중복키입니다.");
+		}
+
+		ValidationUtils.rejectIfEmpty(errors, "stringValue", null, "empty");
+		if("NO".equalsIgnoreCase(target.getStringValue())){
+			errors.rejectValue("stringValue" , null, "'NO' equals Ignore Case");
+		}
+	}
+}
++------------------------------------------------------------------------+
+
+* TargetBeanService
+~~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part2.step1;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.u2ware.springfield.domain.EntityPageable;
+import com.u2ware.springfield.repository.EntityRepository;
+import com.u2ware.springfield.service.EntityServiceImpl;
+
+@Service
+public class TargetBeanService extends EntityServiceImpl<TargetBean, TargetBean>{
+
+	@Autowired
+	public TargetBeanService(
+		@Qualifier("targetBeanRepository")EntityRepository<TargetBean, Integer> r) {
+		super("targetBeanRepository", r);
+	}
+
+	@Override
+	@Transactional
+	public Iterable<TargetBean> findForm(TargetBean request, EntityPageable pageable) {
+		logger.debug("Overide findForm ");
+		return super.findForm(request, pageable);
+	}
+}
++------------------------------------------------------------------------+
+
+
+* @Springfield
+~~~~~~~~~~~~~~~~~~~
+
+ @Springfield(strategy=Strategy.JPA) 선언으로 다음 4개의 Bean 이 자동 생성, 등록 된다.
+
+*-------------------------+--------------------------------------------------+------------------------------+
+| bean name               | bean type                                        | bean implement               |
+*-------------------------+--------------------------------------------------+------------------------------+
+| "targetBeanController" | < EntityController\<TargetBean, TargetBean\> > | com.u2ware.springfield.controller. EntityHandler |
+*-------------------------+--------------------------------------------------+------------------------------+
+| "targetBeanValidator"  | < EntityValidator\<TargetBean, TargetBean\> >  | << example.u2ware.springfield.part2.step1. TargetBeanValidator >>  |
+*-------------------------+--------------------------------------------------+------------------------------+
+| "targetBeanService"    | < EntityService\<TargetBean, TargetBean\> >    | << example.u2ware.springfield.part2.step1. TargetBeanService >> |
+*-------------------------+--------------------------------------------------+------------------------------+
+| "targetBeanRepository" | < EntityRepository\<TargetBean, Integer\> >     | com.u2ware.springfield.repository.sqlsession. EntitySqlsessionRepository  |
+*-------------------------+--------------------------------------------------+------------------------------+
+
+		[Note:]
+			 @springfield 는   {{{ http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/validation.html#validation-beanvalidation} JSR-303 Bean Validation}}
+			 과  {{{  http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/validation.html#validator} org.springframework.validation.Validator}} 를 함계 지원한다.
+
+
+  [application-context.xml:]  
+	 Bean Name 이 springframework 의 applicationContext 에 등록 되어있다면, @Springfield 는 새로운 Bean 을 생성하지 않는다.\
+  	 따라서 , @Springfield 에 의해 생성되는 Bean 의 메소드를 오버라이드 할 수 있다.\
+	 설정 파일에 springframework 의 component-scan 이 선언되어 있어야 한다.
+          
+    <<<<>>>context:component-scan base-package="example.u2ware.springfield" /<<<>>>> 

@@ -12,7 +12,7 @@ import com.u2ware.springfield.view.ViewResolverSupport;
 
 public class MultipartFileViewResolver extends AbstractCachingViewResolver implements ResourceLoaderAware{
 
-	public MultipartFileViewResolver(MultipartFileView view){
+	public MultipartFileViewResolver(View view){
 		this.view = view;
 	}
 	

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security 
+		http://www.springframework.org/schema/security/spring-security.xsd">			
+
+	<sec:debug/>
+
+
+	<!-- 
+	#############################################################
+	# None security path...
+	#############################################################
+	-->
+ 	<sec:http pattern="/resources/**" security="none" />
+
+	<!-- 
+	#############################################################
+	#  authorization : 권한 
+	#############################################################
+	-->
+	<bean id="accessDecisionManager" class="com.u2ware.springfield.security.authorization.AccessDecisionManager">
+		<constructor-arg>
+			<list>
+				<bean class="com.u2ware.springfield.security.authorization.AuthorityAttributeVoter"/>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<sec:http auto-config="true" use-expressions="true" access-decision-manager-ref="accessDecisionManager"  >
+
+ 		<!-- 
+		##################################
+		# intercept-url
+		##################################
+		 -->
+ 		<sec:intercept-url pattern="/**" access="hasRole('ROLE_SPRINGFIELD')"/>
+
+
+ 		<!-- 
+		##################################
+		# form-login 
+		##################################
+		 -->
+		<sec:form-login 
+			      login-processing-url="#{prop['security.login']}"
+			                login-page="#{prop['security.login.page']}"
+			        username-parameter="#{prop['security.login.page.username']}"        
+			        password-parameter="#{prop['security.login.page.password']}"       
+			        default-target-url="#{prop['security.login.page']}" 
+			authentication-failure-url="#{prop['security.login.page']}?errorCode=authentication-failure" 
+		/>
+
+		<sec:logout 
+		           logout-url="#{prop['security.logout']}" 
+			invalidate-session="true" 
+			logout-success-url="#{prop['security.login.page']}?errorCode=logout-success"
+		/>
+
+		<!-- 
+		##################################
+		# remember-me
+		##################################
+		 -->
+ 		<sec:remember-me key="springfield" services-ref="rememberMeService"/>
+
+		<!-- 
+		##################################
+		# session-management
+		##################################
+		 -->
+ 		<sec:session-management>
+			<sec:concurrency-control 
+				max-sessions="1" 
+				 expired-url="#{prop['security.login.page']}?errorCode=session-expired"
+			/>
+		</sec:session-management>
+
+		<!-- 
+		##################################
+		# session-management
+		##################################
+		 -->
+		<sec:access-denied-handler 
+			error-page="#{prop['security.login.page']}?errorCode=access-denied"
+		/>
+
+	</sec:http>
+
+
+	<!-- 
+	#############################################################
+	#   authentication 인증
+	#############################################################
+	 -->
+	<bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
+		<property name="userPropertyToUse" value="salt"/>
+	</bean>
+
+	<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+	</bean>	 
+
+	<bean id="userService" class="com.u2ware.springfield.security.authentication.SimpleUserDetailsService">
+	</bean>
+
+	<sec:authentication-manager alias="authenticationManager">
+
+		<sec:authentication-provider user-service-ref="userService">
+ 			<sec:password-encoder ref="passwordEncoder">
+				<sec:salt-source ref="saltSource"/>
+			</sec:password-encoder>
+ 		</sec:authentication-provider>
+
+ 	</sec:authentication-manager>
+ 	
+	
+	<!-- 
+	#############################################################
+	#   Remember Me !!!
+	#############################################################
+	 -->
+	<bean id="rememberMeService" class="com.u2ware.springfield.security.rememberme.SimpleRememberMeServices">
+		<constructor-arg value="springfieldRememberMe"/>
+		<constructor-arg ref="userService"/>
+		<property name="parameter" value="#{prop['security.login.page.rememberme']}"/>
+		<property name="tokenValiditySeconds" value="3600"/>
+	</bean>
+	
+</beans>

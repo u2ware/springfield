@@ -1,0 +1,205 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>@@Springfield - Support</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+
+<body>
+<section name="File Upload">
+	<subsection name="Code">
+		<source><![CDATA[
+package com.u2ware.springfield.sample.others.upload;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.u2ware.springfield.config.Springfield;
+import com.u2ware.springfield.config.Springfield.Strategy;
+import com.u2ware.springfield.support.multipart.DownloadFile;
+
+@Springfield(
+	strategy=Strategy.JPA,
+	methodLevelMapping={"*","read.stream","read.download"}
+)
+@Entity
+public class AttachedFile implements DownloadFile{
+	
+	@Transient 
+	private @Getter @Setter MultipartFile multipartFile;
+	
+	@Id @GeneratedValue
+	private @Getter @Setter Integer id;
+	private @Getter @Setter String contentFile;
+	private @Getter @Setter String contentName;
+	private @Getter @Setter String contentType;
+	private @Getter @Setter long contentSize;
+}
+		]]></source>
+		<source><![CDATA[
+package com.u2ware.springfield.sample.others.upload;
+
+import java.io.IOException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import com.u2ware.springfield.repository.EntityRepository;
+import com.u2ware.springfield.service.EntityServiceImpl;
+import com.u2ware.springfield.support.multipart.MultipartFileHandler;
+import com.u2ware.springfield.validation.RejectableException;
+
+@Service
+public class AttachedFileService extends EntityServiceImpl<AttachedFile, Integer>{
+
+	@Autowired 
+	private MultipartFileHandler multipartFileHandler;
+
+	@Autowired @Qualifier("attachedFileRepository") 
+	private EntityRepository<AttachedFile, Integer> attachedFileRepository;
+	
+	@Override
+	protected EntityRepository<AttachedFile, Integer> getRepository() {
+		return attachedFileRepository;
+	}
+
+	@Override
+	@Transactional
+	public AttachedFile create(AttachedFile entity) {
+		try {
+			MultipartFile multipartFile = entity.getMultipartFile(); 
+			String contentFile = multipartFileHandler.saveFile(multipartFile);
+			
+			entity.setContentFile(contentFile);
+			entity.setContentName(multipartFile.getOriginalFilename());
+			entity.setContentType(multipartFile.getContentType());
+			entity.setContentSize(multipartFile.getSize());
+		} catch (IOException e) {
+			throw new RejectableException("multipartFile" , "id");
+		}
+		AttachedFile newEntity = getRepository().create(entity);
+		logger.debug(newEntity.getId());
+		
+		return newEntity;
+	}
+	
+	@Override
+	@Transactional
+	public AttachedFile delete(AttachedFile entity) {
+		AttachedFile newEntity = getRepository().read(entity);
+		try {
+			multipartFileHandler.deleteFile(newEntity.getContentFile());
+		} catch (IOException e) {
+			throw new RejectableException("multipartFile" , "id");
+		}
+		getRepository().delete(newEntity);
+		return entity;
+	}
+}
+		]]></source>
+	</subsection>
+	<subsection name="Beans">
+		<p>
+			<b>@Springfield(strategy=Strategy.JPA)</b> 선언으로 다음 4개의 Bean 이  등록 된다.
+			 자동생성 하려는  Bean(Name)이  이미  존재한다면,  @Springfield 는 Bean 을 따로 생성하지 않는다.
+		</p>	
+		<table border="1">
+			<tr><th>bean name  </th>	<th>bean type</th>	<th>bean implement</th></tr>
+			<tr><td>"attachedFileController"</td><td><i><![CDATA[EntityController<AttachedFile, AttachedFile>]]></i></td><td>com.u2ware.springfield.controller. EntityHandler</td></tr>
+			<tr><td>"attachedFileValidator"</td> <td><i><![CDATA[EntityValidator<AttachedFile, AttachedFile>]]></i></td> <td>com.u2ware.springfield.validation. EntityValidatorImpl</td></tr>
+			<tr><td>"attachedFileService"</td>   <td><i><![CDATA[EntityService<AttachedFile, AttachedFile>]]></i></td>   <td><b>com.u2ware.springfield.sample.others.upload. AttachedFileService</b></td></tr>
+			<tr><td>"attachedFileRepository"</td><td><i><![CDATA[EntityRepository<AttachedFile, Integer>]]></i></td><td>com.u2ware.springfield.repository.jpa. EntityJpaRepository</td></tr>
+		</table>
+	</subsection>
+	
+	<subsection name="RequestMapping">
+		<table border="1">
+			<tr><th>매핑 경로</th>	<th>HTTP Method</th>	<th>Controller Method 이름</th>	<th>예제 Command 객체</th>	<th>예제 매핑 경로</th></tr>
+			<tr><td><i>/{topLevelMapping}/</i></td>         <td>GET</td>   <td>home()</td>      <td>AttachedFile</td><td>/others/upload/</td></tr>
+			<tr><td><i>/{topLevelMapping}</i></td>          <td>GET</td>   <td>findForm()</td>  <td>AttachedFile</td><td>/others/upload</td></tr>
+			<tr><td><i>/{topLevelMapping}</i></td>          <td>POST</td>  <td>find()</td>      <td>AttachedFile</td><td>/others/upload</td></tr>
+			<tr><td rowspan="3"><i>/{topLevelMapping}/{id}</i></td>     <td rowspan="3">GET</td>   <td rowspan="3">read()</td>      <td rowspan="3">JpaBean</td><td>/others/upload/1</td></tr>
+			<tr>                                                                                                <td>/others/upload/1.stream</td></tr>
+			<tr>                                                                                                <td>/others/upload/1.download</td></tr>
+			<tr><td><i>/{topLevelMapping}/new</i></td>      <td>GET</td>   <td>createForm()</td><td>AttachedFile</td><td>/others/upload/new</td></tr>
+			<tr><td><i>/{topLevelMapping}/new</i></td>      <td>POST</td>  <td>create()</td>    <td>AttachedFile</td><td>/others/upload/new</td></tr>
+			<tr><td><i>/{topLevelMapping}/{id}/edit</i></td><td>GET</td>   <td>updateForm()</td><td>AttachedFile</td><td>/others/upload/1/eidt</td></tr>
+			<tr><td><i>/{topLevelMapping}/{id}/edit</i></td><td>PUT</td>   <td>update()</td>    <td>AttachedFile</td><td>/others/upload/1/eidt</td></tr>
+			<tr><td><i>/{topLevelMapping}/{id}/edit</i></td><td>DELETE</td><td>delete()</td>    <td>AttachedFile</td><td>/others/upload/1/eidt</td></tr>
+		</table>
+	</subsection>
+	
+	
+	<subsection name="MultipartFileHandler">
+		<dl>
+			<dt>Note:</dt>
+			<dd>
+				 Springfield 는 file upload 를 위해 <b>com.u2ware.springfield.support.multipart.MultipartFileHandler</b> 
+				 인터페이스와 구현체를 제공한다. 
+			</dd>
+			<dd>
+				 인자로 사용되는 <b>com.u2ware.springfield.support.multipart.UploadFile</b>는 업로드된 파일의 실제 저장 경로 및 이름을 결정짓는다.
+			</dd>
+		</dl>
+		<source><![CDATA[
+public interface MultipartFileHandler {
+
+	public String saveFile(MultipartFile multipartFile) throws IOException;
+	public String saveFile(MultipartFile multipartFile, String saveName) throws IOException;
+	public String saveFile(MultipartFile multipartFile, UploadFile policy) throws IOException;
+	public String saveFile(MultipartFile multipartFile, String saveName , UploadFile policy) throws IOException;
+
+	public File findFile(String contentFile) throws IOException;
+	public void deleteFile(String contentFile) throws IOException;
+}
+		]]></source>
+		<source><![CDATA[
+public interface UploadFile {
+
+	public String getContentFile(MultipartFile multipartFile) ;
+	public String getContentFile(MultipartFile multipartFile, String name) ;
+}
+		]]></source>
+		<dl>
+			<dt>application-context.properties:</dt>
+			<dd>파일업로드 사이즈와 저장 위치는 설정이 가능하다.</dd>
+			<dd>
+				<p>
+					webmvc.multipart.maxUploadSize=20000000<br/>
+					webmvc.multipart.location=
+				</p>
+			</dd>
+		</dl>
+	</subsection>
+
+	<subsection name="DownloadFile">
+		<dl>
+			<dt>Note:</dt>
+			<dd>
+				 Springfield 가 제공하는 MultipartFileView 는  <b>com.u2ware.springfield.support.multipart.DownloadFile</b> 을  model 로 부터 찾아서 동작한다.
+			</dd>
+		</dl>
+		<source><![CDATA[
+public interface DownloadFile {
+
+	public String getContentFile();
+	public String getContentName();
+	public String getContentType();
+	public long getContentSize();
+}
+		]]></source>
+	</subsection>
+
+
+</section>
+</body>
+</document>

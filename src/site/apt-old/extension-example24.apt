@@ -1,0 +1,188 @@
+ -----
+ Extension
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+Extension
+~~~~~~~~~~~~~~~~~~~~
+
+* Form
+~~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part2.step4;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import org.joda.time.DateTime;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
+
+import com.u2ware.springfield.config.Springfield;
+import com.u2ware.springfield.config.Springfield.Strategy;
+
+import example.u2ware.springfield.part2.step1.EnumValue;
+
+@Springfield(
+	strategy=Strategy.DTO,
+	identity={"intForm"}
+)
+public class Form {
+
+	@Getter @Setter private Integer intForm;
+
+	@NumberFormat(pattern="0.0000") 
+	@Getter @Setter private Float floatForm;	
+	@Getter @Setter private String stringForm;
+	
+	@DateTimeFormat(pattern="yyyy-MM-dd")  
+	@Getter @Setter private DateTime dateTimeForm;	
+	@Getter @Setter private EnumValue enumForm;	
+}
++------------------------------------------------------------------------+
+
+
+* FormService
+~~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part2.step4;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.u2ware.springfield.domain.EntityPageImpl;
+import com.u2ware.springfield.domain.EntityPageable;
+import com.u2ware.springfield.repository.EntityRepository;
+import com.u2ware.springfield.service.EntityService;
+
+import example.u2ware.springfield.part2.step1.TargetBean;
+
+@Service
+@Transactional
+public class FormService implements EntityService<Form, Form>{
+
+	protected final Log logger = LogFactory.getLog(getClass());
+
+	@Autowired 
+	@Qualifier("targetBeanRepository")
+	protected EntityRepository<TargetBean, Integer> targetBeanRepository;
+
+	public Form home(Form query) {
+		return query;
+	}
+
+	public Iterable<Form> findForm(Form query, EntityPageable pageable) {
+		return find(query, pageable);
+	}
+
+	public Iterable<Form> find(Form query, EntityPageable pageable) {
+		
+		if(pageable != null && pageable.isEnable()){
+			Page<TargetBean> r = targetBeanRepository.findAll(query, pageable);
+			
+			List<Form> content = this.convert(r.getContent());
+			long total = r.getTotalElements();
+			
+			return new EntityPageImpl<Form>(content, pageable, total);
+		}else{
+			List<TargetBean> r = targetBeanRepository.findAll(query);
+			
+			List<Form> content = this.convert(r);
+			return content;
+		}
+	}
+	
+	public Form read(Form entity) {
+		TargetBean target = convert(entity);
+		target = targetBeanRepository.read(target);
+		return convert(target);
+	}
+
+	public Form createForm(Form entity) {
+		return entity;
+	}
+
+	public Form create(Form entity) {
+		TargetBean target = convert(entity);
+		target = targetBeanRepository.create(target);
+		return convert(target);
+	}
+
+	public Form updateForm(Form entity) {
+		return read(entity);
+	}
+
+	public Form update(Form entity) {
+		TargetBean target = convert(entity);
+		target = targetBeanRepository.update(target);
+		return convert(target);
+	}
+
+	public Form delete(Form entity) {
+		TargetBean target = convert(entity);
+		targetBeanRepository.delete(target);
+		return entity;
+	}
+	
+	private List<Form> convert(List<TargetBean> targets) {
+		List<Form> content = new ArrayList<Form>();
+		for(TargetBean target : targets){
+			Form form = convert(target);
+			content.add(form);
+		}
+		return content;
+	}	
+	private Form convert(TargetBean target){
+		Form form = new Form();
+		form.setIntForm(target.getIntValue());
+		form.setStringForm(target.getStringValue());
+		form.setFloatForm(target.getFloatValue());
+		form.setEnumForm(target.getEnumValue());
+		form.setDateTimeForm(target.getDateTimeValue());
+		return form;
+	}
+	private TargetBean convert(Form form){
+		TargetBean target = new TargetBean();
+		target.setIntValue(form.getIntForm());
+		target.setStringValue(form.getStringForm());
+		target.setFloatValue(form.getFloatForm());
+		target.setEnumValue(form.getEnumForm());
+		target.setDateTimeValue(form.getDateTimeForm());
+		return target;
+	}
+}
++------------------------------------------------------------------------+
+
+
+
+* @Springfield
+~~~~~~~~~~~~~~~~~~~~
+
+  @Springfield 선언으로 다음 3개의 Bean 이 자동 생성, 등록 된다.
+  
+*-------------------------+----------------------------------------------+------------------------------------+
+| bean id                 | bean type                                    | implements type                    |
+*-------------------------+----------------------------------------------+------------------------------------+
+| "formController"   | < EntityController\<Form, Form\> > | com.u2ware.springfield.controller. EntityHandler |
+*-------------------------+----------------------------------------------+------------------------------------+
+| "formValidator"   | < EntityValidator\<Form, Form\> > | com.u2ware.springfield.controller. EntityValidatorImpl |
+*-------------------------+----------------------------------------------+------------------------------------+
+| "formService"      | < EntityService\<Form, Form\> >    | <<example.u2ware.springfield.part2.step4. FormService>>   |
+*-------------------------+----------------------------------------------+------------------------------------+
+ 
+ 	[Note:]
+	  	Data Transfer Object 를 이용하기 위한 방법이다.\
+	  	service layer 에서 다수 의 Repository 를 조립하여 비즈니스 로직을 작성할 수 있다.
+ 	
+  
+   

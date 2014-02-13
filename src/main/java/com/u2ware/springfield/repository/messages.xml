@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-
-	<entry key="com.u2ware.springfield.repository.DuplicateKey.message"><![CDATA[Duplicate Key.]]></entry>
-	
-</properties>

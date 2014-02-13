@@ -1,5 +1,8 @@
 package com.u2ware.springfield.repository.jpa;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -9,19 +12,19 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.mapping.PropertyPath;
 import org.springframework.data.repository.query.parser.Part;
 import org.springframework.data.repository.query.parser.Part.Type;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.ObjectUtils;
 
 import com.u2ware.springfield.repository.AbstractPartTreeQuery;
 
 class PartTreeQuery<T> extends AbstractPartTreeQuery<Predicate> implements Specification<T>{
 
-	protected final Log logger = LogFactory.getLog(getClass());
+	//protected final Log logger = LogFactory.getLog(getClass());
 
 	public PartTreeQuery(Class<?> entityClass, Object param) {
 		super(entityClass, param);
@@ -39,6 +42,8 @@ class PartTreeQuery<T> extends AbstractPartTreeQuery<Predicate> implements Speci
 		this.root = root;
 		this.query = query;
 		this.builder = builder;
+		query.distinct(super.partTree.isDistinct());
+		
 		return super.createCriteria();
 	}
 
@@ -141,9 +146,30 @@ class PartTreeQuery<T> extends AbstractPartTreeQuery<Predicate> implements Speci
 			return isNullPath.isNotNull();
 			
 		}else if(Type.NOT_IN.equals(type)){
-		
+			Object inValue = paramWrapper.getPropertyValue(name);
+			if(inValue != null){
+				
+				Expression<String> inPath = getTypedPath(root, part);
+				if(ClassUtils.isAssignableValue(Collection.class, inValue)){
+					return inPath.in((Collection<?>)inValue).not();
+				}else if(ObjectUtils.isArray(inValue)){
+					return inPath.in(Arrays.asList(inValue)).not();
+				}
+			}
+			
 		}else if(Type.IN.equals(type)){
 		
+			Object inValue = paramWrapper.getPropertyValue(name);
+			if(inValue != null){
+				
+				Expression<String> inPath = getTypedPath(root, part);
+				if(ClassUtils.isAssignableValue(Collection.class, inValue)){
+					return inPath.in((Collection<?>)inValue);
+				}else if(ObjectUtils.isArray(inValue)){
+					return inPath.in(Arrays.asList(inValue)).not();
+				}
+			}
+			
 		}else if(Type.STARTING_WITH.equals(type)){
 			Object likeValue = paramWrapper.getPropertyValue(name);
 			if(likeValue != null){

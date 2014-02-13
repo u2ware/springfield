@@ -44,9 +44,9 @@ public class ModulesConfigDefinitionParser implements BeanDefinitionParser{
 			BeanDefinitionRegistry registry = parser.getRegistry();
 			ModulesConfig modulesConfig = new ModulesConfig(element, parser);
 			
-			logger.info("@Springfield");
-			logger.info("\thttp://u2ware.com");
-			logger.info("\t"+modulesConfig.getBasePackage()+" scaning...");
+			logger.warn("@Springfield");
+			logger.warn("\thttp://u2ware.com");
+			logger.warn("\t"+modulesConfig.getBasePackage()+" scaning...");
 			//
 			//
 			//
@@ -75,20 +75,20 @@ public class ModulesConfigDefinitionParser implements BeanDefinitionParser{
 					if(Strategy.DEFAULT.equals(strategy)){
 						strategy = Strategy.DTO;
 					}
-					logger.info("@Springfield Query : "+queryClassName);
-					logger.info("                   : "+entityClass.getName());
-					logger.info("                   : "+strategy);
+					logger.warn("@Springfield Query : "+queryClassName);
+					logger.warn("                   : "+entityClass.getName());
+					logger.warn("                   : "+strategy);
 
 					if(Strategy.DTO.equals(strategy)){
 						addEntityServiceTemplateConfiguration(registry, modulesConfig, entityClass, queryClass);
-						addEntityHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, queryClass, querySpringfield);
+						addHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, queryClass, querySpringfield);
 						addEntityValidatorConfiguration(registry, modulesConfig, entityClass, queryClass);
 						addEntityHandlerConfiguration(registry, modulesConfig, entityClass, queryClass);
 						
 					}else if(Strategy.JPA.equals(strategy)){
 						addJpaRepositoryConfiguration(registry, modulesConfig, entityClass);
 						addEntityServiceConfiguration(registry, modulesConfig, entityClass, queryClass);
-						addEntityHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, queryClass, querySpringfield);
+						addHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, queryClass, querySpringfield);
 						addEntityValidatorConfiguration(registry, modulesConfig, entityClass, queryClass);
 						addEntityHandlerConfiguration(registry, modulesConfig, entityClass, queryClass);
 
@@ -98,7 +98,7 @@ public class ModulesConfigDefinitionParser implements BeanDefinitionParser{
 					}else if(Strategy.MONGODB.equals(strategy)){
 						addMangodbRepositoryConfiguration(registry, modulesConfig, entityClass);
 						addEntityServiceConfiguration(registry, modulesConfig, entityClass, queryClass);
-						addEntityHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, queryClass, querySpringfield);
+						addHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, queryClass, querySpringfield);
 						addEntityValidatorConfiguration(registry, modulesConfig, entityClass, queryClass);
 						addEntityHandlerConfiguration(registry, modulesConfig, entityClass, queryClass);
 					}else if(Strategy.MONGODB_REPOSITORY_ONLY.equals(strategy)){
@@ -107,7 +107,7 @@ public class ModulesConfigDefinitionParser implements BeanDefinitionParser{
 					}else if(Strategy.SQLSESSION.equals(strategy)){
 						addSqlSessionRepositoryConfiguration(registry, modulesConfig, entityClass);
 						addEntityServiceConfiguration(registry, modulesConfig, entityClass, queryClass);
-						addEntityHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, queryClass, querySpringfield);
+						addHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, queryClass, querySpringfield);
 						addEntityValidatorConfiguration(registry, modulesConfig, entityClass, queryClass);
 						addEntityHandlerConfiguration(registry, modulesConfig, entityClass, queryClass);
 					}else if(Strategy.SQLSESSION_REPOSITORY_ONLY.equals(strategy)){
@@ -135,19 +135,19 @@ public class ModulesConfigDefinitionParser implements BeanDefinitionParser{
 						if(Strategy.DEFAULT.equals(strategy)){
 							strategy = Strategy.DTO;
 						}
-						logger.info("@Springfield Entity : "+entityClassName);
-						logger.info("                    : "+strategy);
+						logger.warn("@Springfield Entity : "+entityClassName);
+						logger.warn("                    : "+strategy);
 						
 						if(Strategy.DTO.equals(strategy)){
 							addEntityServiceTemplateConfiguration(registry, modulesConfig, entityClass, entityClass);
-							addEntityHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, entityClass, entitySpringfield);
+							addHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, entityClass, entitySpringfield);
 							addEntityValidatorConfiguration(registry, modulesConfig, entityClass, entityClass);
 							addEntityHandlerConfiguration(registry, modulesConfig, entityClass, entityClass);
 							
 						}else if(Strategy.JPA.equals(strategy)){
 							addJpaRepositoryConfiguration(registry, modulesConfig, entityClass);
 							addEntityServiceConfiguration(registry, modulesConfig, entityClass, entityClass);
-							addEntityHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, entityClass, entitySpringfield);
+							addHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, entityClass, entitySpringfield);
 							addEntityValidatorConfiguration(registry, modulesConfig, entityClass, entityClass);
 							addEntityHandlerConfiguration(registry, modulesConfig, entityClass, entityClass);
 
@@ -157,7 +157,7 @@ public class ModulesConfigDefinitionParser implements BeanDefinitionParser{
 						}else if(Strategy.MONGODB.equals(strategy)){
 							addMangodbRepositoryConfiguration(registry, modulesConfig, entityClass);
 							addEntityServiceConfiguration(registry, modulesConfig, entityClass, entityClass);
-							addEntityHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, entityClass, entitySpringfield);
+							addHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, entityClass, entitySpringfield);
 							addEntityValidatorConfiguration(registry, modulesConfig, entityClass, entityClass);
 							addEntityHandlerConfiguration(registry, modulesConfig, entityClass, entityClass);
 							
@@ -168,7 +168,7 @@ public class ModulesConfigDefinitionParser implements BeanDefinitionParser{
 						}else if(Strategy.SQLSESSION.equals(strategy)){
 							addSqlSessionRepositoryConfiguration(registry, modulesConfig, entityClass);
 							addEntityServiceConfiguration(registry, modulesConfig, entityClass, entityClass);
-							addEntityHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, entityClass, entitySpringfield);
+							addHandlerMetamodelConfiguration(registry, modulesConfig, entityClass, entityClass, entitySpringfield);
 							addEntityValidatorConfiguration(registry, modulesConfig, entityClass, entityClass);
 							addEntityHandlerConfiguration(registry, modulesConfig, entityClass, entityClass);
 							
@@ -186,7 +186,7 @@ public class ModulesConfigDefinitionParser implements BeanDefinitionParser{
 			
 			
 		} catch (Exception e) {
-			logger.info(e.getMessage(), e);
+			logger.warn(e.getMessage(), e);
 			handleError(e, element, parser);
 		} 
 		return null;
@@ -194,11 +194,11 @@ public class ModulesConfigDefinitionParser implements BeanDefinitionParser{
 
 	private void registerBeanDefinition(BeanDefinitionRegistry registry, String beanName, BeanDefinition beanDefinition){
 		registry.registerBeanDefinition(beanName, beanDefinition);
-		logger.info("auto-register : "+beanName+" = "+beanDefinition.getBeanClassName());
+		logger.warn("auto-register : "+beanName+" = "+beanDefinition.getBeanClassName());
 	}
 	
 	private void registerBeanDefinition(BeanDefinitionRegistry registry, String beanName){
-		logger.info("auto-register : "+beanName+" = <<bean name used in registry >>");
+		logger.warn("auto-register : "+beanName+" = <<bean name used in registry >>");
 	}
 	
 	
@@ -264,7 +264,6 @@ public class ModulesConfigDefinitionParser implements BeanDefinitionParser{
 		//logger.info(beanName);
 		BeanDefinition beanDefinition = BeanDefinitionBuilder
 				.rootBeanDefinition("com.u2ware.springfield.service.EntityServiceImpl")
-				.addConstructorArgValue(repositoryName)
 				.addConstructorArgReference(repositoryName)
 				.getBeanDefinition();
 		
@@ -277,7 +276,7 @@ public class ModulesConfigDefinitionParser implements BeanDefinitionParser{
 		
 		//logger.info(beanName);
 		BeanDefinition beanDefinition = BeanDefinitionBuilder
-				.rootBeanDefinition("com.u2ware.springfield.service.EntityServiceTemplate")
+				.rootBeanDefinition("com.u2ware.springfield.service.EntityServiceImpl")
 				.getBeanDefinition();
 		
 		this.registerBeanDefinition(registry, beanName, beanDefinition);
@@ -286,7 +285,7 @@ public class ModulesConfigDefinitionParser implements BeanDefinitionParser{
 	///////////////////////////////////////
 	//
 	///////////////////////////////////////
-	private void addEntityHandlerMetamodelConfiguration(BeanDefinitionRegistry registry, ModulesConfig modulesConfig, Class<?> entityClass, Class<?> queryClass, Springfield webapp) {
+	private void addHandlerMetamodelConfiguration(BeanDefinitionRegistry registry, ModulesConfig modulesConfig, Class<?> entityClass, Class<?> queryClass, Springfield webapp) {
 
 		String beanName = ClassUtils.getShortNameAsProperty(queryClass)+"Metamodel";
 		if(registry.isBeanNameInUse(beanName)) {registerBeanDefinition(registry, beanName); return ;}
@@ -327,7 +326,7 @@ public class ModulesConfigDefinitionParser implements BeanDefinitionParser{
 		if(registry.isBeanNameInUse(beanName)) {registerBeanDefinition(registry, beanName); return ;}
 		
 		BeanDefinition beanDefinition = BeanDefinitionBuilder
-				.rootBeanDefinition("com.u2ware.springfield.controller.EntityValidatorImpl")
+				.rootBeanDefinition("com.u2ware.springfield.validation.EntityValidatorImpl")
 				.getBeanDefinition();
 
 		this.registerBeanDefinition(registry, beanName, beanDefinition);
@@ -349,12 +348,9 @@ public class ModulesConfigDefinitionParser implements BeanDefinitionParser{
 		
 		BeanDefinition beanDefinition = BeanDefinitionBuilder
 				.rootBeanDefinition("com.u2ware.springfield.controller.EntityHandler")
-				.addConstructorArgValue(serviceName)
 				.addConstructorArgReference(serviceName)
-				.addConstructorArgValue(metamodelName)
-				.addConstructorArgReference(metamodelName)
-				.addConstructorArgValue(validatorName)
 				.addConstructorArgReference(validatorName)
+				.addConstructorArgReference(metamodelName)
 				.getRawBeanDefinition();
 				
 		this.registerBeanDefinition(registry, beanName, beanDefinition);

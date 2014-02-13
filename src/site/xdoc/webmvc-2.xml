@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>@Springfield</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+
+<body>
+<section name="EntityValidator">
+		<source><![CDATA[
+public interface EntityValidator<T,Q> {
+
+	public void home(Q target, Errors errors);
+
+	public void findForm(Q target, Errors errors) ;
+	
+	public void find(Q target, Errors errors);
+	
+	public void read(T target, Errors errors);
+	
+	public void createForm(T target, Errors errors) ;
+	
+	public void create(T target, Errors errors);
+	
+	public void updateForm(T target, Errors errors);
+	
+	public void update(T target, Errors errors);
+	
+	public void delete(T target, Errors errors) ;
+	
+}
+		]]></source>
+		<p> T : Entity Object </p>
+		<p> Q : Entity Query Object </p>
+	
+</section>
+
+
+</body>
+</document>
+

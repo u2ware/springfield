@@ -10,12 +10,24 @@
 
   <bannerLeft>
     <name>springfield logo</name>
-    <src>./images/springfield_logo_small.gif</src>
+    <src>./images/springfield_logo_small.png</src>
     <href>http://www.u2ware.com/</href>
   </bannerLeft>
 
 
   <body>
+  		<head>
+			<script>
+			  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			
+			  ga('create', 'UA-39706842-1', 'u2ware.com');
+			  ga('send', 'pageview');
+			
+			</script>
+  		</head>
 <!--
      <links>
       <item name="Apache" href="http://www.apache.org/" />
@@ -35,68 +47,82 @@
       <item name="FAQ" href="faq.html"/>
       <item name="Xdoc Example" href="xdoc.html"/>
     </menu>
+    
+    
  -->
      <menu name="Springfield">
       <item name="Introduction" href="index.html"/>
       <item name="Download" href="download.html"/>
-      <item name="Changelog" href="changelog.html"/>
-      <item name="FAQ" href="faq.html"/>
       <item name="Project Information" href="project-info.html"/>
-    </menu>
-
+	</menu>
+	
      <menu name="Documentation">
+
+      <item name="Quick Start" href="quickstart.html"/>
+
       <item name="Configuration" href="configuration.html">
 	      <item name="pom.xml" href="configuration-1.html"/>
-	      <item name="context.proeprties" href="configuration-2.html"/>
-	      <item name="context.xml" href="configuration-3.html"/>
-	      <item name="web.xml" href="configuration-4.html"/>
-	      <item name="servlet.xml" href="configuration-5.html"/>
+	      <item name="proeprties" href="configuration-2.html"/>
+	      <item name="root-context" href="configuration-3.html"/>
+	      <item name="servlet-context" href="configuration-4.html"/>
+	      <item name="web.xml" href="configuration-5.html"/>
 	      <item name="logback.xml" href="configuration-6.html"/>
-	      <item name="JUnit" href="configuration-7.html"/>
       </item>
 
-      <item name="Data Access" href="dataaccess.html">
-	      <item name="Mybatis"  href="dataaccess-example11.html"/>
-	      <item name="JPA"      href="dataaccess-example12.html"/>
-	      <item name="Mongodb"  href="dataaccess-example13.html"/>
-	      <item name="Query"    href="dataaccess-example14.html"/>
-	      <item name="Pageable" href="dataaccess-example15.html"/>
+      <item name="@Springfield" href="webmvc.html">
+	      <item name="EntityController"   href="webmvc-1.html"/>
+	      <item name="EntityValidator"    href="webmvc-2.html"/>
+	      <item name="EntityService"      href="webmvc-3.html"/>
+	      <item name="EntityRepository"   href="webmvc-4.html"/>
+	  </item>
+
+      <item name="Basic" href="basic.html">
+	      <item name="MybatisBean"   href="basic-1.html"/>
+	      <item name="JpaBean"       href="basic-2.html"/>
+	      <item name="MongodbBean"   href="basic-3.html"/>
       </item>
 
-      <item name="View" href="webmvc.html">
-	      <item name="MappingBean" href="webmvc-example21.html"/>
-	      <item name="ViewBean" href="webmvc-example22.html"/>
+      <item name="Test" href="test.html">
+	      <item name="Controller"   href="test-1.html"/>
+	      <item name="Service"      href="test-2.html"/>
+	      <item name="Repository"   href="test-3.html"/>
+	      <item name="QueryMethod"  href="test-4.html"/>
       </item>
 
-      <item name="Extension" href="extension.html">
-	      <item name="Command" href="extension-example31.html"/>
-	      <item name="Override" href="extension-example32.html"/>
-	      <item name="DTO" href="extension-example33.html"/>
+      <item name="Search" href="search.html">
+	      <item name="QueryBean"   href="search-1.html"/> 
+	      <item name="FindBy"      href="search-2.html"/> 
+      </item>
+      
+      <item name="Override" href="override.html">
+	      <item name="TargetBean" href="override-1.html"/> 
+	      <item name="CustomBean" href="override-2.html"/> 
+	      <item name="FormBean"   href="override-3.html"/> 
       </item>
 
-<!-- 	     
- -->
- <!-- 
-      <item name="DataAccess" href="dataaccess.html">
-	      <item name="Mybatis" href="dataaccess-example21.html"/>
-	      <item name="JPA" href="dataaccess-example22.html"/>
-	      <item name="Mongodb" href="dataaccess-example23.html"/>
+      <item name="Extends" href="extends.html">
+	      <item name="MappingBean" href="extends-1.html"/>
+	      <item name="ViewBean"    href="extends-2.html"/>
       </item>
-      <item name="Extension" href="extension.html">
-	      <item name="EntityPageable" href="extension-example30.html"/>
-	      <item name="Multi-Query" href="extension-example31.html"/>
-	      <item name="Override" href="extension-example32.html"/>
-	      <item name="DTO" href="extension-example33.html"/>
-      </item>
--->
+
+
       <item name="Support" href="support.html">
-	      <item name="Validation" href="support-example41.html"/>
-	      <item name="ContextBroker" href="support-example42.html"/>
-	      <item name="FileUpload 1" href="support-example43.html"/>
-	      <item name="FileUpload 2" href="support-example44.html"/>
+	      <item name="Pageable"           href="support-1.html"/>
+	      <item name="Upload"             href="support-2.html"/>
+	      <item name="Ajax Upload"        href="support-3.html"/>
+	      <item name="Session"            href="support-4.html"/>
       </item>
-    </menu>
 
- 
+      <item name="Security"  href="security.html">
+	      <item name="Configuration"  href="security-1.html"/>
+	      <item name="Component"      href="security-2.html"/>
+	      <item name="Navigation"     href="security-3.html"/>
+	      <item name="Principal"      href="security-4.html"/>
+	      
+	      
+      </item>
+      <item name="ApiDocs" href="./apidocs/index.html" collapse="true"/>
+
+    </menu>
   </body>
 </project>

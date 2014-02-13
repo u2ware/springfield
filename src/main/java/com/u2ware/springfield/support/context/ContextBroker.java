@@ -1,8 +1,5 @@
 package com.u2ware.springfield.support.context;
 
-
-
-
 public interface ContextBroker  {
 
 	public <O> void put(O object);

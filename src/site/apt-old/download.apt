@@ -1,0 +1,45 @@
+ -----
+ Download
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+Download 
+~~~~~~~~~~~~~~~~~~~~
+
+*-------+
+{{{./springfield-1.3.9.jar}springfield-1.3.9.jar}}
+*-------+
+{{{./springfield-1.3.9-pom.xml}springfield-1.3.9-pom.xml}}
+*-------+
+{{{./springfield-1.3.9-sources.jar}springfield-1.3.9-sources.jar}}
+*-------+
+
+
+
+
+*-------+
+{{{./springfield-1.3.8.jar}springfield-1.3.8.jar}}
+*-------+
+{{{./springfield-1.3.8-pom.xml}springfield-1.3.8-pom.xml}}
+*-------+
+{{{./springfield-1.3.8-sources.jar}springfield-1.3.8-sources.jar}}
+*-------+
+
+Install 
+~~~~~~~~~~~~~~~~~~~~
+ 
+ Maven Local repository 
+ 
++------------------------------------------------------------------------+
+mvn install:install-file -Dfile=springfield-1.3.9.jar 
+                         -DpomFile=springfield-1.3.9-pom.xml 
+                         -Dsources=springfield-1.3.9-sources.jar 
+                         -DgroupId=com.u2ware 
+                         -DartifactId=springfield 
+                         -Dversion=1.3.9 
+                         -Dpackaging=jar 
++------------------------------------------------------------------------+
+
+  

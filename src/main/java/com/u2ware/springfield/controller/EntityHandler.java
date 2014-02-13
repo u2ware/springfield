@@ -12,8 +12,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.u2ware.springfield.domain.EntityPageImpl;
 import com.u2ware.springfield.domain.EntityPageable;
 import com.u2ware.springfield.domain.ResultContainable;
-import com.u2ware.springfield.domain.ValidationRejectableException;
 import com.u2ware.springfield.service.EntityService;
+import com.u2ware.springfield.validation.EntityValidator;
+import com.u2ware.springfield.validation.RejectableException;
 
 /**
  *                        /{topLevelMapping}/{methodLevelMapping}
@@ -33,19 +34,25 @@ import com.u2ware.springfield.service.EntityService;
  */
 public class EntityHandler<T,Q> extends EntityController<T,Q>{
 	
-	public EntityHandler(EntityService<T, Q> service, HandlerMetamodel<T, Q> metamodel) {
-		super(service, metamodel);
+	public EntityHandler() {
+		super();
 	}
-	public EntityHandler(String serviceName, EntityService<T,Q> service, String metamodelName, HandlerMetamodel<T,Q> metamodel){
-		super(serviceName, service, metamodelName, metamodel);
+	public EntityHandler(EntityService<T,Q> service) {
+		super();
+		super.setService(service);
 	}
-	public EntityHandler(EntityService<T, Q> service,HandlerMetamodel<T, Q> metamodel, EntityValidator<T, Q> validator) {
-		super(service, metamodel, validator);
+	public EntityHandler(EntityService<T,Q> service, EntityValidator<T,Q> validator) {
+		super();
+		super.setService(service);
 	}
-	public EntityHandler(String serviceName, EntityService<T, Q> service,String metamodelName, HandlerMetamodel<T, Q> metamodel, String validatorName, EntityValidator<T, Q> validator) {
-		super(serviceName, service, metamodelName, metamodel, validatorName, validator);
+	public EntityHandler(EntityService<T,Q> service, EntityValidator<T,Q> validator, HandlerMetamodel<T,Q> metamodel) {
+		super();
+		super.setMetamodel(metamodel);
+		super.setService(service);
+		super.setValidator(validator);
 	}
-
+	
+	
 	@RequestMapping(method=RequestMethod.GET, value="/")
 	public String home(Model model,  @ModelAttribute(MODEL_QUERY)Q query,BindingResult errors) throws Exception{
 
@@ -58,7 +65,7 @@ public class EntityHandler<T,Q> extends EntityController<T,Q>{
 			Object result = getService().home(query);
 			return resolveViewName(model, errors, "home", null, query, null, result);
 
-		}catch(ValidationRejectableException e){
+		}catch(RejectableException e){
 			super.validate(errors, e);
 			return resolveViewName(model, errors, "home", null, query, null, null);
 		}
@@ -76,7 +83,7 @@ public class EntityHandler<T,Q> extends EntityController<T,Q>{
 		}
 		
 		try{
-			Object result = getService().findForm(query, pageable);
+			Iterable<?> result = getService().findForm(query, pageable);
 
 			if(ClassUtils.isAssignable(ResultContainable.class, query.getClass())){
 				ResultContainable target = (ResultContainable)query;
@@ -85,7 +92,7 @@ public class EntityHandler<T,Q> extends EntityController<T,Q>{
 			}
 			
 			return resolveViewName(model, errors, "findForm", null, query, pageable, result);
-		}catch(ValidationRejectableException e){
+		}catch(RejectableException e){
 			super.validate(errors, e);
 			return resolveViewName(model, errors, "findForm", null, query, pageable, new EntityPageImpl<T>());
 		}
@@ -103,7 +110,7 @@ public class EntityHandler<T,Q> extends EntityController<T,Q>{
 		}
 
 		try{
-			Object result = getService().find(query, pageable);
+			Iterable<?> result = getService().find(query, pageable);
 
 			if(ClassUtils.isAssignable(ResultContainable.class, query.getClass())){
 				ResultContainable target = (ResultContainable)query;
@@ -112,7 +119,7 @@ public class EntityHandler<T,Q> extends EntityController<T,Q>{
 			}
 			
 			return resolveViewName(model, errors, "find", null, query, pageable, result);
-		}catch(ValidationRejectableException e){
+		}catch(RejectableException e){
 			super.validate(errors, e);
 			return resolveViewName(model, errors, "findForm", null, query, pageable, new EntityPageImpl<T>());
 		}
@@ -128,8 +135,6 @@ public class EntityHandler<T,Q> extends EntityController<T,Q>{
 		}
 
 		try{
-			logger.debug("entity : "+entity);
-			
 			T newEntity = getService().read(entity);
 			logger.debug("newEntity : "+newEntity);
 			if(newEntity == null) 
@@ -137,7 +142,7 @@ public class EntityHandler<T,Q> extends EntityController<T,Q>{
 
 			return resolveViewName(model, errors, "read", newEntity, null, null, null);
 
-		}catch(ValidationRejectableException e){
+		}catch(RejectableException e){
 			super.validate(errors, e);
 			return resolveViewName(model, errors, "read", entity, null, null, null);
 		}
@@ -156,7 +161,7 @@ public class EntityHandler<T,Q> extends EntityController<T,Q>{
 			T newEntity = getService().createForm(entity);
 			return resolveViewName(model, errors, "createForm", newEntity, null, null, null);
 			
-		}catch(ValidationRejectableException e){
+		}catch(RejectableException e){
 			super.validate(errors, e);
 			return resolveViewName(model, errors, "createForm", entity, null, null, null);
 		}
@@ -175,7 +180,7 @@ public class EntityHandler<T,Q> extends EntityController<T,Q>{
 			T newEntity = getService().create(entity);		
 			return resolveViewName(model, errors,"create", newEntity, null, null, null);
 			
-		}catch(ValidationRejectableException e){
+		}catch(RejectableException e){
 			super.validate(errors, e);
 			return resolveViewName(model, errors, "createForm", entity, null, null, null);
 		}
@@ -192,12 +197,9 @@ public class EntityHandler<T,Q> extends EntityController<T,Q>{
 
 		try{
 			T newEntity = getService().updateForm(entity);
-			if(newEntity == null) 
-				throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
-
 			return resolveViewName(model, errors, "updateForm", newEntity, null, null, null);
 
-		}catch(ValidationRejectableException e){
+		}catch(RejectableException e){
 			super.validate(errors, e);
 			return resolveViewName(model, errors, "updateForm", entity, null, null, null);
 		}
@@ -216,7 +218,7 @@ public class EntityHandler<T,Q> extends EntityController<T,Q>{
 			T newEntity = getService().update(entity);
 			return resolveViewName(model, errors, "update", newEntity, null, null, null);
 			
-		}catch(ValidationRejectableException e){
+		}catch(RejectableException e){
 			super.validate(errors, e);
 			return resolveViewName(model, errors, "updateForm", entity, null, null, null);
 		}
@@ -234,45 +236,9 @@ public class EntityHandler<T,Q> extends EntityController<T,Q>{
 		try{
 			T newEntity = getService().delete(entity);
 			return resolveViewName(model, errors, "delete", newEntity, null, null, null);
-		}catch(ValidationRejectableException e){
+		}catch(RejectableException e){
 			super.validate(errors, e);
 			return resolveViewName(model, errors, "read", entity, null, null, null);
 		}
 	}
 }
-
-/*
-@RequestMapping(method=RequestMethod.POST, value="/append")
-public String append(Model model, @ModelAttribute(MODEL_ENTITY_KEY) @Validated T entity, BindingResult errors) throws Exception{
-	if(errors.hasErrors()){
-		logger.debug(errors);
-		return resolveViewName(model, "appendForm", entity, null, null);
-	}
-	return resolveViewName(model, "append", entity, null, null);
-}
-
-@RequestMapping(method=RequestMethod.GET, value="/choice")
-public String choiceForm(Model model, @ModelAttribute(MODEL_ENTITY_KEY)T entity, BindingResult errors) throws Exception{
-	Q query = createQueryObject();
-	Object result = service.findAll(query);
-	T newEntity = service.read(entity);
-	if(newEntity == null) 
-		throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
-	return resolveViewName(model, "choiceForm", newEntity, query, result);
-}
-
-@RequestMapping(method=RequestMethod.GET, value="/{"+ID+"}/choice")
-public String choice(Model model, @ModelAttribute(MODEL_ENTITY_KEY)T entity, BindingResult errors) throws Exception{
-	T newEntity = service.read(entity);
-	if(newEntity == null) 
-		throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
-	
-	return resolveViewName(model, "choice", newEntity, null, null);
-}
-		if(ClassUtils.isAssignable(EntityPageContainer.class, query.getClass())){
-			EntityPageContainer target = (EntityPageContainer)query;
-			target.setPageable(pageable);
-			logger.info("pageable copied in query object : ");
-		}
-*/
-

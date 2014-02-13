@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+<properties>
+	<title>Configuration</title>
+	<author email="u2waremanager@gmail.com">www.u2ware.com</author>
+</properties>
+
+<body>
+    <section name="Configuration">
+    	<dl>
+    		<dt>/WEB-INF/web.xml:</dt>
+    		<p>
+    		<dd>web application</dd>
+    		</p>
+    		<dd>setting: <b>classpath:com/u2ware/springfield/sample/root-context.xml</b></dd>
+				<dd>setting: <b>/WEB-INF/servlet-context.xml</b></dd>
+		   	<dd>DispatcherServlet name is "appServlet"</dd>
+		   	
+    	</dl>
+    
+		<subsection name="pom.xml dependency">
+			<source><![CDATA[ 
+	<!-- 
+	##########################################
+	#	RootContext
+	##########################################
+	-->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:com/u2ware/springfield/sample/root-context.xml
+		</param-value>
+	</context-param>
+	<listener>
+		<listener-class>
+			org.springframework.web.context.ContextLoaderListener
+		</listener-class>
+	</listener>
+	
+	<!-- 
+	##########################################
+	#	CharacterEncodingFilter
+	##########################################
+	-->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>
+			org.springframework.web.filter.CharacterEncodingFilter
+		</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>utf-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<servlet-name>appServlet</servlet-name>
+	</filter-mapping>	
+	
+	<!-- 
+	##########################################
+	#	MultipartFilter
+	##########################################
+	-->
+	<filter>
+		<filter-name>multipartFilter</filter-name>
+		<filter-class>
+			org.springframework.web.multipart.support.MultipartFilter
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>multipartFilter</filter-name>
+		<servlet-name>appServlet</servlet-name>
+	</filter-mapping>
+	
+	<!-- 
+	##########################################
+	#	http MethodFilter
+	##########################################
+	-->
+	<filter>
+		<filter-name>httpMethodFilter</filter-name>
+		<filter-class>
+			org.springframework.web.filter.HiddenHttpMethodFilter
+		</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>httpMethodFilter</filter-name>
+		<servlet-name>appServlet</servlet-name>
+	</filter-mapping>	
+
+
+	<!-- 
+	##########################################
+	#	Spring Dispatcher Servlet
+	##########################################
+	-->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/servlet-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+</web-app>
+			]]></source>		
+		</subsection>		
+	</section>
+</body>
+</document>

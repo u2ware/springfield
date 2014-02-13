@@ -20,7 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
-import com.u2ware.springfield.domain.ValidationRejectableException;
 import com.u2ware.springfield.repository.EntityRepository;
 import com.u2ware.springfield.repository.QueryMethod;
 
@@ -55,19 +54,14 @@ public class EntitySqlSessionRepository<T,ID extends Serializable> implements En
 	// exists
 	//////////////////////////////////
 	@Override 
-	public boolean exists(ID id, boolean throwsDuplicateException) {		
+	public boolean exists(ID id) {		
 		throw new InvalidDataAccessResourceUsageException("exists");
 	}
 	@Override 
-	public boolean exists(T entity, boolean throwsDuplicateException) {		
+	public boolean exists(T entity) {		
 		String statement = sqlSessionNamespace+".exists";
 		Integer result = (Integer)getTemplate().selectOne(statement, entity);
-
-		if(throwsDuplicateException && result == 1){
-			throw new ValidationRejectableException("com.u2ware.springfield.repository.DuplicateKey.message");
-		}else{
-			return result == 1;
-		}
+		return result == 1;
 	}
 
 	
@@ -113,26 +107,46 @@ public class EntitySqlSessionRepository<T,ID extends Serializable> implements En
 		}
 	}
 	
+	@Override
+	public void delete(ID id) {
+		throw new InvalidDataAccessResourceUsageException("delete");
+	}
+	
 	@Override 
 	public T createOrUpdate(T entity) {
-		return exists(entity , false) ? update(entity) : create(entity);
+		return exists(entity) ? update(entity) : create(entity);
 	}
 
 	
+	@Override 
+	public long count(Object query) {
+		String statement = sqlSessionNamespace+"."+quessStatement(query, "findAll")+"Count";
+		Map<String,Object> param = createQueryParameter(query, null, null);
+
+		//logger.debug("statement : "+statement);
+		Long total = getTemplate().selectOne(statement,  param);
+		//logger.debug("result "+total);
+		
+		return total;
+	}
 	//////////////////////////////////
 	// find
 	//////////////////////////////////
+	@Override
+	public List<T> findAll() {
+		return findAll(null);
+	}
 	@Override 
 	public List<T> findAll(Object query) {
-		String statement =  quessQueryMethodName(query);
-		Map<String,Object> param = quessQueryParameter(query, null, null);
+		String statement = sqlSessionNamespace+"."+quessStatement(query, "findAll");
+		Map<String,Object> param = createQueryParameter(query, null, null);
 		return getTemplate().selectList(statement, param);
 	}
 
 	@Override 
 	public List<T> findAll(Object query, Sort sort) {
-		String statement =  quessQueryMethodName(query);
-		Map<String,Object> param = quessQueryParameter(query, null, sort);
+		String statement = sqlSessionNamespace+"."+quessStatement(query, "findAll");
+		Map<String,Object> param = createQueryParameter(query, null, sort);
 		return getTemplate().selectList(statement, param);
 	}
 	
@@ -142,10 +156,10 @@ public class EntitySqlSessionRepository<T,ID extends Serializable> implements En
 		long total = count(query);
 		List<T> contents = null;
 		if(total > 0){
-			String statement = quessQueryMethodName(query);
-			Map<String,Object> param = quessQueryParameter(query, pageable, null);
+			String statement = sqlSessionNamespace+"."+quessStatement(query, "findAll");
+			Map<String,Object> param = createQueryParameter(query, pageable, null);
 			
-			logger.debug("statement : "+statement);
+			//logger.debug("statement : "+statement);
 			int offset = pageable.getPageSize() * pageable.getPageNumber();
 			int limit  = pageable.getPageSize();
 			contents = getTemplate().selectList(statement, param, new RowBounds(offset, limit));
@@ -157,47 +171,54 @@ public class EntitySqlSessionRepository<T,ID extends Serializable> implements En
 		return new PageImpl<T>(contents, pageable, total);		
 	}
 
+	///////////////////////////////////////
+	//
+	//////////////////////////////////////
 	@Override 
-	public long count(Object query) {
-		String statement = quessQueryMethodName(query)+"Count";
-		Map<String,Object> param = quessQueryParameter(query, null, null);
+	public void deleteAll(){
+		deleteAll(null);
+	}
 
-		logger.debug("statement : "+statement);
-		Long total = getTemplate().selectOne(statement,  param);
-		logger.debug("result "+total);
+	@Override 
+	public void deleteAll(Object query) {
+		String statement = sqlSessionNamespace+"."+quessStatement(query, "deleteAll");
+		Map<String,Object> param = createQueryParameter(query, null, null);
+		logger.debug(statement);
 		
-		return total;
+		int rows = getTemplate().delete(statement, param);
+		logger.debug(rows + " rows delete");
 	}
 	
-	protected String quessQueryMethodName(Object query){
-
-		Class<?> beanClass = query.getClass();
-		
-		String statement = "findAll";
-		if(! sqlSessionNamespace.endsWith(ClassUtils.getShortName(beanClass))){
-			statement = ClassUtils.getShortNameAsProperty(beanClass);
-		}
-		
-		String queryMethodName =  sqlSessionNamespace+"."+statement;
-		QueryMethod queryMethod = AnnotationUtils.findAnnotation(beanClass, QueryMethod.class);
-
-		if(queryMethod != null && StringUtils.hasText(queryMethod.value())){
-			queryMethodName = sqlSessionNamespace+"."+queryMethod.value();
-		}
-
-		logger.debug(query.getClass() +" quessQueryMethodName is "+queryMethodName);
-		return queryMethodName;
-	}
-
-	protected Map<String,Object> quessQueryParameter(Object query, Pageable pageable, Sort sort){
+	protected Map<String,Object> createQueryParameter(Object query, Pageable pageable, Sort sort){
 		Map<String,Object> param = new HashMap<String,Object>();
 		param.put("query", query);
 		param.put("pageable", pageable);
 		param.put("sort", sort);
-		
-		logger.debug(param);
+		//logger.debug(param);
 		
 		return param;
+	}
+
+	
+	protected String quessStatement(Object query, String suffix){
+		
+		if(query == null) return suffix;
+		
+		Class<?> queryClass =  query.getClass();
+		if(sqlSessionNamespace.equals(queryClass.getName())){
+			return suffix;
+		}
+		
+		Class<?> beanClass = query.getClass();
+		String queryMethodName = ClassUtils.getShortNameAsProperty(beanClass);
+		QueryMethod queryMethod = AnnotationUtils.findAnnotation(beanClass, QueryMethod.class);
+
+		if(queryMethod != null && StringUtils.hasText(queryMethod.value())){
+			queryMethodName = queryMethod.value();
+		}
+
+		logger.info(query.getClass() +" quessStatement is "+queryMethodName);
+		return queryMethodName;
 	}
 }
 
@@ -241,19 +262,6 @@ public class EntitySqlSessionRepository<T,ID extends Serializable> implements En
 
 		List<T> contents = getSqlSessionTemplate().selectList(statement, sqlSessionParam, new RowBounds(offset, limit));
 		return new PageImpl<T>(contents, pageable, total);		
-	}
-	protected String quessQueryMethodName(Object query){
-
-		Class<?> beanClass = query.getClass();
-		String queryMethodName =  sqlSessionNamespace+".findAll";
-		QueryMethod queryMethod = AnnotationUtils.findAnnotation(beanClass, QueryMethod.class);
-
-		if(queryMethod != null && StringUtils.hasText(queryMethod.value())){
-			queryMethodName = sqlSessionNamespace+"."+queryMethod.value();
-		}
-
-		logger.debug(query.getClass() +" quessQueryMethodName is "+queryMethodName);
-		return queryMethodName;
 	}
 
 	protected Map<String,Object> quessQueryParameter(Object query, Pageable pageable, Sort sort){

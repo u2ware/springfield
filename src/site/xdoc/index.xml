@@ -9,11 +9,16 @@
   <body>
     <section name="Introduction">
       <p>
-        <b>Springfield</b> is Startup-Toolkit for Java Web Application Development.
+      	<center>
+			<iframe width="60%" height="315" src="http://www.youtube.com/embed/kVgeBXKtOWM" frameborder="0"></iframe>
+      	</center>
       </p>
     </section>
 
     <section name="Features">
+	      <p>
+	        <b>Springfield</b> is Startup-Toolkit for Java Web Application Development.
+	      </p>
 		<ul>
 			<li> POJO oriented</li>
 			<li> Code of Convention  </li>
@@ -27,11 +32,6 @@
 
     </section>
 
-    <section name="The Show">
-    	<center>
-			<iframe width="420" height="315" src="http://www.youtube.com/embed/kVgeBXKtOWM" frameborder="0"></iframe>
-    	</center>
-	</section>
   </body>
 </document>
 

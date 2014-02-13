@@ -1,0 +1,87 @@
+ -----
+ Configuration
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+Configuration
+~~~~~~~~~~~~~~~~~~~~
+
+	[application-context.xml:] 
+	   config your 'application-context.properties' path and basePackage
+       	
+       	-------------------------------------------------------------------------------------\
+		\<util:properties id="prop" \
+		location="<<classpath:example/u2ware/springfield/application-context.properties>>" /\>\
+		.\
+		.\
+		\<context:component-scan base-package="<<example.u2ware.springfield>>" /\>\
+		.\
+		.\
+		\<springfield:modules base-package="<<example.u2ware.springfield>>" \
+		 default-strategy="DTO" /\>
+
+
+ 
+* application-context.xml
+~~~~~~~~~~~~~~~~~~~~
+
++------------------------------------------------------------------------+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:springfield="http://www.u2ware.com/schema/springfield"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/jdbc 
+		http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.u2ware.com/schema/springfield 
+		http://www.u2ware.com/schema/springfield/u2ware-springfield.xsd">
+
+  <!-- 
+  #############################################################
+  # springfield provide 
+  #############################################################
+  -->
+  <util:properties id="prop" 
+    location="classpath:example/u2ware/springfield/application-context.properties"/>
+
+  <import resource="classpath:com/u2ware/springfield/context-datasource-hsql.xml"/>
+  <import resource="classpath:com/u2ware/springfield/context-datasource-c3p0.xml"/>	
+  <import resource="classpath:com/u2ware/springfield/context-orm-jpa.xml"/> 
+  <import resource="classpath:com/u2ware/springfield/context-orm-mongodb.xml"/>
+  <import resource="classpath:com/u2ware/springfield/context-orm-sqlsession.xml"/> 	
+  <import resource="classpath:com/u2ware/springfield/context-webmvc-view.xml"/>
+  <import resource="classpath:com/u2ware/springfield/context-webmvc.xml"/>
+
+  <!-- 
+  #############################################################
+  # component-scan
+  #############################################################
+  -->
+  <context:component-scan base-package="example.u2ware.springfield" />
+
+  <!-- 
+  #############################################################
+  # springfield auto beans
+  #############################################################
+  -->
+  <springfield:modules base-package="example.u2ware.springfield" 
+                        default-strategy="DTO" />	 
+	
+</beans>
++------------------------------------------------------------------------+
+
+ 

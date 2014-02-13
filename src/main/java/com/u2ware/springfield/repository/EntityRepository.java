@@ -11,8 +11,8 @@ public interface EntityRepository<T, ID extends Serializable> {
 
 	public <X> X getTemplate();
 	
-	public boolean exists(ID id, boolean throwException) ;
-	public boolean exists(T entity, boolean throwException) ;
+	public boolean exists(ID id) ;
+	public boolean exists(T entity) ;
 	
 	public T read(ID id) ;
 	public T read(T entity) ;
@@ -20,11 +20,18 @@ public interface EntityRepository<T, ID extends Serializable> {
 	public T update(T entity) ;
 	public T createOrUpdate(T entity) ;
 	public void delete(T entity);
+	public void delete(ID id);
 	
 	public long count(Object query);
+
+	public List<T> findAll();
 	public List<T> findAll(Object query);
 	public List<T> findAll(Object query, Sort sort);
 	public Page<T> findAll(Object query, Pageable pageable);
+
+	public void deleteAll();
+	public void deleteAll(Object query);
+
 }
 
 
