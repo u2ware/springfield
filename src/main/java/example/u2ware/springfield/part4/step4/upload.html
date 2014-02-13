@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"/>
+	<script type="text/javascript" src="http://malsup.github.com/jquery.form.js"/>
+	<script type="text/javascript" src="http://twitter.github.com/bootstrap/assets/js/bootstrap.min.js"/>
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" />
+
+	<script type="text/javascript" src="http://cdn.kendostatic.com/2012.3.1315/js/kendo.web.min.js"></script>
+	<link rel="stylesheet" href="http://cdn.kendostatic.com/2012.3.1315/styles/kendo.common.min.css"/>
+	<link rel="stylesheet" href="http://cdn.kendostatic.com/2012.3.1315/styles/kendo.default.min.css"/> 
+</head>
+<body>
+
+
+	<form>
+		<input type="file" name="multipartFile" id="multipartFile" multiple="multiple"/>
+	</form>
+	
+	<script>
+		$(document).ready(function() {
+		    $("#multipartFile").kendoUpload({
+		        async: {
+		            saveUrl: "/springfield/part4/step4/upload",
+		            removeUrl: "/springfield/part4/step4/delete",
+		            autoUpload: true
+		        },  
+	          cancel: onCancel,
+            complete: onComplete,
+            error: onError,
+            progress: onProgress,
+            remove: onRemove,
+            select: onSelect,
+            success: onSuccess,
+            upload: onUpload
+		    });
+		});
+		
+		function onSelect(e) {
+				console.log("Select :: " + getFileInfo(e));
+    }
+
+    function onUpload(e) {
+    	console.log("Upload :: " + getFileInfo(e));
+    }
+
+    function onSuccess(e) {
+    	e.files[0]['contentFile'] = e.response.contentFile;
+    	console.log("Success :: " + getFileInfo(e));
+    }
+
+    function onError(e) {
+    	console.log("Error (" + e.operation + ") :: " + getFileInfo(e));
+    }
+
+    function onProgress(e) {
+    	console.log("Progress (" + e.operation + ") :: " + getFileInfo(e));
+    }
+
+    function onComplete(e) {
+    	console.log("Success :: " + getFileInfo(e));
+    }
+
+    function onCancel(e) {
+    	console.log("Cancel :: " + getFileInfo(e));
+    }
+
+    function onRemove(e) {
+    	e.data = {"multipartFile" : e.files[0]['contentFile']}
+    	console.log("Remove :: " + getFileInfo(e));
+    }		
+
+    function getFileInfo(e) {
+        return e;
+    }        
+	</script>
+
+</body>
+</html>

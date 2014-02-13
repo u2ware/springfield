@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<entry key="com.u2ware.springfield.repository.multipart.UploadFileNotFound.message"><![CDATA[업로드 파일을 선택하여 주십시오.]]></entry>
+	<entry key="com.u2ware.springfield.repository.multipart.UploadSizeExceeded.message"><![CDATA[업로드 파일의 사이즈는 {0} byte 보다 작아야 합니다.]]></entry>
+	<entry key="com.u2ware.springfield.repository.multipart.UploadMediaTypeMismatch.message"><![CDATA[업로드 파일의 media-type은 "{0}" 이여야 합니다.]]></entry>
+	<entry key="com.u2ware.springfield.repository.multipart.UploadIOError.message"><![CDATA[upload io error.]]></entry>
+	
+</properties>

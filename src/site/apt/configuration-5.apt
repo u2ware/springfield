@@ -1,0 +1,33 @@
+ -----
+ Configuration
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+Configuration
+~~~~~~~~~~~~~~~~~~~~
+
+	[/WEB-INF/application-servlet.xml:] 
+		
+		springframework 의 context XML. 나중에 필요한 빈 설정을 추가 할 때 사용된다.
+ 
+* /WEB-INF/application-servlet.xml
+~~~~~~~~~~~~~~~~~~~~
+
++------------------------------------------------------------------------+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+
+
+
+</beans>
++------------------------------------------------------------------------+
+ 

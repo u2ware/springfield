@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="example.u2ware.springfield.part1.step1.MybatisBean">
+
+
+
+	<select id="exists" 
+		parameterType="example.u2ware.springfield.part1.step1.MybatisBean" 
+		resultType="integer">
+		select count(id) from MybatisBean 
+		where id = #{id}
+	</select>
+
+	<insert id="create" 
+		parameterType="example.u2ware.springfield.part1.step1.MybatisBean">
+		 insert into MybatisBean ( id, password, name, address ) values ( #{id}, #{password}, #{name}, #{address} )
+	</insert>
+
+	<select id="read" 
+		parameterType="example.u2ware.springfield.part1.step1.MybatisBean" 
+		resultType="example.u2ware.springfield.part1.step1.MybatisBean">
+		select * from MybatisBean 
+		where id = #{id}
+	</select>
+
+	<update id="update" 
+		parameterType="example.u2ware.springfield.part1.step1.MybatisBean">
+		update MybatisBean set password = #{password} , name = #{name}, address = #{address}
+		where id = #{id}
+	</update>
+
+	<delete id="delete" 
+		parameterType="example.u2ware.springfield.part1.step1.MybatisBean">
+		delete from MybatisBean
+		where id = #{id}
+	</delete>
+
+	<select id="findAll" 
+		parameterType="map" 
+		resultType="example.u2ware.springfield.part1.step1.MybatisBean">
+		select * from MybatisBean
+		<include refid="whereSyntax"/>
+		<include refid="orderSyntax"/>
+	</select>
+
+	<select id="findAllCount" 
+		parameterType="map"
+		resultType="long">
+		select count(*) from MybatisBean 
+		<include refid="whereSyntax"/>
+	</select>
+
+	
+
+	<sql id="whereSyntax">
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="query.id != null"> and id = #{query.id}</if> 
+			<if test="query.password != null">and password = #{query.password}</if>
+			<if test="query.name != null"> and name = #{query.name}</if> 
+			<if test="query.address != null"> and address = #{query.address}</if> 
+		</trim>
+	</sql>
+	<sql id="orderSyntax">
+		<if test="pageable != null">
+			<trim prefix="order by" prefixOverrides=", ">
+				<foreach item="item" index="index" collection="pageable.sortOrders">
+					<if test="item.direction == 1">
+						, ${item.property} asc
+					</if>
+					<if test="item.direction == -1">
+						, ${item.property} desc
+					</if>
+				</foreach>
+			</trim>
+		</if>
+	</sql>
+
+
+
+	<select id="findByIdAndPasswordAndNameAndAddressOrderByNameDesc" 
+		parameterType="map" 
+		resultType="example.u2ware.springfield.part1.step1.MybatisBean">
+		select * from MybatisBean
+
+		<include refid="whereSyntax"/>
+		<include refid="orderSyntax"/>
+	</select>
+
+	<select id="findByIdAndPasswordAndNameAndAddressOrderByNameDescCount" 
+		parameterType="map"
+		resultType="long">
+		select count(*) from MybatisBean 
+		<include refid="whereSyntax"/>
+	</select>
+
+
+
+</mapper>

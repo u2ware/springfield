@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+       "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<tiles-definitions>
+	
+	<!-- default -->
+	<definition name="/*/*/*"   template="/WEB-INF/example/u2ware/springfield/tiles-template.jsp">
+	    <put-attribute name="content"    value="/WEB-INF/example/u2ware/springfield/{1}/{2}/{3}.jsp"/>
+	</definition>
+
+	<!--
+	####################################
+	# Default tiles-template mapping
+	####################################
+	<definition name="/*"       template="/WEB-INF/com/lgu/abc/tiles-template.jsp">
+	    <put-attribute name="content"    value="/WEB-INF/com/lgu/abc/{1}.jsp"/>
+	</definition>
+ 	<definition name="/*/*"     template="/WEB-INF/com/lgu/abc/tiles-template.jsp">
+	    <put-attribute name="content"    value="/WEB-INF/com/lgu/abc/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="/*/*/*"   template="/WEB-INF/com/lgu/abc/tiles-template.jsp">
+	    <put-attribute name="content"    value="/WEB-INF/com/lgu/abc/{1}/{2}/{3}.jsp"/>
+	</definition>
+	
+	<definition name="/*.*"       template="/WEB-INF/com/lgu/abc/tiles-template.{2}.jsp">
+	    <put-attribute name="content"    value="/WEB-INF/com/lgu/abc/{1}.{2}.jsp"/>
+	</definition>
+	<definition name="/*/*.*"     template="/WEB-INF/com/lgu/abc/tiles-template.{3}.jsp">
+	    <put-attribute name="content"    value="/WEB-INF/com/lgu/abc/{1}/{2}.{3}.jsp"/>
+	</definition>
+	<definition name="/*/*/*.*"   template="/WEB-INF/com/lgu/abc/tiles-template.{4}.jsp">
+	    <put-attribute name="content"    value="/WEB-INF/com/lgu/abc/{1}/{2}/{3}.{4}.jsp"/>
+	</definition>
+	
+	<definition name="/*.*"       template="/WEB-INF/com/lgu/abc/tiles-template.{2}.jsp">
+	    <put-attribute name="content"    value="/WEB-INF/com/lgu/abc/{1}.{2}.jsp"/>
+	</definition>
+	<definition name="/*/*.*"     template="/WEB-INF/com/lgu/abc/tiles-template.{3}.jsp">
+	    <put-attribute name="content"    value="/WEB-INF/com/lgu/abc/{1}/{2}.{3}.jsp"/>
+	</definition>
+	<definition name="/*/*/*.*"   template="/WEB-INF/com/lgu/abc/tiles-template.{4}.jsp">
+	    <put-attribute name="content"    value="/WEB-INF/com/lgu/abc/{1}/{2}/{3}.{4}.jsp"/>
+	</definition>
+
+	<definition name="/*"       template="/WEB-INF/com/lgu/abc/tiles-template.jsp">
+	    <put-attribute name="content"    value="/WEB-INF/com/lgu/abc/{1}.jsp"/>
+	</definition>
+ 	<definition name="/*/*"     template="/WEB-INF/com/lgu/abc/tiles-template.jsp">
+	    <put-attribute name="content"    value="/WEB-INF/com/lgu/abc/{1}/{2}.jsp"/>
+	</definition>
+	<definition name="/*/*/*"   template="/WEB-INF/com/lgu/abc/tiles-template.jsp">
+	    <put-attribute name="content"    value="/WEB-INF/com/lgu/abc/{1}/{2}/{3}.jsp"/>
+	</definition>
+	-->
+	
+</tiles-definitions>

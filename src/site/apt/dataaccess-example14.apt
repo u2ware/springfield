@@ -1,0 +1,131 @@
+ -----
+ Data Access
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+Data Access 
+~~~~~~~~~~~~~~~~~~~~
+
+* EntityRepository 
+~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+public interface EntityRepository<T, ID extends Serializable> {
+	.	
+	.	
+	public List<T> findAll(Object query);
+	public List<T> findAll(Object query, Sort sort);
+	public Page<T> findAll(Object query, Pageable pageable);
+	
+	public long count(Object query);
+}
++------------------------------------------------------------------------+
+
+	[Note:]
+		EntityRepository 의  count() 및 findAll() 의 인자를  springfield 에서는  <<Entity Query Object>> 라고 명명 하고, 이 객체를  통해 검색을 위한 where 조건 및 order 항목이 동적으로 결정된다.
+		
+
+* FindByIdAndPasswordAndNameAndAddress ( <<Entity Query Object>> )
+~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part1;
+
+import lombok.Getter;
+import lombok.Setter;
+
+public class FindByIdAndPasswordAndNameAndAddress {
+
+	public @Getter @Setter Integer id;
+	public @Getter @Setter String password;
+	public @Getter @Setter String address;
+	public @Getter @Setter String name;	
+}
++------------------------------------------------------------------------+
+
+* SampleQuery ( <<Entity Query Object>> )
+~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+package example.u2ware.springfield.part1;
+
+import com.u2ware.springfield.repository.QueryMethod;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@QueryMethod("findByIdAndPasswordAndNameAndAddress")
+public class SampleQuery {
+
+	public @Getter @Setter Integer id;
+	public @Getter @Setter String password;
+	public @Getter @Setter String address;
+	public @Getter @Setter String name;
+}
++------------------------------------------------------------------------+
+
+* @Springfield
+~~~~~~~~~~~~~~~~~~~~
+
+	[Note:]
+		 EntityRepository 는  <<Entity Query Object>> 의  Class 이름 이나 선언된 @com.u2ware.springfield.repository.QueryMethod 속성 값에 따라 <<QueryMethod>>을 결정한다.
+		 
+		 SQLSESSION 전략에서 <<QueryMethod>>는 sqlsession.xml 에 미리정의된 mapping query statement 를   의미한다.
+		 
+		 JPA  전략에서 <<QueryMethod>>는  "findBy~" 로 시작하는   {{{http://static.springsource.org/spring-data/data-jpa/docs/current/reference/html/#jpa.query-methods.query-creation}spring-data JPA Query Method}} 을 따른다.
+		 
+		 MONGODB 전략에서 <<QueryMethod>>는  "findBy~" 로 시작하는   {{{http://static.springsource.org/spring-data/data-mongodb/docs/current/reference/html/#mongodb.repositories.queries}spring-data mongodb Query Method}} 을 따른다.
+
+
+* EntityRepository Test
+~~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
+@ContextConfiguration(locations="../../application-context.xml")
+public class JpaBeanRepositoryTest {
+
+	protected final Log logger = LogFactory.getLog(getClass());
+
+	@Autowired @Qualifier("mybatisBeanRepository")
+	private EntityRepository<MyBatisBean,Integer> mybatisBeanRepository;
+
+	@Autowired @Qualifier("jpaBeanRepository")
+	private EntityRepository<JpaBean,Integer> jpaBeanRepository;
+
+	@Autowired @Qualifier("mongodbBeanRepository")
+	private EntityRepository<MongodbBean,Integer> mongodbBeanRepository;
+	
+	public void testWhereByQueryObject1() throws Exception{
+		FindByIdAndPasswordAndNameAndAddress query = new FindByIdAndPasswordAndNameAndAddress();
+		query.setPassword("pwd7");
+		
+		List<?> result = xxxxxxxxRepository.findAll(query);
+		Assert.assertEquals(1, result.size());
+	}
+	
+	public void testWhereByQueryObject2() throws Exception{
+		FindByIdAndPasswordAndNameAndAddress query = new FindByIdAndPasswordAndNameAndAddress();
+		
+		List<?> result = xxxxxxxxRepository.findAll(query);
+		Assert.assertEquals(9, result.size());
+	}
+
+	public void testWhereByQueryObject3() throws Exception{
+		MyQuery query = new MyQuery();
+		query.setAddress("addr-9");
+		
+		List<?> result = xxxxxxxxRepository.findAll(query);
+		Assert.assertEquals(1, result.size());
+	}
+	
+	public void testWhereByQueryObject4() throws Exception{
+		MyQuery query = new MyQuery();
+		
+		List<?> result = xxxxxxxxRepository.findAll(query);
+		Assert.assertEquals(9, result.size());
+	}
+}
+ 
++------------------------------------------------------------------------+
+

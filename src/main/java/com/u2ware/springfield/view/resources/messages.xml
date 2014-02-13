@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<entry key="application.title"><![CDATA[Springfield Example]]></entry>
+	<entry key="application.footer"><![CDATA[U2ware dot com]]></entry>
+	<entry key="application.backToTop"><![CDATA[back to top]]></entry>
+	<entry key="application.listButton"><![CDATA[LIST]]></entry>
+	<entry key="application.newButton"><![CDATA[NEW]]></entry>
+	<entry key="application.updateButton"><![CDATA[UPDATE]]></entry>
+	<entry key="application.editButton"><![CDATA[EDIT]]></entry>
+	<entry key="application.saveButton"><![CDATA[SAVE]]></entry>
+	<entry key="application.resetButton"><![CDATA[RESET]]></entry>
+	<entry key="application.deleteButton"><![CDATA[DELETE]]></entry>
+	<entry key="application.prevButton"><![CDATA[Prev]]></entry>
+	<entry key="application.nextButton"><![CDATA[Next]]></entry>
+	<entry key="application.yesButton"><![CDATA[yes]]></entry>
+	<entry key="application.noButton"><![CDATA[no]]></entry>	
+	
+</properties>

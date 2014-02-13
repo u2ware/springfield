@@ -1,0 +1,125 @@
+ -----
+ Data Access
+ -----
+ www.u2ware.com
+ -----
+ -----
+
+Data Access 
+~~~~~~~~~~~~~~~~~~~~
+
+ @Springfield 의 strategy 속성 값에 따라 으로 Bean 이 자동 생성, 등록 된다.
+
+*-----------------------------+----------------------------+------------------------+------------------------------+
+| Springfield\ Strategy      | bean name                | bean type              | bean implement               |
+*-----------------------------+----------------------------+------------------------+------------------------------+
+| SQLSESSION | "~Controller"\ | < EntityController<T,Q>> \ | com.u2ware.springfield.controller. EntityHandler \ |
+|            | "~Service"   \ |< EntityService<T,Q>> \     | com.u2ware.springfield.service. EntityServiceImpl \  |
+|            | "~Repository"  |< EntityRepository<T,ID>>   | <<com.u2ware.springfield.repository.sqlsession. EntitySqlsessionRepository>>  |
+*-----------------------------+----------------------------+------------------------+------------------------------+
+| JPA        | "~Controller"\ |< EntityController<T,Q>> \  | com.u2ware.springfield.controller. EntityHandler \ |
+|            | "~Service"   \ |< EntityService<T,Q>> \     | com.u2ware.springfield.service. EntityServiceImpl \  |
+|            | "~Repository"  |< EntityRepository<T,ID>>   | <<com.u2ware.springfield.repository.jpa. EntityJpaRepository >> |
+*-----------------------------+----------------------------+------------------------+------------------------------+
+| MONGODB    | "~Controller"\ |< EntityController<T,Q>> \  | com.u2ware.springfield.controller. EntityHandler \ |
+|            | "~Service"   \ |< EntityService<T,Q>> \     | com.u2ware.springfield.service. EntityServiceImpl \  |
+|            | "~Repository"  |< EntityRepository<T,ID>>   | <<com.u2ware.springfield.repository.mongodb. EntityMongodbRepository >> |
+*-----------------------------+----------------------------+------------------------+------------------------------+
+
+	[Note:]
+		 POJO Class 에   @Springfield 을 선언하면  Generic 류의 Controller / Service / Repository Bean 을 
+		 생성하여 CoC 에 의해 "~Controller", "~Service", "~Repository" 라는 Bean Name 으로, springframework 의 applicationContext에 등록 한다.
+
+
+
+* EntityController
+~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+ public abstract class EntityHandler<T,Q> {
+ 
+	public String home(Model m, Q query, BindingResult errors) {...}
+	
+	public String findForm(EntityPageable pageable, Model m, Q query, BindingResult e){...}
+	
+	public String find(EntityPageable pageable, Model m, Q query, BindingResult e){...}
+	
+	public String read(Model m, T entity, BindingResult e) {...}
+
+	public String createForm(Model m, T entity, BindingResult e) {...}
+	
+	public String create(Model m, T entity, BindingResult e) {...}
+
+	public String updateForm(Model m, T entity, BindingResult e) {...}
+	
+	public String update(Model m, T entity, BindingResult e) {...}
+	
+	public String delete(Model m, T entity, BindingResult e) {...}
+
++------------------------------------------------------------------------+
+
+ T : Entity Object, {{{http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/mvc.html#mvc-ann-methods}Command or form object}}
+ 
+ Q : Entity Query Object, {{{http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/mvc.html#mvc-ann-methods}Command or form object}} 
+
+
+*EntityService
+~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+public interface EntityService<T, Q>{
+	
+	public Object home(Q query);
+
+	public Iterable<T> findForm(Q query, EntityPageable pageable);
+
+	public Iterable<T> find(Q query, EntityPageable pageable);
+		
+	public T read(T entity) ;
+	
+	public T createForm(T entity);
+	
+	public T create(T entity) ;
+	
+	public T updateForm(T entity);
+	
+	public T update(T entity) ;
+	
+	public T delete(T entity);
+}
++------------------------------------------------------------------------+
+
+ T : Entity Object 
+ 
+ Q : Entity Query Object
+
+
+*EntityRepository
+~~~~~~~~~~~~~~~~~~~
++------------------------------------------------------------------------+
+public interface EntityRepository<T, ID extends Serializable> {
+
+	public <X> X getTemplate();
+	
+	public boolean exists(ID id, boolean throwException) ;
+	public boolean exists(T entity, boolean throwException) ;
+	
+	public T create(T entity) ;
+	public T read(ID id) ;
+	public T read(T entity) ;
+	public T update(T entity) ;
+	public void delete(T entity);
+	public T createOrUpdate(T entity) ;
+	
+	public List<T> findAll(Object query);
+	public List<T> findAll(Object query, Sort sort);
+	public Page<T> findAll(Object query, Pageable pageable);
+	
+	public long count(Object query);
+}
++------------------------------------------------------------------------+
+
+ T : Entity Object
+ 
+ ID : Entity Identity Object 
+
+ 
+ 
