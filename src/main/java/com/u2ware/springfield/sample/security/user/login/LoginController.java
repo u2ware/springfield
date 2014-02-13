@@ -1,7 +1,7 @@
 package com.u2ware.springfield.sample.security.user.login;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class LoginController {
 	
-	protected final Log logger = LogFactory.getLog(getClass());
+	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	
 	
 	@RequestMapping(value="/security/user/loginForm",method=RequestMethod.GET)
@@ -26,12 +26,12 @@ public class LoginController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if(authentication != null){
 
-			logger.debug(authentication.getCredentials());
-			logger.debug(authentication.getDetails());
-			logger.debug(authentication.getAuthorities());
+			logger.debug(""+authentication.getCredentials());
+			logger.debug(""+authentication.getDetails());
+			logger.debug(""+authentication.getAuthorities());
 			
 			Object p = authentication.getPrincipal();
-			logger.debug(p.getClass());
+			logger.debug(""+p.getClass());
 			
 			if(! "anonymousUser".equals(p)){
 				principal = p;

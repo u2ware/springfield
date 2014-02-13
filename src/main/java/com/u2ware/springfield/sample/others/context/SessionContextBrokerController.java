@@ -5,8 +5,8 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -17,7 +17,7 @@ import com.u2ware.springfield.support.context.ContextBroker;
 @Controller
 public class SessionContextBrokerController {
 
-	protected final Log logger = LogFactory.getLog(getClass());
+	private static final Logger logger = LoggerFactory.getLogger(SessionContextBrokerController.class);
 
 	@Autowired @Qualifier("sessionContextBroker")
 	private ContextBroker sessionContextBroker;

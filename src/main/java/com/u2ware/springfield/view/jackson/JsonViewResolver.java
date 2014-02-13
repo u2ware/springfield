@@ -3,6 +3,8 @@ package com.u2ware.springfield.view.jackson;
 import java.util.Locale;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.web.servlet.View;
@@ -11,6 +13,8 @@ import org.springframework.web.servlet.view.AbstractCachingViewResolver;
 import com.u2ware.springfield.view.ViewResolverSupport;
 
 public class JsonViewResolver extends AbstractCachingViewResolver implements ResourceLoaderAware{
+
+	private static final Logger logger = LoggerFactory.getLogger(JsonViewResolver.class);
 
 	public JsonViewResolver(JsonView view){
 		this.view = view;

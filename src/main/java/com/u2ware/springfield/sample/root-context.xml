@@ -17,22 +17,29 @@
 		http://www.u2ware.com/schema/springfield 
 		http://www.u2ware.com/schema/springfield/u2ware-springfield.xsd">			
 
-	<!-- 
-	#############################################################
-	# springfield provide 
-	#############################################################
-	 -->
+
 	<util:properties id="prop" 
 		location="classpath:com/u2ware/springfield/sample/root-context.properties" />
 	
-	<import resource="classpath:com/u2ware/springfield/context-datasource-hsql.xml"/>
-	<import resource="classpath:com/u2ware/springfield/context-datasource-c3p0.xml"/>	
-	<import resource="classpath:com/u2ware/springfield/context-orm-jpa.xml"/> 
-	<import resource="classpath:com/u2ware/springfield/context-orm-mongodb.xml"/>
-	<import resource="classpath:com/u2ware/springfield/context-orm-sqlsession.xml"/> 	
+	<!-- 
+	#############################################################
+	# springfield present 
+	#############################################################
+	 -->
+ 	<import resource="classpath:com/u2ware/springfield/context-datasource-c3p0.xml"/> 
+ 	<import resource="classpath:com/u2ware/springfield/context-datasource-hsql.xml"/> 
+
+ 	<import resource="classpath:com/u2ware/springfield/context-repository-jpa.xml"/> 
+ 	<!-- <import resource="classpath:com/u2ware/springfield/context-repository-hibernate.xml"/>  -->
+	<import resource="classpath:com/u2ware/springfield/context-repository-sqlsession.xml"/> 	
+
 	<import resource="classpath:com/u2ware/springfield/context-webmvc.xml"/>
 	<import resource="classpath:com/u2ware/springfield/context-webmvc-view.xml"/>
-	<import resource="classpath:com/u2ware/springfield/context-webmvc-multipart.xml"/>
+	<import resource="classpath:com/u2ware/springfield/context-webmvc-security.xml"/>
+
+ 	<import resource="classpath:com/u2ware/springfield/context-integration-mongodb.xml"/>
+ 	<import resource="classpath:com/u2ware/springfield/context-integration-email.xml"/>
+
 	
 	<!-- 
 	#############################################################
@@ -46,17 +53,19 @@
 	# springfield auto beans
 	#############################################################
 	 -->
-	<springfield:modules base-package="com.u2ware.springfield.sample"  
-						 default-strategy="DTO" />	 
+	<springfield:modules base-package="com.u2ware.springfield.sample" default-strategy="DTO" />	 
 
 
 	<!-- 
 	#############################################################
-	# initialize database
+	# database initialize
 	#############################################################
 	 -->
-	<jdbc:initialize-database data-source="#{prop['baseDatasource']}" >
+	<jdbc:initialize-database data-source="hsqlDataSource" >
 		<jdbc:script location="classpath:com/u2ware/springfield/sample/database.ddl"/>
 	</jdbc:initialize-database>
+
+
+	
 
 </beans>

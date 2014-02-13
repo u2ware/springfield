@@ -18,11 +18,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
-import com.u2ware.springfield.sample.ApplicationSecurityContextTestRoot;
+import com.u2ware.springfield.sample.ApplicationContextTestRoot;
 import com.u2ware.springfield.sample.security.user.register.UserRegister;
 import com.u2ware.springfield.service.EntityService;
 
-public class PasswordControllerTest extends ApplicationSecurityContextTestRoot{
+public class PasswordControllerTest extends ApplicationContextTestRoot{
 
 	MockHttpSession httpSession = new MockHttpSession(); 
 
@@ -44,7 +44,7 @@ public class PasswordControllerTest extends ApplicationSecurityContextTestRoot{
 		logger.debug("===========================================================");
 		logger.debug("===========================================================");
 		logger.debug("===========================================================");
-		logger.debug(SecurityContextHolder.getContext().getAuthentication());
+		logger.debug(""+SecurityContextHolder.getContext().getAuthentication());
 		logger.debug("===========================================================");
 	}
 

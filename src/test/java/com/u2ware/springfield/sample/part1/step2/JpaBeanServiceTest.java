@@ -36,10 +36,10 @@ public class JpaBeanServiceTest extends ApplicationContextTestRoot{
 		JpaBean query = new JpaBean();
 		
 		EntityPage<JpaBean> entityPage = (EntityPage<JpaBean>)jpaBeanService.find(query, pageable);
-		logger.debug(entityPage.getTotalElements());
-		logger.debug(entityPage.getTotalPages());
-		logger.debug(entityPage.getContent().size());
-		logger.debug(entityPage.getContent());
+		logger.debug(""+entityPage.getTotalElements());
+		logger.debug(""+entityPage.getTotalPages());
+		logger.debug(""+entityPage.getContent().size());
+		logger.debug(""+entityPage.getContent());
 		
 		Assert.assertEquals(9 , entityPage.getTotalElements());
 		Assert.assertEquals("id1", entityPage.getContent().get(0).getId());

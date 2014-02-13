@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.u2ware.springfield.repository.EntityRepository;
 import com.u2ware.springfield.sample.security.AuthenticationContext;
 import com.u2ware.springfield.sample.security.Authorities;
-import com.u2ware.springfield.sample.security.Role;
 import com.u2ware.springfield.sample.security.Users;
+import com.u2ware.springfield.security.authentication.Role;
 import com.u2ware.springfield.service.EntityServiceImpl;
 
 
@@ -34,7 +34,7 @@ public class UserRegisterService extends EntityServiceImpl<UserRegister, UserReg
 		String salt = authenticationContext.getPasswordSalt();
 		String password = authenticationContext.getPassword(entity.getPassword1(), salt);
 		String description = entity.getDescription();
-		Role role = entity.getRole();
+		Role role = Role.valueOf(entity.getRole());
 		
 		Users user = new Users();
 		user.setSalt(salt);
@@ -48,7 +48,7 @@ public class UserRegisterService extends EntityServiceImpl<UserRegister, UserReg
 		for(GrantedAuthority authority : role.getAuthorities()){
 			authoritiesRepository.create(new Authorities(username, authority.getAuthority()));
 		}
-		logger.debug(user);
+		logger.debug(user.toString());
 		
 		authenticationContext.logoff();
 		

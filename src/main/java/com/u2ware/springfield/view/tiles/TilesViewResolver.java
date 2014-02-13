@@ -3,6 +3,8 @@ package com.u2ware.springfield.view.tiles;
 import java.util.Locale;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.StringUtils;
@@ -12,6 +14,8 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import com.u2ware.springfield.view.ViewResolverSupport;
 
 public class TilesViewResolver extends UrlBasedViewResolver implements ResourceLoaderAware{
+
+	private static final Logger logger = LoggerFactory.getLogger(TilesViewResolver.class);
 
 	private final ViewResolverSupport support = new ViewResolverSupport(); 
 

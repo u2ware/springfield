@@ -9,7 +9,7 @@ import com.u2ware.springfield.sample.ApplicationContextTestRoot;
 
 public class FindBeanControllerTest extends ApplicationContextTestRoot{
 
-	@Test
+	//@Test
 	public void testFindByName() throws Exception{
 		this.mockMvc.perform(
 				get("/part2/step21")

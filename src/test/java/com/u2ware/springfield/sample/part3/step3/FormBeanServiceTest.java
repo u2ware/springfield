@@ -23,7 +23,7 @@ public class FormBeanServiceTest extends ApplicationContextTestRoot{
 		entity.setAge(12);
 
 		Object newEntity = formService.create(entity);
-		logger.debug(newEntity);
+		logger.debug(newEntity.toString());
 	}
 	
 	@Test
@@ -34,11 +34,11 @@ public class FormBeanServiceTest extends ApplicationContextTestRoot{
 		
 		FormBean request = new FormBean();
 		
-		EntityPage<?> entityPage = (EntityPage<?>)formService.findForm(request, pageable);
-		logger.debug(entityPage.getTotalElements());
-		logger.debug(entityPage.getTotalPages());
-		logger.debug(entityPage.getContent().size());
-		logger.debug(entityPage.getContent());
+		EntityPage<?> entityPage = (EntityPage<?>)formService.find(request, pageable);
+		logger.debug(""+entityPage.getTotalElements());
+		logger.debug(""+entityPage.getTotalPages());
+		logger.debug(""+entityPage.getContent().size());
+		logger.debug(""+entityPage.getContent());
 	}
 	
 }

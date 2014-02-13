@@ -7,10 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.Test;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.u2ware.springfield.sample.ApplicationSecurityContextTestRoot;
+import com.u2ware.springfield.sample.ApplicationContextTestRoot;
 
 
-public class LoginControllerTest extends ApplicationSecurityContextTestRoot{
+public class LoginControllerTest extends ApplicationContextTestRoot{
 
 	@Test
 	public void testLogin() throws Exception{

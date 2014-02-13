@@ -2,7 +2,6 @@ package com.u2ware.springfield.sample.others.multipart;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mock.web.MockMultipartFile;
 
 import com.u2ware.springfield.sample.ApplicationContextTestRoot;
@@ -21,7 +20,7 @@ public class MultipartFileHandlerTest extends ApplicationContextTestRoot{
 
 		MockMultipartFile multipartFile = new MockMultipartFile("multipartFile", "data.text", "text/html", "1234567".getBytes());
 
-		String contentKey = multipartFileHandler.saveFile(multipartFile);
+		String contentKey = multipartFileHandler.uploadFile(multipartFile);
 		logger.debug(contentKey);
 		multipartFileHandler.deleteFile(contentKey);
 	}

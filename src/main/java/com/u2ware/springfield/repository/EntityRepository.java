@@ -22,14 +22,16 @@ public interface EntityRepository<T, ID extends Serializable> {
 	public void delete(T entity);
 	public void delete(ID id);
 	
-	public long count(Object query);
-
+	public long count();
 	public List<T> findAll();
+	public List<T> findAll(Sort sort);
+	public Page<T> findAll(Pageable pageable);
+	public void deleteAll();
+
+	public long count(Object query);
 	public List<T> findAll(Object query);
 	public List<T> findAll(Object query, Sort sort);
 	public Page<T> findAll(Object query, Pageable pageable);
-
-	public void deleteAll();
 	public void deleteAll(Object query);
 
 }

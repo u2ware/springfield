@@ -3,8 +3,8 @@ package com.u2ware.springfield.view.thymeleaf.templateresolver;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.thymeleaf.TemplateProcessingParameters;
@@ -13,7 +13,8 @@ import org.thymeleaf.templateresolver.TemplateResolver;
 
 public class ResourceBasedTemplateResolver extends TemplateResolver implements IResourceResolver, ResourceLoaderAware{
 
-	private final Log logger = LogFactory.getLog(getClass());
+	private static final Logger logger = LoggerFactory.getLogger(ResourceBasedTemplateResolver.class);
+
 	private ResourceLoader resourceLoader;
 	
 	public ResourceBasedTemplateResolver() {

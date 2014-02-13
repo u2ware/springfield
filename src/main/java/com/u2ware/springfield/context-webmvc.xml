@@ -8,16 +8,30 @@
 
 	<!-- 
 	#############################################################
+	# multipartResolver 
+	#############################################################
+	-->	
+	<bean id="filterMultipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	    <property name="maxUploadSize" value="#{prop['webmvc.multipart.maxUploadSize']}"/>
+	</bean>
+
+	<bean id="multipartFileHandler" class="com.u2ware.springfield.support.multipart.MultipartFileHandlerImpl">
+		<property name="location" value="#{prop['webmvc.multipart.uploadLocation']}"/>
+	</bean>
+
+	<!-- 
+	#############################################################
 	# SessionContextBroker
 	#############################################################
-	 -->
+	<bean id="servletContextBroker" class="com.u2ware.springfield.support.context.ServletContextBroker">
+	</bean>
+		 -->
 	<bean id="sessionContext" class="com.u2ware.springfield.support.context.SessionContext" scope="session"/>
 	<bean id="sessionContextBroker" class="com.u2ware.springfield.support.context.SessionContextBroker">
 		<property name="targetBeanName" value="sessionContext" />
 	</bean>
 
-	<bean id="servletContextBroker" class="com.u2ware.springfield.support.context.ServletContextBroker">
-	</bean>
+	
 	 
 
 	<!-- 
@@ -29,21 +43,6 @@
 		<property name="defaultLocale" value="#{prop['webmvc.defaultLocale']}"/>
 	</bean>
 
-	<!-- 
-	#############################################################
-	# navigation
-	#############################################################
-	-->
-	<bean id="navigationResources" class="com.u2ware.springfield.support.resource.ResourcePatternResolverBean">
-		<property name="targetName" value="Navigation"/>
-		<property name="locationPatterns" value="
-			classpath:#{prop['basePackage'].replace('.','/')}#{prop['webmvc.navigation']},
-			#{prop['baseWebapp']}#{prop['webmvc.navigation']}
-		"/>
-	</bean>
-	<bean id="navigation" class="com.u2ware.springfield.security.NavigationFactory">
-		<property name="resources" value="#{navigationResources.locations}"/>
-	</bean>
 
 	<!-- 
 	#############################################################
@@ -52,17 +51,23 @@
 	 -->
 	<bean id="messageSourceBasenames" class="com.u2ware.springfield.support.resource.ResourcePatternResolverBean">
 		<property name="targetName" value="MessageSource"/>
-		<property name="locationPatterns" value="
-			classpath:#{prop['basePackage'].replace('.','/')}#{prop['webmvc.messageBasenamesPattern']},
-			#{prop['baseWebapp']}#{prop['webmvc.messageBasenamesPattern']}
-		"/>
+		<property name="packageToScan" value="#{prop['webmvc.packagesToScan']}"/>
+		<property name="locationPatterns" value="#{prop['webmvc.messagesource.locationPatterns']}"/>
 	</bean>
+	
+	
 	 
 	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="defaultEncoding" value="UTF-8"/>
 		<property name="basenames" value="#{messageSourceBasenames.basenames}"/>
 	</bean>
 	
+	<bean id="messageSourceAccessor" class="org.springframework.context.support.MessageSourceAccessor">
+		<constructor-arg ref="messageSource"/>
+		<constructor-arg value="#{prop['webmvc.defaultLocale']}"/>
+	</bean>
+
+
 	
 	<!-- 
 	#############################################################
@@ -90,21 +95,6 @@
 		</property>
 	</bean>
 
-	<!-- 
-	#############################################################
-	# contentNegotiationManager
-	#############################################################
-	<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
-	    <property name="mediaTypes" >
-	        <value>
-	            json=application/json
-	            xml=application/xml
-	            
-	        </value>
-	    </property>
-	    <property name="defaultContentType" value="text/html"/>
-	</bean>
-	 -->
 
 	<!-- 
 	#############################################################
@@ -124,8 +114,7 @@
 	 -->
 	<mvc:interceptors>
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>
-		<bean class="com.u2ware.springfield.controller.HandlerInterceptor"/>	
-		<bean class="com.u2ware.springfield.security.authorization.AccessDecisionInterceptor"/>
+		<bean class="com.u2ware.springfield.controller.HandlerInterceptor"/>
 	</mvc:interceptors>
 
 	<!-- 
@@ -135,5 +124,15 @@
 	<mvc:resources mapping="/springfield/resources/**" location="classpath:/META-INF/springfield/" />
 	 -->
 	<mvc:resources mapping="/resources/**" location="/resources/" />
+
+
+	<!-- 
+	#############################################################
+	# Springfield EntityController Handler Mapping
+	#############################################################
+	 -->
+	<bean class="com.u2ware.springfield.controller.HandlerMapping">
+	</bean>
+
 	
 </beans>

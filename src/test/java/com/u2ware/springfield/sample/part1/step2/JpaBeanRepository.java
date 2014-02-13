@@ -43,10 +43,10 @@ public class JpaBeanRepository extends ApplicationContextTestRoot{
 		//param.setId(7);
 		
 		long count = jpaBeanRepository.count(query);
-		logger.debug(count);
+		logger.debug(""+count);
 		
 		Page<JpaBean> page = jpaBeanRepository.findAll(query, pageable);
-		logger.debug(page.getContent().size());
+		logger.debug(""+page.getContent().size());
 		
 		Assert.assertEquals(9 , page.getContent().size());
 		Assert.assertEquals("id1", page.getContent().get(0).getId());

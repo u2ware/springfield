@@ -1,7 +1,5 @@
 package com.u2ware.springfield.sample.part3.step3;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -16,17 +14,10 @@ import com.u2ware.springfield.service.EntityService;
 @Service
 public class FormBeanService implements EntityService<FormBean, FormBean>{
 
-	protected final Log logger = LogFactory.getLog(getClass());
 
 	@Autowired 
 	@Qualifier("targetBeanRepository")
 	protected EntityRepository<TargetBean, String> targetBeanRepository;
-
-	@Override
-	@Transactional
-	public Iterable<?> findForm(FormBean query, EntityPageable pageable) {
-		return find(query, pageable);
-	}
 
 	@Override
 	@Transactional
@@ -93,9 +84,12 @@ public class FormBeanService implements EntityService<FormBean, FormBean>{
 		return entity;
 	}
 
+
+
+
 	
 
-
+/*
 	@Override
 	@Transactional
 	public boolean validate(FormBean entity) {
@@ -106,5 +100,5 @@ public class FormBeanService implements EntityService<FormBean, FormBean>{
 	@Transactional
 	public boolean reset(FormBean entity) {
 		return true;
-	}
+	}*/
 }

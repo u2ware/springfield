@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
+@SuppressWarnings("deprecation")
 public class AuthenticationContextImpl implements AuthenticationContext{
 	
 	@Autowired(required=false)

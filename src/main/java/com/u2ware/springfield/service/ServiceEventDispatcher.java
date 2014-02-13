@@ -2,12 +2,9 @@ package com.u2ware.springfield.service;
 
 import javax.swing.event.EventListenerList;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class ServiceEventDispatcher {
 
-	protected final Log logger = LogFactory.getLog(getClass());
+	//private static final Logger logger = LoggerFactory.getLogger(ServiceEventDispatcher.class);
 
 	protected EventListenerList listenerList;
 	

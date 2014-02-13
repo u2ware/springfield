@@ -21,8 +21,6 @@ public class MemberInfoValidator extends EntityValidatorImpl<MemberInfo, MemberI
 		super.create(target, errors);
 		if(errors.hasErrors()) return;
 		
-		
-		logger.debug(usersRepository.exists(target.getUsername()));
 		if(! usersRepository.exists(target.getUsername())){
 			errors.rejectValue("username", "errorCode" , "등록된 사용자가 아닙니다.");
 		}

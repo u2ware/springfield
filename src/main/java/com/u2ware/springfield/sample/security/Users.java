@@ -11,16 +11,17 @@ import lombok.Getter;
 import lombok.Setter;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.u2ware.springfield.config.Springfield;
 import com.u2ware.springfield.config.Springfield.Strategy;
-import com.u2ware.springfield.security.authentication.SaltedUserDetails;
+import com.u2ware.springfield.security.authentication.Role;
 
 
 
 @Springfield(strategy=Strategy.JPA_REPOSITORY_ONLY)
 @Entity
-public class Users implements SaltedUserDetails{
+public class Users implements UserDetails{
 
 	private static final long serialVersionUID = 5482145308642802692L;
 

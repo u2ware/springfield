@@ -15,7 +15,7 @@ import com.u2ware.springfield.config.Springfield.Strategy;
 	strategy=Strategy.JPA, 
 	methodLevelMapping={
 		"*","*.do",
-		"findForm.json","findForm.xml","findForm.xls",
+		"find.json","find.xml","find.xls",
 		"read.json","read.xml","read.xls"
 	}
 )

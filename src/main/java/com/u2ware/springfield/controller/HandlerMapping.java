@@ -3,15 +3,14 @@ package com.u2ware.springfield.controller;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.PatternMatchUtils;
@@ -29,112 +28,27 @@ import org.springframework.web.servlet.mvc.condition.RequestCondition;
 import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-
-import com.u2ware.springfield.security.Navigation;
 
 
 
 
 public class HandlerMapping extends RequestMappingInfoHandlerMapping{
-	RequestMappingHandlerMapping f;
-
-	protected final Log logger = LogFactory.getLog(getClass());
-
 	
-	protected Map<String,String> mappingTitle = new LinkedHashMap<String,String>(new HashMap<String,String>());
+	private static final Logger logger = LoggerFactory.getLogger(HandlerMapping.class);
 
-	protected Map<String,Integer> mappingSeq = new LinkedHashMap<String,Integer>(new HashMap<String,Integer>());
+	private final String REQUEST_MAPPING_INFO_MAP_KEY = "com.u2ware.springfield.domain.EntityInformation";
 	
 	
+	protected Map<String,String> m = new LinkedHashMap<String,String>(new HashMap<String,String>());
+
+	public Map<String, String> getRequestMappingInfoMap() {
+		return m;
+	}
+
 	protected void initHandlerMethods() {
 		super.initHandlerMethods();
-		this.initNavigation();
+		getServletContext().setAttribute(REQUEST_MAPPING_INFO_MAP_KEY, m);			
 	}
-	
-	protected void initNavigation(){
-		
-		if(getServletContext().getAttribute(Navigation.OBJECT_NAME) != null) return;
-		
-		HandlerMappingNavigation root = new HandlerMappingNavigation();
-		root.setPath("/");
-		root.setPattern("/**");
-		root.setName("root.title");
-
-		for(String mapping : mappingTitle.keySet()){
-			
-			//logger.debug(mapping+"......");
-			
-			String[] paths = StringUtils.delimitedListToStringArray(mapping, "/");
-			
-			HandlerMappingNavigation parent = root;
-			HandlerMappingNavigation child = null;
-			for(int i = 0 ; i < paths.length; i++){
-
-				
-				String[] sub = Arrays.copyOfRange(paths, 0, i+1);
-				String p = StringUtils.arrayToDelimitedString(sub , "/");
-						
-				if(StringUtils.hasText(p)){
-					child = new HandlerMappingNavigation();
-					child.setPattern(p+"/**");
-					child.setPath(p);
-					
-					String title = sub[sub.length-1];
-					if(! StringUtils.hasText(title)){
-						title = mappingTitle.get(mapping);
-					}
-					if(title.startsWith(".")){
-						title = mappingTitle.get(mapping)+title;
-					}
-					
-					
-					child.setName(title);
-	
-					parent = (HandlerMappingNavigation) parent.addChild(child);
-				}
-			}
-		}
-
-		getServletContext().setAttribute(Navigation.OBJECT_NAME, root);			
-		logger.warn("Navigation build success.");
-		
-		//if(logger.isInfoEnabled())
-		//	printNavigation(0, root);
-	}
-
-/*	private void printNavigation(int i, Navigation n){
-		logger.info(i + " "+n);
-		if(n.getChildren() != null){
-			int j = i+1;
-			for(Navigation c : n.getChildren()){
-				printNavigation(j ,c);
-			}
-		}
-	}
-*/
-	@SuppressWarnings("serial")
-	private class HandlerMappingNavigation extends Navigation{
-
-		@Override
-		public String getPath() {
-			if(super.getChildren().size() > 0){
-				return getChildren().get(0).getPath();
-			}
-			return super.getPath();
-		}
-		
-		@Override
-		public Navigation addChild(Navigation child){
-			if(super.getChildren().contains(child)){
-				return getChildren().get(getChildren().indexOf(child));
-			}else{
-				super.getChildren().add(child);
-				return child;
-			}
-		}
-	}	
-	
 	
 	
 	
@@ -162,7 +76,7 @@ public class HandlerMapping extends RequestMappingInfoHandlerMapping{
 
 	@Override
 	protected boolean isHandler(Class<?> beanType) {
-		return  ClassUtils.isAssignable(EntityHandler.class, beanType);
+		return  ClassUtils.isAssignable(EntityControllerImpl.class, beanType);
 	}
 
 	@Override
@@ -173,12 +87,12 @@ public class HandlerMapping extends RequestMappingInfoHandlerMapping{
 	private RequestMappingInfo getMappingForMethod(Object handler, Method method, Class<?> handlerType) {
 		
 		Object handlerObj = (handler instanceof String) ? getApplicationContext().getBean((String) handler) : handler;
-		EntityHandler<?,?> controller = (EntityHandler<?,?>)handlerObj;
+		EntityControllerImpl<?,?> controller = (EntityControllerImpl<?,?>)handlerObj;
 		
-		//logger.debug(handler+" "+controller+" "+method.getName()+" "+controller.getQueryMetamodel().getTargetMapping());
 		
 		RequestMappingInfo info = null;
 		RequestMapping methodAnnotation = createMethodLevelRequestMapping(controller, method);
+		//logger.debug(methodAnnotation+" "+handler+" "+controller+" "+method.getName()+" "+controller.getMetamodel().getTopLevelMapping());
 		
 		if (methodAnnotation != null) {
 			info = createRequestMappingInfo(methodAnnotation, null);
@@ -238,13 +152,14 @@ public class HandlerMapping extends RequestMappingInfoHandlerMapping{
 	///////////////////////////////////////////////////////////////////////
 	//
 	///////////////////////////////////////////////////////////////////////
-	protected RequestMapping createMethodLevelRequestMapping(EntityHandler<?,?> handler, Method method) {
+	protected RequestMapping createMethodLevelRequestMapping(EntityControllerImpl<?,?> handler, Method method) {
 		final RequestMapping requestMapping = AnnotationUtils.findAnnotation(method, RequestMapping.class);
 		if(requestMapping == null) return null;
+
 		
 		final String[] newValues = createMethodLevelRequestMappingValues(handler, method, requestMapping.value());
 		if(newValues == null || newValues.length == 0) return null;
-		
+
 		return new RequestMapping(){
 			public Class<? extends Annotation> annotationType() {return requestMapping.annotationType();}
 			public String[] value() {return newValues;}
@@ -257,24 +172,30 @@ public class HandlerMapping extends RequestMappingInfoHandlerMapping{
 	}
 	
 	
-	protected String[] createMethodLevelRequestMappingValues(EntityHandler<?,?> handler, Method method, String[] requestMappingValues){
+	protected String[] createMethodLevelRequestMappingValues(EntityControllerImpl<?,?> handler, Method method, String[] requestMappingValues){
 		
 		try{
-			String topLevelMapping = handler.getMetamodel().getTopLevelMapping();
-			String[] methodLevelMappings = handler.getMetamodel().getMethodLevelMapping();
-			String commandId = handler.getMetamodel().getIdentityUri();
+			String topLevelMapping = handler.getInformation().getTopLevelMapping();
+			String[] methodLevelMappings = handler.getInformation().getMethodLevelMapping();
+			String identityPath = handler.getInformation().getEntityPath();
 
+			
 			List<String> newValuesList = new ArrayList<String>();
 			for(String requestMappingValue : requestMappingValues){
 
-				String requestMapping = StringUtils.replace(requestMappingValue, EntityHandler.COMMAND_ID, commandId);
+				String requestMapping = StringUtils.replace(requestMappingValue, EntityControllerImpl.COMMAND_ID_PATH, identityPath);
 
+				if( ! StringUtils.hasLength(identityPath) ){
+					throw new Exception("identity requried");
+				}
+				
 				for(int i = 0 ; i < methodLevelMappings.length; i++){
 					
 					String file = StringUtils.stripFilenameExtension(methodLevelMappings[i]);
 					String extension = StringUtils.getFilenameExtension(methodLevelMappings[i]);
 
-					
+					//logger.debug(file+"."+extension);
+				
 					
 					if(PatternMatchUtils.simpleMatch(file, method.getName())){
 						
@@ -285,22 +206,22 @@ public class HandlerMapping extends RequestMappingInfoHandlerMapping{
 							newValuesList.add( topLevelMapping + requestMapping);
 						}
 
-						if(! mappingTitle.containsKey(topLevelMapping+"/")){
-							mappingTitle.put(topLevelMapping+"/" , ClassUtils.getShortName(handler.getMetamodel().getQueryClass()));
+						if(! m.containsKey(topLevelMapping+"/")){
+							m.put(topLevelMapping+"/" , ClassUtils.getShortName(handler.getInformation().getQueryClass()));
 						}
 
 					}
 
 				}
 			}
+			//logger.debug(newValuesList.size());
 			
 			String[] newValues = new String[newValuesList.size()];
 			newValuesList.toArray(newValues);
 			return newValues;
 
 		}catch(Exception e){
-			e.printStackTrace();
-			return new String[]{};
+			throw new RuntimeException(e);
 		}
 		
 	}
