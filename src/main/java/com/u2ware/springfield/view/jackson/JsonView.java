@@ -11,23 +11,33 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.u2ware.springfield.view.ViewResolverSupport;
+import com.u2ware.springfield.view.ModelFilter;
 
 
 public class JsonView extends MappingJackson2JsonView{
 
-	private static final Logger logger = LoggerFactory.getLogger(JsonView.class);
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
+	private ModelFilter modelFilter;
 	
 	public JsonView(){
 		super();
+		super.setContentType("application/json;charset=UTF-8");
 		super.getObjectMapper().registerModule(new JodaModule());
 		super.getObjectMapper().configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 	}
 	
-	
+	public void setModelFilter(ModelFilter modelFilter) {
+		this.modelFilter = modelFilter;
+	}
+
+	@Override
 	protected Object filterModel(Map<String, Object> model) {
-		return ViewResolverSupport.getResponseModel(model);
+		if(modelFilter != null){
+			return modelFilter.extractOutputModel(model);
+		}else{
+			return super.filterModel(model);
+		}
 	}
 
 	@Override

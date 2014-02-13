@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:springfield="http://www.u2ware.com/schema/springfield"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/jdbc 
+		http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.u2ware.com/schema/springfield 
+		http://www.u2ware.com/schema/springfield/u2ware-springfield.xsd">			
+
+
+	<!-- 
+	#############################################################
+	# dataSource
+	#############################################################
+	 -->
+	<jdbc:embedded-database id="dataSource" type="HSQL" />
+
+
+	<context:component-scan base-package="com.u2ware.springfield.service.test2"/>
+
+	<!-- 
+	#############################################################
+	# springfield 
+	#############################################################
+	-->
+	<springfield:modules base-package="com.u2ware.springfield.service.test2" data-source-ref="dataSource"/>
+	
+</beans>

@@ -7,10 +7,10 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 
+
 public class NavigationAccessor {
 
-	private static final Logger logger = LoggerFactory.getLogger(NavigationAccessor.class);
-	
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	public static final String DEFAULT_ACCESS = "hasRole('ROLE_ANONYMOUS')";
 
@@ -42,7 +42,7 @@ public class NavigationAccessor {
 		//logger.debug("\t"+n);
 		if(antPathMatcher.match(n.getPattern(), requestPath)){
 			n.setSelected(true);
-			logger.debug("\t"+ n);
+			logger.warn("\t"+ n);
 		}else{
 			n.setSelected(false);
 		}
@@ -54,14 +54,14 @@ public class NavigationAccessor {
 		
 		boolean visible = accessExpressionRoot.evaluateAsBoolean(n.getAccess());
 		n.setHide( !visible);
-		logger.debug("\t"+ n);
+		logger.warn("\t"+ n);
 	}
 	private void updateAccess(Navigation n) {
 		if(n.getPattern() == null) return;
 		
 		if(antPathMatcher.match(n.getPattern(), requestPath)){
 			if(StringUtils.hasText(n.getAccess())){
-				logger.debug("\t"+ n);
+				logger.warn("\t"+ n);
 				attribute = n.getAccess();
 			}
 		}

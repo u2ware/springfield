@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	
+	<section>
+		<title>ViewResolver</title>
+
+    	<para>
+    		<xref linkend="springfield.modules"/>에 의해 한 개 이상의 
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html">
+       		<interfacename>EntityController</interfacename>
+       		</ulink> 가 등록되는 경우, 
+			ViewName 을 랜더링하기 위해 다음 과 같은 View Resolver Bean 들이 자동 등록된다.
+		</para>		
+			
+		<table>
+			<title>Auto Register Beans for Resolving View </title>
+			<tgroup cols="2">
+				<thead>
+					<row>
+						<entry>Bean Name</entry>
+						<entry>Bean Object</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>springfieldWebmvcRenderThymeleafViewResolver</entry>
+						<entry>~
+						</entry>
+					</row>
+					<row>
+						<entry>springfieldWebmvcRenderJstlViewResolver</entry>
+						<entry>~
+						</entry>
+					</row>
+					<row>
+						<entry>springfieldWebmvcRenderTilesViewResolver</entry>
+						<entry>~
+						</entry>
+					</row>
+					<row>
+						<entry>springfieldWebmvcRenderJsonViewResolver</entry>
+						<entry>~
+						</entry>
+					</row>
+					<row>
+						<entry>springfieldWebmvcRenderXmlViewResolver</entry>
+						<entry>~
+						</entry>
+					</row>
+					<row>
+						<entry>springfieldWebmvcRenderXlsViewResolver</entry>
+						<entry>~
+						</entry>
+					</row>
+					<row>
+						<entry>springfieldWebmvcRenderCsvViewResolver</entry>
+						<entry>~
+						</entry>
+					</row>
+					<row>
+						<entry>springfieldWebmvcRenderDownloadViewResolver</entry>
+						<entry>~
+						</entry>
+					</row>
+					<row>
+						<entry>springfieldWebmvcRenderStreamViewResolver</entry>
+						<entry>~
+						</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+
+	</section>
+       		
+
+		

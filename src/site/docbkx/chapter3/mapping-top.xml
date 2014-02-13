@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	<section>
+		<title>topLevelMapping</title>
+		<para>
+			<xref linkend="springfield.modules"/> 은  등록된 
+			<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html">
+			<interfacename>EntityController</interfacename>
+			</ulink> 의 handler method 룰 RESTful 요청 경로로 매핑 한다. 
+			<xref linkend="springfield.annotation"/> 의 topLevelMapping 속성을 설정하여 요청 경로를 변경할 수 있으며, 	
+			별도의 선언 이 없으면, basePackage 를 기준으로 결정된다. 
+			요청 경로에 따른  응답 view name 은 EntityController 의 메소드 이름이 조립되어 문자열로 리턴된다.
+		</para>
+
+		<table>
+			<title>Request mapping. See <xref linkend="springfield.example"/></title>
+			<tgroup cols="4">
+				<thead>
+					<row>
+						<entry>handle method</entry>
+						<entry>HTTP Method</entry>
+						<entry>Request Path </entry>
+						<entry>Response ViewName </entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>fooController.find()</entry>
+						<entry>GET</entry>
+						<entry>/foo</entry>
+						<entry>"/foo/find"</entry>
+					</row>
+					<row>
+						<entry>fooController.read()</entry>
+						<entry>GET</entry>
+						<entry>/foo/1</entry>
+						<entry>"/foo/read"</entry>
+					</row>
+					<row>
+						<entry>fooController.createForm()</entry>
+						<entry>GET</entry>
+						<entry>/foo/new</entry>
+						<entry>"/foo/createForm"</entry>
+					</row>
+					<row>
+						<entry>fooController.create()</entry>
+						<entry>POST</entry>
+						<entry>/foo/new</entry>
+						<entry>"/foo/create"</entry>
+					</row>
+					<row>
+						<entry>fooController.updateForm()</entry>
+						<entry>GET</entry>
+						<entry>/foo/1/edit</entry>
+						<entry>"/foo/updateForm"</entry>
+					</row>
+					<row>
+						<entry>fooController.update()</entry>
+						<entry>PUT</entry>
+						<entry>/foo/1/edit</entry>
+						<entry>"/foo/update"</entry>
+					</row>
+					<row>
+						<entry>fooController.delete()</entry>
+						<entry>DELETE</entry>
+						<entry>/foo/1/edit</entry>
+						<entry>"/foo/delete"</entry>
+					</row>
+					<row>
+						<entry>barSearchController.find()</entry>
+						<entry>GET</entry>
+						<entry>/a/b/c/d</entry>
+						<entry>"/a/b/c/d/find"</entry>
+					</row>
+					<row>
+						<entry>barSearchController.read()</entry>
+						<entry>GET</entry>
+						<entry>/a/b/c/d/1</entry>
+						<entry>"/a/b/c/d/read"</entry>
+					</row>
+					<row>
+						<entry>barSearchController.createForm()</entry>
+						<entry>GET</entry>
+						<entry>/a/b/c/d/new</entry>
+						<entry>"/a/b/c/d/createForm"</entry>
+					</row>
+					<row>
+						<entry>barSearchController.create()</entry>
+						<entry>POST</entry>
+						<entry>/a/b/c/d/new</entry>
+						<entry>"/a/b/c/d/create"</entry>
+					</row>
+					<row>
+						<entry>barSearchController.updateForm()</entry>
+						<entry>GET</entry>
+						<entry>/a/b/c/d/1/edit</entry>
+						<entry>"/a/b/c/d/updateForm"</entry>
+					</row>
+					<row>
+						<entry>barSearchController.update()</entry>
+						<entry>PUT</entry>
+						<entry>/a/b/c/d/1/edit</entry>
+						<entry>"/a/b/c/d/update"</entry>
+					</row>
+					<row>
+						<entry>barSearchController.delete()</entry>
+						<entry>DELETE</entry>
+						<entry>/a/b/c/d/1/edit</entry>
+						<entry>"/a/b/c/d/delete"</entry>
+					</row>
+
+				</tbody>
+			</tgroup>
+		</table>
+	</section>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.u2ware.springfield.repository.sqlsession.test3.SpringfieldQueryTemplate">
+
+	<resultMap type="com.u2ware.springfield.repository.sqlsession.test3.SpringfieldQueryTemplate" id="entityType"/>
+	
+	<select id="exists" parameterType="map" resultType="integer">
+		select count(name) from MybatisTable3
+		<if test="name != null">where name = #{name}</if>
+		<if test="name == null">where name = #{entity.name}</if>
+	</select>
+
+	<select id="findOne" parameterType="map" resultMap="entityType">
+		select * from MybatisTable3 
+		<if test="name != null">where name = #{name}</if>
+		<if test="name == null">where name = #{entity.name}</if>
+	</select>
+
+	<update id="update" parameterType="map">
+		update MybatisTable3 set 
+		age = #{entity.age}
+		where name = #{entity.name}
+	</update>
+
+	<insert id="insert" parameterType="map">
+		 insert into MybatisTable3 ( name, age ) 
+		 values ( #{entity.name}, #{entity.age} )
+	</insert>
+
+
+	<delete id="delete" parameterType="map">
+		delete from MybatisTable3
+		<if test="name != null">where name = #{name}</if>
+		<if test="name == null">where name = #{entity.name}</if>
+	</delete>
+
+
+	<select id="findAll" parameterType="map" resultMap="entityType">
+		select * from MybatisTable3
+		<include refid="whereSyntax"/>
+		<include refid="orderSyntax"/>
+	</select>
+
+	<select id="countAll" parameterType="map" resultType="long">
+		select count(*) from MybatisTable3 
+		<include refid="whereSyntax"/>
+	</select>
+
+	<delete id="deleteAll" parameterType="map">
+		delete from MybatisTable3
+		<include refid="whereSyntax"/>
+	</delete>
+	
+	
+	<sql id="whereSyntax">
+		<if test="query != null">
+			<trim prefix="WHERE" prefixOverrides="AND |OR ">
+				<if test="query.name != null"> and name = #{query.name}</if> 
+				<if test="query.age != null"> and age = #{query.age}</if> 
+			</trim>
+		</if>
+	</sql>
+	
+	
+	<sql id="orderSyntax">
+		<if test="pageable != null and pageable.sort != null">
+			<trim prefix="order by" prefixOverrides=", ">
+				<foreach item="item" index="index" collection="pageable.sort">
+					${item.property} ${item.direction}
+				</foreach>
+			</trim>
+		</if>
+		<if test="sort != null">
+			<trim prefix="order by" prefixOverrides=", ">
+				<foreach item="item" index="index" collection="sort">
+					${item.property} ${item.direction}
+				</foreach>
+			</trim>
+		</if>
+	</sql>
+
+	<!-- 
+	#######################################
+	#
+	#######################################
+	 -->
+	<select id="customQuery" parameterType="map" resultMap="entityType">
+		select * from MybatisTable3
+		<include refid="whereSyntaxCustomQuery"/>
+	</select>
+	
+	<select id="countByCustomQuery" parameterType="map" resultType="long">
+		select count(*) from MybatisTable3  
+		<include refid="whereSyntaxCustomQuery"/>
+	</select>
+	
+	<delete id="deleteByCustomQuery" parameterType="map">
+		delete from MybatisTable3
+		<include refid="whereSyntaxCustomQuery"/>
+	</delete>
+	
+	<sql id="whereSyntaxCustomQuery">
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="query.name != null"> and name = #{query.name}</if> 
+			<if test="query.age != null"> and age = #{query.age}</if> 
+		</trim>
+	</sql>
+
+
+</mapper>

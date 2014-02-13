@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+
+    <title th:text="#{application.title}"/>
+
+    <!-- Le styles -->
+    <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css" rel="stylesheet"/>
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet"/>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://getbootstrap.com/2.3.2/assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="http://getbootstrap.com/2.3.2/assets/ico/apple-touch-icon-144-precomposed.png"/>
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="http://getbootstrap.com/2.3.2/assets/ico/apple-touch-icon-114-precomposed.png"/>
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="http://getbootstrap.com/2.3.2/assets/ico/apple-touch-icon-72-precomposed.png"/>
+                    <link rel="apple-touch-icon-precomposed" href="http://getbootstrap.com/2.3.2/assets/ico/apple-touch-icon-57-precomposed.png"/>
+                                   <link rel="shortcut icon" href="http://getbootstrap.com/2.3.2/assets/ico/favicon.png"/>
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"/>
+	<script type="text/javascript" src="http://malsup.github.com/jquery.form.js"/>
+
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-transition.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-alert.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-modal.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-dropdown.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-scrollspy.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-tab.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-tooltip.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-popover.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-button.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-collapse.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-carousel.js"></script>
+    <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap-typeahead.js"></script>
+
+
+	<script src="http://cdn.kendostatic.com/2012.3.1315/js/kendo.web.min.js"></script>
+	<link rel="stylesheet" href="http://cdn.kendostatic.com/2012.3.1315/styles/kendo.common.min.css"/>
+	<link rel="stylesheet" href="http://cdn.kendostatic.com/2012.3.1315/styles/kendo.default.min.css"/> 
+  </head>
+
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" th:href="@{${navigation.path}}" th:text="${navigation.name}"/>
+          <div class="nav-collapse collapse">
+            
+            <ul class="nav">
+				<li th:each="n1 : ${navigation.children}" th:if="${!n1.hide}" th:class="${n1.selected} ? 'active'">
+					<a th:href="@{${n1.path}}" th:text="${n1.name}"/>
+				</li>
+            </ul>
+            
+            <form class="navbar-form pull-right">
+              <input class="span2" type="text" placeholder="Email"/>
+              <input class="span2" type="password" placeholder="Password"/>
+              <button type="submit" class="btn">Sign in</button>
+            </form>
+            
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="container">
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav" th:each="n1 : ${navigation.children}" th:if="${n1.selected}">
+            
+ 				<ul th:each="n2 : ${n1.children}" th:if="${!n2.hide}" class="nav nav-list" >
+
+					<li th:if="${#lists.isEmpty(n2.children)}" th:class="${n2.selected} ? 'active'">
+						<a th:href="@{${n2.path}}" th:text="${n2.name}"/>
+					</li>
+					
+          <li th:unless="${ #lists.isEmpty(n2.children) }" th:class="${n2.selected} ? 'active'">
+            <a/><span th:text="${n2.name}"/><a/>
+            <ul class="nav nav-list">
+              <li th:unless="${ #lists.isEmpty(n2.children) }" th:each="n3 : ${n2.children}" th:if="${!n3.hide}">
+                <a th:href="@{${n3.path}}" th:text="${n3.name}" />
+              </li>
+            </ul>
+          </li>
+					
+				</ul>
+            
+          </div><!--/.well -->
+        </div><!--/span-->
+        <div class="span9">
+        
+			<div class="well">
+				<a href="http://www.kendoui.com/" target="_blank" th:text="'Async File Upload Form With KendoUI'"/>
+			</div> 
+ 
+ 
+			<form>
+				<input type="file" name="multipartFile" id="multipartFile" multiple="multiple"/>
+			</form>
+					
+        </div><!--/span9-->
+      </div><!--/row-->
+
+      <hr/>
+
+      <footer>
+        <p>&copy; Company 2013</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+
+
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(document).ready(function() {
+		    $("#multipartFile").kendoUpload({
+		        async: {
+		            saveUrl: './upload.html',
+		            removeUrl: './delete.html',
+		            autoUpload: true
+		        },  
+	          cancel: onCancel,
+            complete: onComplete,
+            error: onError,
+            progress: onProgress,
+            remove: onRemove,
+            select: onSelect,
+            success: onSuccess,
+            upload: onUpload
+		    });
+		});
+		
+		function onSelect(e) {
+				console.log("Select :: " + getFileInfo(e));
+    }
+
+    function onUpload(e) {
+    	console.log("Upload :: " + getFileInfo(e));
+    }
+
+    function onSuccess(e) {
+    	e.files[0]['contentFile'] = e.response.contentFile;
+    	console.log("Success :: " + getFileInfo(e));
+    }
+
+    function onError(e) {
+    	console.log("Error (" + e.operation + ") :: " + getFileInfo(e));
+    }
+
+    function onProgress(e) {
+    	console.log("Progress (" + e.operation + ") :: " + getFileInfo(e));
+    }
+
+    function onComplete(e) {
+    	console.log("Success :: " + getFileInfo(e));
+    }
+
+    function onCancel(e) {
+    	console.log("Cancel :: " + getFileInfo(e));
+    }
+
+    function onRemove(e) {
+    	e.data = {"multipartFile" : e.files[0]['contentFile']}
+    	console.log("Remove :: " + getFileInfo(e));
+    }		
+
+    function getFileInfo(e) {
+        return e;
+    }        
+    /*]]>*/</script>
+
+  </body>
+</html>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	
+	<section>
+		<title>UserDetailsService</title>
+		
+		<para>
+       		<interfacename>org.springframework.security.core.userdetails.UserDetailsService</interfacename>
+       		를 구현한 Bean 이 등록되어 있다면, 
+       		<xref linkend="springfield.modules"/> 이 동적으로 이 Bean 을 추적하여 
+    		<ulink url="http://docs.spring.io/spring-security/site/docs/3.1.4.RELEASE/reference/springsecurity.html">
+       		spring security 
+       		</ulink> 가 로그인을 처리하도록 설정한다.
+			
+       		<interfacename>org.springframework.security.web.authentication.AuthenticationSuccessHandler</interfacename>
+       		를 구현한 Bean 이 등록되어 있다면, 로그인 성공 이벤트를 수신할수 있으며, 
+       		<interfacename>org.springframework.security.web.authentication.AuthenticationFailureHandler</interfacename>
+       		를 구현한 Bean 이 등록되어 있다면, 로그인 실패 이벤트를 수신할수 있으며, 
+		</para>
+
+		<programlistingco>
+			<areaspec>
+				<area id="x1" coords="13"/>
+			</areaspec>
+			<programlisting language="java">
+package com.yourcompany.yourproject.security;
+		
+@Component
+public class LoginService implements org.springframework.security.core.userdetails.UserDetailsService{
+
+	@Autowired @Qualifier("userRepository")
+	private EntityRepository&lt;User, String&gt; userRepository;
+
+	@Override
+	@Transactional
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = userRepository.findOne(username);
+		if (user == null) {
+			throw new DataRetrievalFailureException("Query returned no results for user '" + username + "'");
+		}
+		return user;
+	}
+}
+			</programlisting>		
+			<calloutlist>
+				<callout arearefs="x1">
+					<para>
+						사용자 계정을 데이터베이스에서 조회하여 로그인 처리 한다.
+					</para>
+				</callout>
+			</calloutlist>
+		</programlistingco>	
+	
+		<programlistingco>
+			<areaspec>
+				<area id="x1" coords="10"/>
+			</areaspec>
+			<programlisting language="java">
+package com.yourcompany.yourproject.security;
+		
+@Component
+public class LoginSuccess implements org.springframework.security.web.authentication.AuthenticationSuccessHandler{
+
+	@Override
+	public void onAuthenticationSuccess(HttpServletRequest request, 
+		HttpServletResponse response, 
+		Authentication authentication) throws IOException, ServletException {
+		//로그인 성공 이벤트 
+	}
+}
+			</programlisting>		
+			<calloutlist>
+				<callout arearefs="x1">
+					<para>
+						로그인 성공 이벤트를 수신하여 로직을 구현할수 있다.
+					</para>
+				</callout>
+			</calloutlist>
+		</programlistingco>	
+	
+		<programlistingco>
+			<areaspec>
+				<area id="x1" coords="10"/>
+			</areaspec>
+			<programlisting language="java">
+package com.yourcompany.yourproject.security;
+		
+@Component
+public class LoginFailure implements org.springframework.security.web.authentication.AuthenticationSuccessHandler{
+
+	@Override
+	public void onAuthenticationFailure(HttpServletRequest request, 
+		HttpServletResponse response, 
+		AuthenticationException exception)throws IOException, ServletException {
+		//로그인 실패 이벤트 
+	}
+}
+			</programlisting>		
+			<calloutlist>
+				<callout arearefs="x1">
+					<para>
+						로그인 실패 이벤트를 수신하여 로직을 구현할수 있다.
+					</para>
+				</callout>
+			</calloutlist>
+		</programlistingco>	
+	
+	
+	
+	
+	
+	
+	
+	
+		<programlistingco>
+			<areaspec>
+				<area id="x1" coords="5"/>
+			</areaspec>
+
+			<programlisting language="xml">
+&lt;beans&gt;
+	&lt;jdbc:embedded-database id="yourDataSource" type="HSQL"/&gt;  	
+
+	&lt;context:component-scan base-package="com.yourcompany.yourproject"/&gt;  
+	
+	&lt;springfield:modules base-package="com.yourcompany.yourproject" 
+			data-source-ref="yourDataSource"
+	/&gt;
+	...
+&lt;/beans&gt;
+			</programlisting>
+			<calloutlist>
+				<callout arearefs="x1">
+					<para>
+						&lt;context:component-scan&gt; 으로  LoginService , LoginSuccess , LoginFailure 를 등록 하여야 한다. 
+					</para>
+				</callout>
+			</calloutlist>			
+		</programlistingco>
+
+	</section>

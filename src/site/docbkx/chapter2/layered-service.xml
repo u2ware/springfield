@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+  "http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+  	<section>
+		<title>EntityService</title>
+    	<para>
+    		Layered Architecture 에서 Service Layer 역할을 수행하는  
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityService.html">
+       		<interfacename>EntityService</interfacename>
+       		</ulink> 
+			는  
+       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html">
+       		<interfacename>EntityController</interfacename>
+       		</ulink> 
+       		의 handle method 에 대응하는 service method 가 정의되어 있으며 
+       		
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html">
+       		<interfacename>EntityControllerImpl</interfacename>
+       		</ulink> 
+       		에 의해 해당 메소드가 호출된다.
+       		
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityService.html">
+       		<interfacename>EntityService</interfacename>
+       		</ulink> 
+       		의 구현체인 
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityServiceImpl.html">
+       		<interfacename>EntityServiceImpl</interfacename>
+       		</ulink> 
+       		는  
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/EntityRepository.html">
+       		<interfacename>EntityRepository</interfacename>
+       		</ulink> 
+			와
+       		<interfacename>org.springframework.transaction.support.TransactionTemplate</interfacename>
+       		를 주입 받아서 동작한다.
+    	</para>
+		<programlisting language="java">
+public interface EntityService&lt;T, Q&gt;{
+	
+	public Iterable&lt;?&gt; find(Q query, Pageable pageable);
+
+	public T read(T entity);
+	
+	public T createForm(T entity);
+	
+	public T create(T entity) ;
+	
+	public T updateForm(T entity);
+	
+	public T update(T entity);
+	
+	public T delete(T entity);
+
+}
+ 		</programlisting>   	
+	</section>

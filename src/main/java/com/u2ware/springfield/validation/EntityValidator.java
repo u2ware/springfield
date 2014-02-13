@@ -4,10 +4,8 @@ import org.springframework.validation.Errors;
 
 public interface EntityValidator<T,Q> {
 
-	public void home(Q target, Errors errors);
+	//public void home(Q target, Errors errors);
 
-	public void findForm(Q target, Errors errors) ;
-	
 	public void find(Q target, Errors errors);
 	
 	public void read(T target, Errors errors);

@@ -9,38 +9,33 @@ import org.springframework.data.domain.Sort;
 
 public interface EntityRepository<T, ID extends Serializable> {
 
-	public <X> X getTemplate();
-	
-	public boolean exists(ID id) ;
-	public boolean exists(T entity) ;
-	
-	public T read(ID id) ;
-	public T read(T entity) ;
-	public T create(T entity) ;
-	public T update(T entity) ;
-	public T createOrUpdate(T entity) ;
-	public void delete(T entity);
-	public void delete(ID id);
-	
-	public long count();
-	public List<T> findAll();
-	public List<T> findAll(Sort sort);
-	public Page<T> findAll(Pageable pageable);
-	public void deleteAll();
+	public boolean exists(T entity);
+	public boolean exists(ID id);//CrudRepository
 
-	public long count(Object query);
-	public List<T> findAll(Object query);
-	public List<T> findAll(Object query, Sort sort);
-	public Page<T> findAll(Object query, Pageable pageable);
-	public void deleteAll(Object query);
+	public T findOne(T entity);
+	public T findOne(ID id);//CrudRepository
 
+	public <S extends T> S save(S entity);//CrudRepository
+	public <S extends T> Iterable<S> save(Iterable<S> entities);//CrudRepository
+
+	public void delete(ID id);//CrudRepository
+	public void delete(T entity);//CrudRepository
+	public void delete(Iterable<? extends T> entities);//CrudRepository
+
+
+	public long deleteAll();//CrudRepository
+	public long count();//CrudRepository
+	public List<T> findAll();//CrudRepository
+	//public Iterable<T> findAll(Iterable<ID> ids);//CrudRepository
+	public Iterable<T> findAll(Sort sort); //PagingAndSortingRepository
+	public Page<T> findAll(Pageable pageable); //PagingAndSortingRepository
+	
+	
+	public long deleteAll(Object queryMethod);
+	public long count(Object queryMethod);
+	public List<T> findAll(Object queryMethod);
+	public List<T> findAll(Object queryMethod, Sort sort);
+	public Page<T> findAll(Object queryMethod, Pageable pageable);
+	
+	public <R, X> R execute(TemplateCallback<R, X> callback);
 }
-
-
-
-/*
-public List<T> findAll(String query , Object[] param);
-public List<T> findAll(String query , Object[] param, Sort sort);
-public Page<T> findAll(String query , Object[] param, Pageable pageable);
-public long count(String query , Object[] param);
-*/

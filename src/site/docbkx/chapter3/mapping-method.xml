@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	<section>
+		<title>methodLevelMapping</title>
+		<para>
+			요청 매핑은 <xref linkend="springfield.annotation"/> 의  methodLevelMapping 속성값에 의해 결정된다.
+			
+			methodLevelMapping 에서 
+            <ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html">
+            <interfacename>EntityController</interfacename>
+            </ulink> 
+       		의 handler method 이름과 확장자를 선언 하는 방식으로 요청 매핑을 추가, 변경 할수 있다. 
+       		
+       		이때, 선언가능한 확장자는 <xref linkend="controller-view"/> 과 같다. 
+			와일드카드는 
+            <ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html">
+            <interfacename>EntityController</interfacename>
+            </ulink> 
+       		의 모든 handler method 를 의미하며, 
+			별도의 선언이 없으면 default 로  {*} 가 등록된다.
+		</para>
+		
+		<itemizedlist spacing="compact">
+			<listitem> 기본 매핑  예시
+				<programlisting language="java">
+//
+package com.yourcompany.yourproject.foo;
+
+@Springfield
+@Entity
+public class Foo{
+	@Id
+	private String name;
+	private Integer age;
+	...
+}
+				</programlisting>
+				<tgroup cols="4">
+			        <colspec colwidth="1*"/>
+			        <colspec colwidth="2*"/>
+			        <colspec colwidth="3*"/>
+			        <colspec colwidth="4*"/>
+					<thead>
+						<row>
+							<entry>Controller method()</entry>
+							<entry>HTTP Method</entry>
+							<entry>Request Path </entry>
+							<entry>Response ViewName </entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>fooController.find()</entry>
+							<entry>GET</entry>
+							<entry>/foo</entry>
+							<entry>"/foo/find"</entry>
+						</row>
+						<row>
+							<entry>fooController.read()</entry>
+							<entry>GET</entry>
+							<entry>/foo/1</entry>
+							<entry>"/foo/read"</entry>
+						</row>
+						<row>
+							<entry>fooController.createForm()</entry>
+							<entry>GET</entry>
+							<entry>/foo/new</entry>
+							<entry>"/foo/createForm"</entry>
+						</row>
+						<row>
+							<entry>fooController.create()</entry>
+							<entry>POST</entry>
+							<entry>/foo/new</entry>
+							<entry>"/foo/create"</entry>
+						</row>
+						<row>
+							<entry>fooController.updateForm()</entry>
+							<entry>GET</entry>
+							<entry>/foo/1/edit</entry>
+							<entry>"/foo/updateForm"</entry>
+						</row>
+						<row>
+							<entry>fooController.update()</entry>
+							<entry>PUT</entry>
+							<entry>/foo/1/edit</entry>
+							<entry>"/foo/update"</entry>
+						</row>
+						<row>
+							<entry>fooController.delete()</entry>
+							<entry>DELETE</entry>
+							<entry>/foo/1/edit</entry>
+							<entry>"/foo/delete"</entry>
+						</row>
+	
+					</tbody>
+				</tgroup>
+				<para>&nbsp;</para>
+			</listitem>
+
+			<listitem> 메소드 매핑 예시
+				<programlisting language="java">
+//
+package com.yourcompany.yourproject.foo;
+
+@Springfield
+@Entity(
+	methodLevelMapping={
+		"find", "find.html", "find.json",
+		"read", "read.html", "read.json" }
+)
+public class Foo{
+	@Id
+	private String name;
+	private Integer age;
+	...
+}
+				</programlisting>
+				<tgroup cols="4">
+			        <colspec colwidth="1*"/>
+			        <colspec colwidth="2*"/>
+			        <colspec colwidth="3*"/>
+			        <colspec colwidth="4*"/>
+					<thead>
+						<row>
+							<entry>Controller method()</entry>
+							<entry>HTTP Method</entry>
+							<entry>Request Path </entry>
+							<entry>Response ViewName </entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>fooController.find()</entry>
+							<entry>GET</entry>
+							<entry>/foo</entry>
+							<entry>"/foo/find"</entry>
+						</row>
+						<row>
+							<entry></entry>
+							<entry></entry>
+							<entry>/foo.html</entry>
+							<entry>"/foo/find.html"</entry>
+						</row>
+						<row>
+							<entry></entry>
+							<entry></entry>
+							<entry>/foo.json</entry>
+							<entry>"/foo/find.json"</entry>
+						</row>
+						<row>
+							<entry>fooController.read()</entry>
+							<entry>GET</entry>
+							<entry>/foo/1</entry>
+							<entry>"/foo/read"</entry>
+						</row>
+						<row>
+							<entry></entry>
+							<entry></entry>
+							<entry>/foo/1.html</entry>
+							<entry>"/foo/read.html"</entry>
+						</row>
+						<row>
+							<entry></entry>
+							<entry></entry>
+							<entry>/foo/1.json</entry>
+							<entry>"/foo/read.json"</entry>
+						</row>
+					</tbody>
+				</tgroup>
+				<para>&nbsp;</para>
+			</listitem>
+
+			<listitem> 확장자  매핑 예시
+				<programlisting language="java">
+//
+package com.yourcompany.yourproject.foo;
+
+@Springfield
+@Entity(
+	methodLevelMapping={"*.jstl"}
+)
+public class Foo{
+	@Id
+	private String name;
+	private Integer age;
+	...
+}
+				</programlisting>
+				<tgroup cols="4">
+					<thead>
+						<row>
+							<entry>Controller method()</entry>
+							<entry>HTTP Method</entry>
+							<entry>Request Path </entry>
+							<entry>Response ViewName </entry>
+						</row>
+					</thead>
+					<tbody>
+						<row>
+							<entry>fooController.find()</entry>
+							<entry>GET</entry>
+							<entry>/foo.jstl</entry>
+							<entry>"/foo/find.jstl"</entry>
+						</row>
+						<row>
+							<entry>fooController.read()</entry>
+							<entry>GET</entry>
+							<entry>/foo/1.jstl</entry>
+							<entry>"/foo/read.jstl"</entry>
+						</row>
+						<row>
+							<entry>fooController.createForm()</entry>
+							<entry>GET</entry>
+							<entry>/foo/new.jstl</entry>
+							<entry>"/foo/createForm.jstl"</entry>
+						</row>
+						<row>
+							<entry>fooController.create()</entry>
+							<entry>POST</entry>
+							<entry>/foo/new.jstl</entry>
+							<entry>"/foo/create.jstl"</entry>
+						</row>
+						<row>
+							<entry>fooController.updateForm()</entry>
+							<entry>GET</entry>
+							<entry>/foo/1/edit.jstl</entry>
+							<entry>"/foo/updateForm.jstl"</entry>
+						</row>
+						<row>
+							<entry>fooController.update()</entry>
+							<entry>PUT</entry>
+							<entry>/foo/1/edit.jstl</entry>
+							<entry>"/foo/update.jstl"</entry>
+						</row>
+						<row>
+							<entry>fooController.delete()</entry>
+							<entry>DELETE</entry>
+							<entry>/foo/1/edit.jstl</entry>
+							<entry>"/foo/delete.jstl"</entry>
+						</row>
+					</tbody>
+				</tgroup>
+				<para>&nbsp;</para>
+			</listitem>
+		
+		</itemizedlist>
+	</section>

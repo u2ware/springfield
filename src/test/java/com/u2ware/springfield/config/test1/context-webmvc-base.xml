@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">			
+
+	<!-- 
+	#############################################################
+	# MVC @Controller programming model
+	#############################################################
+	 -->
+	<mvc:annotation-driven conversion-service="conversionService" validator="validator" >
+		<mvc:argument-resolvers>
+			<bean class="org.springframework.data.web.PageableHandlerMethodArgumentResolver">
+				<constructor-arg>
+					<bean class="org.springframework.data.web.SortHandlerMethodArgumentResolver">
+						<property name="sortParameter" value="model_query_pageable.sort"/>			
+					</bean>
+				</constructor-arg>
+				<property name="pageParameterName" value="model_query_pageable.pageNumber"/>	
+				<property name="sizeParameterName" value="model_query_pageable.pageSize"/>	
+			</bean>
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
+
+	<!-- 
+	#############################################################
+	# mvc:interceptors
+	#############################################################
+	 -->
+	<mvc:interceptors>
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>
+		<bean class="com.u2ware.springfield.controller.HandlerInterceptor"/>
+	</mvc:interceptors>
+
+<bean class="org.springframework.web.servlet.handler.MappedInterceptor">
+		<constructor-arg><null/></constructor-arg>
+		<constructor-arg>
+			<bean class="com.u2ware.springfield.controller.HandlerInterceptor"/>
+		</constructor-arg>
+	</bean>
+	
+<bean class="org.springframework.web.servlet.handler.MappedInterceptor">
+		<constructor-arg><null/></constructor-arg>
+		<constructor-arg>
+<bean class="com.u2ware.springfield.controller.NavigationInterceptor"/>
+		</constructor-arg>
+	</bean>
+
+
+
+	<!-- 
+	#############################################################
+	#  Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory 
+	#############################################################
+	<mvc:resources mapping="/springfield/resources/**" location="classpath:/META-INF/springfield/" />
+	 -->
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+
+
+	<!-- 
+	#############################################################
+	# conversionService
+	#############################################################
+	 -->
+	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<property name="formatters">
+			<list>
+				<bean class="com.u2ware.springfield.support.conversion.StringTrimFormatter"/>
+			</list>
+		</property>
+	</bean>
+	
+
+	<!-- 
+	#############################################################
+	# validator
+	#############################################################
+	 -->
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="messageInterpolator">
+			<bean class="com.u2ware.springfield.validation.ValidationMessageInterpolator" />
+		</property>
+	</bean>
+
+	<!-- 
+	#############################################################
+	# Springfield 
+	#############################################################
+	 -->
+	<bean id="springfieldHandlerMapping" class="com.u2ware.springfield.controller.HandlerMapping">
+	</bean>
+	
+	<!-- 
+	#############################################################
+	# Navigation
+	#############################################################
+	<bean id="springfieldNavigationFactoryConfigLocation" class="com.u2ware.springfield.support.resource.ResourcePatternResolverBean">
+		<property name="packagesToScan" value="#{springfield['springfield.basePackage']}"/>
+		<property name="resourcePatterns" value="/**/navigation.xml"/>
+	</bean>
+	<bean id="springfieldNavigationFactory" class="com.u2ware.springfield.security.authorization.NavigationFactory">
+		<property name="configLocation" value="#{springfieldNavigationFactoryConfigLocation.resources}"/>
+	</bean>
+	-->	
+	
+	<!-- 
+	#############################################################
+	# i18n
+	#############################################################
+	 -->
+	<bean id="springfieldLocaleResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="defaultLocale" ref="springfieldBaseLocale"/>
+	</bean>
+
+
+	<!-- 
+	#############################################################
+	# multipartResolver 
+	#############################################################
+	-->	
+	<bean id="filterMultipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	    <property name="maxUploadSize" ref="springfieldUploadSize"/>
+	</bean>
+
+	<bean id="springfieldMultipartFileHandler" class="com.u2ware.springfield.support.multipart.MultipartFileHandlerImpl">
+		<property name="directory" ref="springfieldUploadDirectory"/>
+	</bean>
+
+
+
+	<!-- 
+	#############################################################
+	# messageSource 
+	#############################################################
+	 -->
+	<bean id="messageSourceBasenames" class="com.u2ware.springfield.support.resource.ResourcePatternResolverBean">
+		<property name="packagesToScan" value="#{springfieldConfigurer['springfieldConfigurer.basePackage']}"/>
+		<property name="resourcePatterns" value="/**/messages.xml"/>
+	</bean>
+
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="defaultEncoding" value="UTF-8"/>
+		<property name="basenames" value="#{messageSourceBasenames.filenames}"/>
+	</bean>
+	<bean id="messageSourceAccessor" class="org.springframework.context.support.MessageSourceAccessor">
+		<constructor-arg ref="messageSource"/>
+		<constructor-arg value="#{springfieldConfigurer['springfieldConfigurer.baseLocale']}"/>
+	</bean>
+	
+
+
+	<!-- 
+	#############################################################
+	# ViewResolver
+	#############################################################
+	 -->
+
+	<bean id="modelFilter" class="com.u2ware.springfield.view.ModelFilterImpl">
+	</bean>
+			
+	 
+	<bean id="downloadView" class="com.u2ware.springfield.view.multipart.MultipartFileBeanView">
+		<property name="multipartFileHandler" ref="springfieldMultipartFileHandler"/>
+		<property name="download" value="true"/>
+		<property name="modelFilter" ref="modelFilter"/>
+	</bean>
+
+	<bean id="streamView" class="com.u2ware.springfield.view.multipart.MultipartFileBeanView">
+		<property name="multipartFileHandler" ref="springfieldMultipartFileHandler"/>
+		<property name="download" value="false"/>
+		<property name="modelFilter" ref="modelFilter"/>
+	</bean>
+
+	<bean id="jsonView" class="com.u2ware.springfield.view.jackson.JsonView">
+		<property name="contentType" value="application/json;charset=UTF-8"/>
+		<property name="modelFilter" ref="modelFilter"/>
+	</bean>
+
+
+	<bean id="xmlViewMarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
+		<property name="autodetectAnnotations" value="true" />
+	</bean>
+	<bean id="xmlView" class="com.u2ware.springfield.view.xstream.XmlView">
+		<property name="marshaller" ref="xmlViewMarshaller"/>
+		<property name="contentType" value="application/xml;charset=UTF-8"/>
+		<property name="modelFilter" ref="modelFilter"/>
+	</bean>
+
+	<bean id="xlsView" class="com.u2ware.springfield.view.jexcel.XlsView">
+		<property name="contentType" value="application/vnd.ms-excel"/>
+		<property name="modelFilter" ref="modelFilter"/>
+	</bean>
+
+	<bean id="jstlView" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="" />
+		<property name="suffix" value="" />
+	</bean>
+
+
+	<bean id="tilesViewConfigurerDefinitions" class="com.u2ware.springfield.support.resource.ResourcePatternResolverBean">
+		<property name="packagesToScan" value="#{springfieldConfigurer.basePackage}"/>
+		<property name="resourcePatterns" value="/**/tiles-definitions.xml"/>
+	</bean>
+	<bean id="tilesViewConfigurer" class="com.u2ware.springfield.view.tiles2.TilesConfigurer">
+		<property name="definitions" value="#{tilesViewConfigurerDefinitions.locations}"/>
+	</bean>
+	<bean id="tilesView" class="org.springframework.web.servlet.view.UrlBasedViewResolver"> 
+		<property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView"/> 
+	</bean>	
+
+	<!--  
+	<bean id="thymeleafViewEngineResolver" class="com.u2ware.springfield.view.thymeleaf.ResourceBasedTemplateResolver">
+		<property name="prefix" value="" />
+		<property name="suffix" value="" />
+		<property name="characterEncoding" value="UTF-8" />
+		<property name="templateMode" value="HTML5" />
+		<property name="cacheable" value="false"/>
+	</bean>
+	<bean id="thymeleafViewEngine" class="org.thymeleaf.spring3.SpringTemplateEngine">
+		<property name="templateResolver" ref="thymeleafViewEngineResolver" />	
+		 <property name="additionalDialects">
+            <set>
+                <bean class="org.thymeleaf.extras.springsecurity3.dialect.SpringSecurityDialect" />
+            </set>
+        </property>
+	</bean>
+	<bean id="thymeleafView" class="org.thymeleaf.spring3.view.ThymeleafViewResolver">
+ 		<property name="templateEngine" ref="thymeleafViewEngine" />
+		<property name="characterEncoding" value="UTF-8"/>
+		<property name="viewNames" value="*.html"/>
+		<property name="contentType" value="text/html"/>
+		<property name="staticVariables">
+			<map>
+				<entry key="aaa" value="/aa/aa/aa" />
+			</map>
+		</property>
+	</bean>
+	-->
+
+	<bean class="com.u2ware.springfield.view.EntityNegotiatingViewResolver">
+		<property name="locations" value="#{springfieldConfigurer.baseLocations}"/>
+		<property name="entityViewResolvers">
+			<list>
+				<bean id="downloadViewResolver" class="com.u2ware.springfield.view.EntityViewResolver">
+					<constructor-arg ref="downloadView"/>
+					<property name="baseExtensions" value="download"/>
+					<property name="extensions" value="download"/>
+				</bean>
+				<bean id="streamViewResolver" class="com.u2ware.springfield.view.EntityViewResolver">
+					<constructor-arg ref="streamView"/>
+					<property name="baseExtensions" value="stream"/>
+					<property name="extensions" value="stream"/>
+				</bean>
+				<bean id="jsonViewResolver" class="com.u2ware.springfield.view.EntityViewResolver">
+					<constructor-arg ref="jsonView"/>
+					<property name="baseExtensions" value="json"/>
+					<property name="extensions" value="json"/>
+				</bean>
+				<bean id="xmlViewResolver" class="com.u2ware.springfield.view.EntityViewResolver">
+					<constructor-arg ref="xmlView"/>
+					<property name="baseExtensions" value="xml"/>
+					<property name="extensions" value="xml"/>
+				</bean>
+				<bean id="xlsViewResolver" class="com.u2ware.springfield.view.EntityViewResolver">
+					<constructor-arg ref="xlsView"/>
+					<property name="baseExtensions" value="xls"/>
+					<property name="extensions" value="xls"/>
+					<property name="resourceRequired" value="true"/>
+				</bean>
+
+				<bean id="jstlViewResolver" class="com.u2ware.springfield.view.EntityViewResolver">
+					<constructor-arg ref="jstlView"/>
+					<property name="baseExtensions" value="jstl"/>
+					<property name="extensions" value="jstl"/>
+					<property name="resourceRequired" value="true"/>
+				</bean>
+				<bean id="tilesViewResolver" class="com.u2ware.springfield.view.EntityViewResolver">
+					<constructor-arg ref="tilesView"/>
+					<property name="baseExtensions" value="tiles"/>
+					<property name="extensions" value="tiles"/>
+					<property name="resourceRequired" value="true"/>
+				</bean>
+				<bean id="thymeleafViewResolver" class="com.u2ware.springfield.view.EntityViewResolver">
+					<constructor-arg ref="thymeleafView"/>
+					<property name="baseExtensions" value="html"/>
+					<property name="extensions" value="thymeleaf,html,none"/>
+					<property name="resourceRequired" value="true"/>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+
+	
+</beans>

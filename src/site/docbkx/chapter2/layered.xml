@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	
+	<para>
+
+		<para>
+            <xref linkend="springfield.modules"/> 은  basePackage 를 기준으로  
+            <xref linkend="springfield.annotation"/> 를 스캔하여  
+			Layered Architecture 에서 각 레이어에 해당하는 Bean 들을 자동 생성, 등록한다. 
+			등록되는 Bean Name 과 Bean Type 은 다음과 같다.
+		</para>
+		<table>
+			<title>Auto Register Bean Name &amp; Type</title>
+			<tgroup cols="3">
+				<thead>
+					<row>
+						<entry>Layer</entry>
+						<entry>Bean Name</entry>
+						<entry>Bean Type</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>Controller Layer</entry>
+						<entry>{@Springfield class short name}Repository</entry>
+						<entry>
+							<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html">
+			                	<interfacename>EntityController&lt;T, Q&gt;</interfacename>
+				            </ulink>
+						</entry>
+					</row>
+					<row>
+						<entry>Validator Layer</entry>
+						<entry>{@Springfield class short name}Validator</entry>
+						<entry>
+				<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html">
+                	<interfacename>EntityValidator&lt;T, Q&gt;</interfacename>
+	            </ulink>
+						</entry>
+					</row>
+					<row>
+						<entry>Service Layer</entry>
+						<entry>{@Springfield class short name}Service</entry>
+						<entry>
+							<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html">
+			                	<interfacename>EntityService&lt;T, Q&gt;</interfacename>
+				            </ulink>
+						</entry>
+					</row>
+					<row>
+						<entry>Repository Layer</entry>
+						<entry>{Entity class short name}Repository</entry>
+						<entry>
+							<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html">
+			                	<interfacename>EntityRepository&lt;T, ID&gt;</interfacename>
+				            </ulink>
+						</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+			
+			
+		<para>
+			등록 되는 Bean (implementation) Object 는 
+			<xref linkend="springfield.annotation"/> 의 strategy 속성에 따라 결정된다.	
+			strategy 속성이 없다면 <xref linkend="springfield.modules"/> 의  default-strategy 속성을 따른다.
+    		default-strategy 도 선언되지 않았다면, 
+			<interfacename>Strategy.JPA </interfacename>
+			로 설정된다.
+		</para>
+		
+		<table>
+			<title>
+				Auto Register Bean (implementation) Object
+			</title>
+			<tgroup cols="5">
+				<thead>
+					<row>
+						<entry>
+				               <interfacename>Springfield.Strategy</interfacename>
+						</entry>
+						<entry>		
+			                	<interfacename>EntityController&lt;T, Q&gt;</interfacename>
+			       		</entry>
+			       		<entry>
+			                	<interfacename>EntityValidator&lt;T, Q&gt;</interfacename>
+			       		</entry>
+			       		<entry>
+			                	<interfacename>EntityService&lt;T, Q&gt;</interfacename>
+			       		</entry>
+						<entry>
+			                	<interfacename>EntityRepository&lt;T, Q&gt;</interfacename>
+			       		</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>
+							<interfacename>JPA</interfacename> (Default)
+						</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html">
+				       		<interfacename>EntityControllerImpl&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/validation/EntityValidatorImpl.html">
+				       		<interfacename>EntityValidatorImpl&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityServiceImpl.html">
+				       		<interfacename>EntityServiceImpl&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jpa/JpaRepository.html">
+				       		<interfacename>JpaRepository&lt;T, ID&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+					</row>
+					<row>
+						<entry>
+							<interfacename>JPA_REPOSITORY_ONLY</interfacename>
+						</entry>
+						<entry>
+				       		-
+			       		</entry>
+						<entry>
+				       		-
+			       		</entry>
+						<entry>
+				       		-
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jpa/JpaRepository.html">
+				       		<interfacename>JpaRepository&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+					</row>
+
+
+					<row>
+						<entry>
+							<interfacename>HIBERNATE</interfacename>
+						</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html">
+				       		<interfacename>EntityControllerImpl&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/validation/EntityValidatorImpl.html">
+				       		<interfacename>EntityValidatorImpl&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityServiceImpl.html">
+				       		<interfacename>EntityServiceImpl&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/hibernate/HibernateRepository.html">
+				       		<interfacename>HibernateRepository&lt;T, ID&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+					</row>
+					<row>
+						<entry>
+							<interfacename>HIBERNATE_REPOSITORY_ONLY</interfacename>
+						</entry>
+						<entry>
+				       		-
+			       		</entry>
+						<entry>
+				       		-
+			       		</entry>
+						<entry>
+				       		-
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/hibernate/HibernateRepository.html">
+				       		<interfacename>HibernateRepository&lt;T, ID&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+					</row>
+
+
+					<row>
+						<entry>
+							<interfacename>SQLSESSION</interfacename>
+						</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html">
+				       		<interfacename>EntityControllerImpl&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/validation/EntityValidatorImpl.html">
+				       		<interfacename>EntityValidatorImpl&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityServiceImpl.html">
+				       		<interfacename>EntityServiceImpl&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/sqlsession/SqlSessionRepository.html">
+				       		<interfacename>SqlSessionRepository&lt;T, ID&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+					</row>
+					<row>
+						<entry>
+							<interfacename>SQLSESSION_REPOSITORY_ONLY</interfacename>
+						</entry>
+						<entry>
+				       		-
+			       		</entry>
+						<entry>
+				       		-
+			       		</entry>
+						<entry>
+				       		-
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/sqlsession/SqlSessionRepository.html">
+				       		<interfacename>SqlSessionRepository&lt;T, ID&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+					</row>
+
+
+					<row>
+						<entry>
+							<interfacename>JDBC</interfacename>
+						</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html">
+				       		<interfacename>EntityControllerImpl&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/validation/EntityValidatorImpl.html">
+				       		<interfacename>EntityValidatorImpl&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityServiceImpl.html">
+				       		<interfacename>EntityServiceImpl&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jdbc/JdbcRepository.html">
+				       		<interfacename>JdbcRepository&lt;T, ID&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+					</row>
+					<row>
+						<entry>
+							<interfacename>JDBC_REPOSITORY_ONLY</interfacename>
+						</entry>
+						<entry>
+				       		-
+			       		</entry>
+						<entry>
+				       		-
+			       		</entry>
+						<entry>
+				       		-
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/jdbc/JdbcRepository.html">
+				       		<interfacename>JdbcRepository&lt;T, ID&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+					</row>
+
+
+					<row>
+						<entry>
+							<interfacename>DTO</interfacename>
+						</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityControllerImpl.html">
+				       		<interfacename>EntityControllerImpl&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/validation/EntityValidatorImpl.html">
+				       		<interfacename>EntityValidatorImpl&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/service/EntityServiceImpl.html">
+				       		<interfacename>EntityServiceImpl&lt;T, Q&gt;</interfacename>
+				       		</ulink>
+			       		</entry>
+						<entry>
+				       		-
+			       		</entry>
+					</row>
+
+				</tbody>
+			</tgroup>
+		</table>
+
+
+		<para>
+            <xref linkend="springfield.example"/> 에서 등록되는 Bean 은 다음과 같다.
+		</para>
+
+
+		<table>
+			<title>
+				<xref linkend="springfield.example"/> Auto Register Bean (implementation) Object
+			</title>
+				
+			<tgroup cols="3"  >
+				<thead>
+					<row>
+						<entry>Bean Name</entry>
+						<entry>Bean Type</entry>
+						<entry>Bean Object</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>fooController</entry>
+						<entry>
+				       		<interfacename>EntityController</interfacename>&lt;Foo, Foo&gt;
+			       		</entry>
+						<entry>
+				       		<interfacename>EntityControllerImpl</interfacename>&lt;Foo, Foo&gt;
+			       		</entry>
+					</row>
+					<row>
+						<entry>fooValidator</entry>
+						<entry>
+				       		<interfacename>EntityValidator</interfacename>&lt;Foo, Foo&gt;
+			       		</entry>
+						<entry>
+				       		<interfacename>EntityValidatorImpl</interfacename>&lt;Foo, Foo&gt;
+			       		</entry>
+					</row>
+					<row>
+						<entry>fooService</entry>
+						<entry>
+				       		<interfacename>EntityService</interfacename>&lt;Foo, Foo&gt;
+			       		</entry>
+						<entry>
+				       		<interfacename>EntityServiceImpl</interfacename>&lt;Foo, Foo&gt;
+			       		</entry>
+					</row>
+					<row>
+						<entry>fooRepository</entry>
+						<entry>
+				       		<interfacename>EntityRepository</interfacename>&lt;Foo, String&gt;
+			       		</entry>
+						<entry>
+				       		<interfacename>JpaRepository</interfacename>&lt;Foo, String&gt;
+			       		</entry>
+					</row>
+					<row>
+						<entry>~
+			       		</entry>
+						<entry>~
+			       		</entry>
+						<entry>~
+			       		</entry>
+					</row>
+					<row>
+						<entry>barSearchController</entry>
+						<entry>
+				       		<interfacename>EntityController</interfacename>&lt;Bar, BarSearch&gt;
+			       		</entry>
+						<entry>
+				       		<interfacename>EntityControllerImpl</interfacename>&lt;Bar, BarSearch&gt;
+			       		</entry>
+					</row>
+					<row>
+						<entry>barSearchValidator</entry>
+						<entry>
+				       		<interfacename>EntityValidator</interfacename>&lt;Bar, BarSearch&gt;
+			       		</entry>
+						<entry>
+				       		<interfacename>EntityValidatorImpl</interfacename>&lt;Bar, BarSearch&gt;
+			       		</entry>
+					</row>
+					<row>
+						<entry>barSearchService</entry>
+						<entry>
+				       		<interfacename>EntityService</interfacename>&lt;Bar, BarSearch&gt;
+			       		</entry>
+						<entry>
+				       		<interfacename>EntityServiceImpl</interfacename>&lt;Bar, BarSearch&gt;
+			       		</entry>
+					</row>
+					<row>
+						<entry>barRepository</entry>
+						<entry>
+				       		<interfacename>EntityRepository</interfacename>&lt;Bar, Integer&gt;
+			       		</entry>
+						<entry>
+				       		<interfacename>JpaRepository</interfacename>&lt;Bar, Integer&gt;
+			       		</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+	
+		<important>
+            <xref linkend="springfield.modules"/>가 Bean 들을 자동 생성 , 등록하는 과정에서, 
+			
+			해당 이름을 가진 Bean 이 이미 등록 되어 있다면, 
+			<xref linkend="springfield.modules"/> 은 Bean 을 생성 하지 않고 참조만 하게 된다.
+			이는 각 레이어의 Bean 를 customizing 할 수 있는 방식으로 사용된다. 
+		</important>  
+    	</para>
+

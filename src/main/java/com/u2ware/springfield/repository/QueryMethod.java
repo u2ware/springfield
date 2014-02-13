@@ -13,8 +13,7 @@ public @interface QueryMethod {
 
 	String value() default "";
 
-	String query() default "";
-	String countQuery() default "";	
-	
-	
+	//String query() default "";
+	//String countQuery() default "";	
+		
 }

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	
+	<section>
+		<title>Message</title>
+	
+
+		<para>
+			<xref linkend="springfield.modules"/>는   
+			message 처리를 위해 다음 bean 을 등록 한다.
+		</para>
+       	<table>
+       		<title>Auto Register Beans for Message Support</title>
+			<tgroup cols="2">
+				<thead>
+					<row>
+						<entry>Bean Name</entry>
+						<entry>Bean Object</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>messageSource</entry>
+						<entry><interfacename>org.springframework.context.MessageSource</interfacename></entry>
+					</row>
+					<row>
+						<entry>messageSourceAccessor</entry>
+						<entry><interfacename>org.springframework.context.support.MessageSourceAccessor</interfacename></entry>
+					</row>
+				</tbody>
+	       	</tgroup> 
+		</table>
+
+		<para>
+			<xref linkend="springfield.modules"/>은 
+			basePackage 를 기준으로  "/**/messages" 을 자동 스캔한다. 
+			다음 예시의 messages_ko.xml 와 messages_en.xml 파일이 
+			basePackage 내에 어떤 위치라도 존재한다면 별도의 설정없이 이를 load 한다.
+		</para>
+
+		<itemizedlist>
+			<listitem>messages_ko.xml
+				<programlisting language="text">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd"&gt;
+&lt;properties&gt;
+	&lt;entry key="foo.title"&gt;&lt;![CDATA[한글제목]]&gt;&lt;/entry&gt;
+	...	
+&lt;/properties&gt;			
+				</programlisting>
+			
+			</listitem>
+			<listitem>messages_en.xml
+				<programlisting language="text">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd"&gt;
+&lt;properties&gt;
+	&lt;entry key="foo.title"&gt;&lt;![CDATA[Foooooo]]&gt;&lt;/entry&gt;
+	...	
+&lt;/properties&gt;			
+				</programlisting>
+			</listitem>
+		</itemizedlist>
+
+			
+	</section>

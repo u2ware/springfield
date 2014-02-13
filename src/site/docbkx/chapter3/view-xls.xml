@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	
+	<section>
+		<title>SpreadSheet</title>
+		<para>
+			<xref linkend="springfield.modules"/> 은  Excel View 를 위해  
+			<ulink url="http://jexcelapi.sourceforge.net/">jExcelApi</ulink> 를 사용하고 있다.
+
+			Excel 의 Herder 셀의 명칭을 바꾸기 위해 
+			<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/view/spreadsheet/XlsProperty.html">
+				<interfacename>@XlsProperty</interfacename>
+			</ulink> 
+			를 사용하거나 ,
+			해당 property 를 출력하지 않도록  
+			<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/view/spreadsheet/XlsProperty.html">
+				<interfacename>@XlsIgnore</interfacename>
+			</ulink> 
+			를 사용할수 있다.
+		</para>
+		
+		<programlisting language="java">
+@Springfield(toplevelMapping="/sample", methodLevelMapping={"*.xls"})
+@Entity
+public class Sample {
+
+	@Id
+	private Integer intValue;
+
+	@XlsProperty("새이름")
+	private String stringValue;	
+
+	@XlsIgnore
+	private Float floatValue;	
+
+	private DateTime dateTimeValue;	
+
+	//...	
+}
+		</programlisting>
+
+		<para>
+				[GET:/sample.xls] 요청 일때, 다음과 같은  Excel Sheet 를 응답한다.
+		</para>
+		<programlisting language="text">
+** Response Sheet
++----------+-------------+---------------+
+| intValue | 새이름      | dateTimeValue |
++----------+-------------+---------------+
+| 1        | a           | 2010-01-01    |
++----------+-------------+---------------+
+| 1        | b           | 2010-01-01    |
++----------+-------------+---------------+
+		</programlisting>
+			
+		
+		<para> 
+				<xref linkend="springfield.modules"/>의 Excel View 는 runtime 에 미리 정해진 위치를 스캔하여 Template File 이  존재하면 이를 parsing 하여 응답 한다.
+				Template File 은 
+				<ulink url="http://docs.spring.io/spring-framework/docs/3.2.5.RELEASE/spring-framework-reference/html/expressions.html">
+				Spring Expression Language (SpEL)
+				</ulink> 문법을 따른다.
+				Template File 이 사용될 경우 
+				<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/view/spreadsheet/XlsProperty.html">
+					<interfacename>@XlsProperty</interfacename>
+				</ulink> 와 
+				<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/view/spreadsheet/XlsProperty.html">
+					<interfacename>@XlsIgnore</interfacename>
+				</ulink> 는 모두 무시된다.
+				Template File 검색 위치 순서는 다음과 같다.
+		</para>
+		<orderedlist>
+			<listitem>/WEB-INF/com/yourcompany/yourproject/{viewName}.xls</listitem>
+			<listitem>classapth:com/yourcompany/yourproject/{viewName}.xls</listitem>
+		</orderedlist>
+
+		<para>
+			다음과 같이  /WEB-INF/com/yourcompany/yourproject/sample/read.xls 을 작성하고,
+		</para>
+		<programlisting language="text">
+** Template Sheet                          
++--------+------------------+                
+| 정수   | #{intValue}      |		   
++--------+------------------+		     
+| 문자   | #{stringValue}   |		   
++--------+------------------+  
+| 실수   | #{floatValue}    |		   
++--------+------------------+		     
+| 날짜   | #{dateTimeValue} |		   
++--------+------------------+		     
+		</programlisting>
+		<para>
+			[GET:/sample/{intValue}.xls] 요청 일때 , 다음과 같은 Excel Sheet 를 리턴한다.
+		</para>
+		<programlisting language="text">
+** Response Sheet              
++--------+------------------+  
+| 정수   | 1                |  
++--------+------------------+  
+| 문자   | a                |  
++--------+------------------+  
+| 실수   | 1                |  
++--------+------------------+  
+| 날짜   | 2010-01-01       |  
++--------+------------------+  
+		</programlisting>
+
+		<para> 
+			<xref linkend="springfield.modules"/>의 Excel View 는 요청은 파일 다운로드 형태로 응답한다. 
+			이때 다운로드되는 파일 이름을 변경하기 위해서, 
+			<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/view/multipart/DownloadBean.html">
+				<interfacename>DownloadBean</interfacename>
+			</ulink> 을 implements 한다. 
+		</para>
+		<programlisting language="java">
+@Springfield(toplevelMapping="/sample", methodLevelMapping={"*.xls"})
+@Entity
+public class Sample implements DownloadBean{
+
+	@Id
+	private Integer intValue;
+
+	@XlsProperty("새이름")
+	private String stringValue;	
+
+	@XlsIgnore
+	private Float floatValue;	
+
+	private DateTime dateTimeValue;	
+
+	@Override
+	public String getContentName(){
+		return "YourFileName";
+	}
+}
+		</programlisting>
+		<para>
+			[GET:/sample/{intValue}.xls] 요청 일때 , "YourFileName.xls" 이름으로 Excel Sheet 를 리턴한다.
+		</para>
+
+	</section>

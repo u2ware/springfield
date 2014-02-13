@@ -12,15 +12,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class MultipartFileHandlerImpl implements MultipartFileHandler {
 	
-	private static final Logger logger = LoggerFactory.getLogger(MultipartFileHandlerImpl.class);
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
+	private File directory;
 
-	private String location;
-
-	public void setLocation(String location) {
-		this.location = location;
+	public void setDirectory(File directory) {
+		this.directory = directory;
 	}
-	
+
 	/////////////////////////////////
 	//
 	////////////////////////////////
@@ -31,30 +30,32 @@ public class MultipartFileHandlerImpl implements MultipartFileHandler {
 	};
 	
 	@Override
-	public synchronized String uploadFile(MultipartFile multipartFile) throws IOException {
+	public String uploadFile(MultipartFile multipartFile) throws IOException {
 		return uploadFile(multipartFile, defaultFilenameResolver);
 	}
 
 	@Override
-	public synchronized String uploadFile(MultipartFile multipartFile, UploadFileNameResolver resolver) throws IOException {
+	public String uploadFile(MultipartFile multipartFile, UploadFileNameResolver resolver) throws IOException {
 
-		logger.info("MultipartFile : "+multipartFile);
-		logger.info("MultipartFile Name: "+multipartFile.getName());
-		logger.info("MultipartFile Size : "+multipartFile.getSize());
-		logger.info("MultipartFile ContentType: "+multipartFile.getContentType());
-		logger.info("MultipartFile OriginalFilename: "+multipartFile.getOriginalFilename());
 
 		String contentFile = resolver.resolveFileName(multipartFile);
-		logger.info("contentFile : "+contentFile);
+
+		logger.warn("MultipartFile : "+multipartFile);
+		logger.warn("MultipartFile Name: "+multipartFile.getName());
+		logger.warn("MultipartFile Size : "+multipartFile.getSize());
+		logger.warn("MultipartFile ContentType: "+multipartFile.getContentType());
+		logger.warn("MultipartFile OriginalFilename: "+multipartFile.getOriginalFilename());
+		logger.warn("Upload ContentFile : "+contentFile);
 		File dest = findFile(contentFile);
 
 		if(dest.exists()){
+			logger.warn("Upload Rewrite : "+dest.getAbsolutePath());
 			IOUtils.copyLarge(multipartFile.getInputStream(), new FileOutputStream(dest, false));
 
 		}else{
 			dest.getParentFile().mkdirs();
 			if(dest.createNewFile()){
-				logger.info("Saved File : "+dest.getAbsolutePath());
+				logger.warn("Upload Make : "+dest.getAbsolutePath());
 				multipartFile.transferTo(dest);
 			}else{
 				throw new IOException("cann't create file");
@@ -64,22 +65,17 @@ public class MultipartFileHandlerImpl implements MultipartFileHandler {
 	}
 	
 	@Override
-	public synchronized File findFile(String contentFile) throws IOException {
-		logger.info("contentFile : "+contentFile);
-		File file = new File(getBaseDir(), contentFile);
-		logger.info("Find File : "+file);
-		logger.info("Find File : "+file.exists());
+	public File findFile(String contentFile) throws IOException {
+		File file = new File(directory, contentFile);
 		return file;
 	}
 	
 	@Override
-	public synchronized void deleteFile(String contentFile) throws IOException {
+	public void deleteFile(String contentFile) throws IOException {
 		
 		if(contentFile.startsWith("/")){
 			String[] paths = StringUtils.delimitedListToStringArray(contentFile, "/");
-			for(int i = 0 ; i < paths.length; i++){
-				logger.info(paths[i]);
-			}
+
 			for(int i = 0 ; i < paths.length - 1; i++){
 				
 				StringBuilder buf = new StringBuilder();
@@ -92,44 +88,15 @@ public class MultipartFileHandlerImpl implements MultipartFileHandler {
 				String key = buf.toString();
 				File file = findFile(key);
 				if(file.delete()){
-					logger.info("Deleted File : "+file);
+					logger.warn("Deleted File : "+file);
 				}
 			}
 		}else{
 			File file = findFile(contentFile);
 			if(file.delete()){
-				logger.info("Deleted File : "+file);
+				logger.warn("Deleted File : "+file);
 			}
 		}
 	}
 
-	/////////////////////////////////
-	//
-	////////////////////////////////
-	private File dir;
-	private synchronized File getBaseDir() {
-		if(dir != null) return dir;
-		try{
-			dir = new File(location);
-			if(dir.exists()){
-				return dir;
-			}
-		}catch(Exception e){
-			
-		}
-		try{
-			dir = new File(System.getProperty("user.dir") , "uploadBySpringfield");
-			if(dir.exists()){
-				return dir;
-			}else{
-				boolean mkdir = dir.mkdir();
-				if(mkdir){
-					return dir;
-				}
-			}
-		}catch(Exception e){
-			
-		}
-		throw new RuntimeException("upload location is not good.");
-	}
 }

@@ -1,12 +1,12 @@
 package com.u2ware.springfield.service;
 
-import com.u2ware.springfield.domain.EntityPageable;
+import org.springframework.data.domain.Pageable;
 
 public interface EntityService<T, Q>{
 	
-	public Object home(Q query);
+	//public Object home(Q query);
 
-	public Iterable<?> find(Q query, EntityPageable pageable);
+	public Iterable<?> find(Q query, Pageable pageable);
 
 	public T read(T entity);
 	

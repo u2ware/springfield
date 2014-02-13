@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	
+	<section>
+		<title>Thymeleaf</title>
+		<para>
+			<xref linkend="springfield.modules"/> 가 지원하는 <ulink url="http://www.thymeleaf.org/">Thymeleaf</ulink>는
+			Rendering 을 위한 정적인 리소스(html, jsp)를 추가하여 Customizing 할수 있다.
+			
+			runtime 에 미리 정해진 위치를 스캔하여 정적인 리소스가 존재하면 이를 사용 한다.
+			만약 해당 위치에 정적인 리소스가 없다면, &lt;springfield:moduls&gt; 가 기본제공하는
+			<ulink url="http://www.thymeleaf.org/">Thymeleaf</ulink> 페이지가 사용 된다.
+			리소스 검색 위치 순서는 다음과 같다. 	
+		</para>
+		<orderedlist>
+			<listitem>/WEB-INF/com/yourcompany/yourproject/{viewName}.html</listitem>
+			<listitem>classapth:com/yourcompany/yourproject/{viewName}.html</listitem>
+		</orderedlist>
+		<programlisting language="java">
+@Springfield(toplevelMapping="/sample")
+@Entity
+public class Sample {
+
+	@Id
+	private Integer intValue;
+
+	private String stringValue;	
+
+	private Float floatValue;	
+
+	private DateTime dateTimeValue;	
+
+	//...	
+}
+		</programlisting>
+
+		<para>
+			다음과 같이 /WEB-INF/com/yourcompany/yourproject/sample/find.html 을 작성하고,
+		</para>
+		<programlisting language="text">
+&lt;!DOCTYPE html&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"&gt;
+
+	&lt;h1&gt;My Themyleaf Page&lt;/h1&gt;
+
+&lt;/html&gt;
+		</programlisting>
+		<para>
+			 [GET:/sample] 요청 일때, 위 리소스를 리턴한다. 
+		</para>
+	
+	</section>

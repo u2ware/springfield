@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	<section>
+		<title>Upload / Download</title>
+
+		<para>
+			다음은 Service 레이어를 변경하여 파일을 업로드 하고 메타정보를 데이터 베이스에 저장하고,
+			업로드된 파일을 리스트업하고 다운로드하는 예제이다.
+		</para>
+
+		<programlistingco>
+			<areaspec>
+				<area id="x1" coords="5"/>
+				<area id="x2" coords="7"/>
+				<area id="x3" coords="16"/>
+			</areaspec>
+			<programlisting language="java">
+package com.yourcompany.yourproject.file;
+
+@Springfield(
+	methodLevelMapping={"find", "createForm", "create", "read.download","read.stream"})
+@Entity
+public class FileBean implements MultipartFileBean{
+
+	@Id
+	public String contentFile;
+	public String contentName;
+	public String contentType;
+	public Long contentSize;
+	
+	@Transient 
+	public MultipartFile uploadFile;
+	
+	//...
+}
+			</programlisting>
+			<calloutlist>
+				<callout arearefs="x1">
+					<para>
+						[GET:/file/{contentName}.download] 또는 [GET:/file/{contentName}.stream] 요청일 경우 
+						<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/MultipartHandler.html">
+							<interfacename>MultipartFileHandler</interfacename>
+						</ulink>.findFile() 을 이용하여 미리 저장 또는 업로드된 파일을 Downloading 하거나 Streaming 한다.
+					</para>
+				</callout>
+				<callout arearefs="x2">
+					<para>
+						<xref linkend="springfield.modules"/> 가 지원하는 
+						확장자중, *.download , *.stream 은 
+						도메인 객체가 
+						<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/MultipartHandler.html">
+							<interfacename>MultipartFileBean</interfacename>
+						</ulink>
+						을 implements 한 경우에만 동작가능하다.
+						
+
+						<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/MultipartHandler.html">
+							<interfacename>MultipartFileBean</interfacename>
+						</ulink>의 getContentFile() 값으로 
+						
+						<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/MultipartHandler.html">
+							<interfacename>MultipartFileHandler</interfacename>
+						</ulink>.findFile() 을 이용하여 미리 저장 또는 업로드된 파일을 Downloading 하거나 Streaming 한다.
+					</para>
+				</callout>
+				<callout arearefs="x3">
+					<para>
+						&lt;form method="POST" enctype="multipart/form-data"&gt;
+						의 &lt;input type="file" name="uploadFile"&gt; 를 
+						도메인 객체에 담아두기 위해 필요한 property 이다. 
+						uploadFile 은 데이터베이스에 저장하지 않는 필드이므로 
+						<interfacename>@javax.persistence.Transient</interfacename>
+						가 선언되었다.
+					</para>
+				</callout>
+			</calloutlist>			
+		</programlistingco>		
+
+
+
+		<programlistingco>
+			<areaspec>
+				<area id="x1" coords="27"/>
+			</areaspec>
+			<programlisting language="java">
+package com.yourcompany.yourproject.file;
+
+@Service("fileBeanService")
+public class FileBeanService extends AbstractEntityService&lt;FileBean,FileBean&gt;{
+
+	@Autowired @Qualifier("fileBeanRepository")
+	private EntityRepository&lt;FileBean, String&gt; fileBeanRepository;
+
+	@Autowired 
+	private TransactionTemplate transactionTemplate;
+	
+	@Override
+	protected EntityRepository&lt;FileBean, String&gt; getRepository() {
+		return fileBeanRepository;
+	}
+
+	@Override
+	protected TransactionTemplate getTransactionTemplate() {
+		return transactionTemplate;
+	}
+	
+	@Autowired 
+	private MultipartFileHandler multipartFileHandler;
+	
+	@Override
+	public FileBean create(FileBean entity) {
+		
+		MultipartFile f = entity.getUploadFile();
+		try {
+			String contentFile = multipartFileHandler.uploadFile(f);
+			String contentName = f.getOriginalFilename();
+			String contentType = f.getContentType();
+			Long contentSize = f.getSize();
+		
+			entity.setContentFile(contentFile);
+			entity.setContentName(contentName);
+			entity.setContentType(contentType);
+			entity.setContentSize(contentSize);
+			
+			return super.create(entity);
+
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+}
+			</programlisting>
+			<calloutlist>
+				<callout arearefs="x1">
+					<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/support/multipart/MultipartHandler.html">
+						<interfacename>MultipartFileHandler</interfacename>
+					</ulink>
+					를 이용하여 파일을 업로드하고 메타정보를 도매인 객체에 담아서 이를 데이터베이스에 저장한다. 						
+				</callout>
+			</calloutlist>			
+		</programlistingco>		
+
+
+		<programlistingco>
+			<areaspec>
+				<area id="x1" coords="5"/>
+			</areaspec>
+
+			<programlisting language="xml">
+&lt;beans&gt;
+	&lt;jdbc:embedded-database id="yourDataSource" type="HSQL"/&gt;  	
+
+	&lt;context:component-scan base-package="com.yourcompany.yourproject"/&gt;  
+	
+	&lt;springfield:modules base-package="com.yourcompany.yourproject" 
+			data-source-ref="yourDataSource"
+	/&gt;
+	...
+&lt;/beans&gt;
+			</programlisting>
+			<calloutlist>
+				<callout arearefs="x1">
+					<para>
+						Bean 을 교체하기 위해 
+						&lt;springfield:modules&gt; 보다 앞서
+						&lt;context:component-scan&gt; 으로  FileBeanService 를 등록 하여야 한다.
+					</para>
+				</callout>
+			</calloutlist>			
+		</programlistingco>
+
+
+
+
+
+
+
+
+
+
+		
+	</section>

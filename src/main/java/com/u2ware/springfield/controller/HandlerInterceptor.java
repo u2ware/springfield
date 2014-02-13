@@ -10,20 +10,19 @@ import org.springframework.web.servlet.ModelAndView;
 
 public class HandlerInterceptor implements org.springframework.web.servlet.HandlerInterceptor{
 
-	private static final Logger logger = LoggerFactory.getLogger(HandlerInterceptor.class);
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	public boolean preHandle(HttpServletRequest request,HttpServletResponse response, Object handler) throws Exception {
-		logger.info("preHandle : "+LocaleContextHolder.getLocale()+" "+request.getRequestURI()+" "+handler);
+		logger.warn("preHandle : ["+request.getMethod()+":"+request.getRequestURI()+", LOCALE:"+LocaleContextHolder.getLocale()+"] "+handler);
 		return true;
 	}
 
 	public void postHandle(HttpServletRequest request,HttpServletResponse response, Object handler,ModelAndView modelAndView) throws Exception {
-		logger.info("postHandle : "+LocaleContextHolder.getLocale()+" "+request.getRequestURI()+" "+handler);
+		logger.warn("postHandle : ["+request.getMethod()+":"+request.getRequestURI()+", LOCALE:"+LocaleContextHolder.getLocale()+"] "+handler);
 	}
 
 	public void afterCompletion(HttpServletRequest request,HttpServletResponse response, Object handler, Exception ex)throws Exception {
-		logger.info("afterCompletion : "+LocaleContextHolder.getLocale()+" "+request.getRequestURI()+" "+handler);
+		logger.warn("afterCompletion : ["+request.getMethod()+":"+request.getRequestURI()+", LOCALE:"+LocaleContextHolder.getLocale()+"] "+handler);
 	}
-
 
 }

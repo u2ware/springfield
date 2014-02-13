@@ -4,8 +4,6 @@ import javax.swing.event.EventListenerList;
 
 public class ServiceEventDispatcher {
 
-	//private static final Logger logger = LoggerFactory.getLogger(ServiceEventDispatcher.class);
-
 	protected EventListenerList listenerList;
 	
 	public void addEventListener(ServiceEventListener listener){

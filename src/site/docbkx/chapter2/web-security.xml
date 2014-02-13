@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	
+	<section>
+		<title>Security</title>
+
+		<para>
+    		<xref linkend="springfield.modules"/>에 의해 한 개 이상의 
+    		<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/controller/EntityController.html">
+       		<interfacename>EntityController</interfacename>
+       		</ulink> 가 등록되는 경우, 
+			
+			<ulink url="http://docs.spring.io/spring-security/site/docs/3.1.4.RELEASE/reference/springsecurity.html">
+       		spring security 
+       		</ulink> 를 사용하는 다음 bean 을 등록 한다. 
+		</para>
+
+       	<table>
+       		<title>Auto Register Beans for Security Support</title>
+			<tgroup cols="2">
+				<thead>
+					<row>
+						<entry>Bean Name</entry>
+						<entry>Bean Object</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>springfieldWebmvcSecurityNavigationFactory</entry>
+						<entry>
+    						<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/security/authorization/NavigationFactory.html">
+								<interfacename>NavigationFactory</interfacename>
+				       		</ulink> 
+						</entry>
+					</row>
+					<row>
+						<entry>springfieldWebmvcSecurityConfiguration</entry>
+						<entry>
+							<ulink url="http://docs.spring.io/spring-security/site/docs/3.1.4.RELEASE/reference/springsecurity.html">
+							Spring-Security 
+							</ulink>
+							Support Beans ... </entry>
+					</row>
+				</tbody>
+	       	</tgroup> 
+		</table>
+	
+
+
+		
+	</section>

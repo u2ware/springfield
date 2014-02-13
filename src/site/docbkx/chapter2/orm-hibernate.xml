@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+
+	<section>
+		<title>Using Hibernate</title>
+		<para>
+			<ulink url="http://docs.spring.io/spring-framework/docs/3.2.5.RELEASE/spring-framework-reference/html/orm.html#orm-hibernate">
+			Hibernate</ulink>을 지원하고 
+			<interfacename>Spring @Transactional</interfacename> 을  활성화하기  위해 
+			<xref linkend="springfield.modules"/>은  필요한 Bean 을 등록한다.
+		</para>
+	
+		<programlisting language="xml">
+&lt;!-- case 1 --&gt;
+&lt;beans&gt;
+	&lt;jdbc:embedded-database id="yourDataSource" type="HSQL"/&gt;  	
+	   
+	&lt;springfield:modules base-package="com.yourcompany.yourproject" 
+			data-source-ref="yourDataSource" 
+	/&gt;
+&lt;/beans&gt;
+
+&lt;!-- case 2 --&gt;
+&lt;beans&gt;
+	&lt;bean id="yourSessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean"&gt; 
+		...
+	&lt;bean/&gt; 
+	   
+	&lt;springfield:modules base-package="com.yourcompany.yourproject" 
+			session-factory-ref="yourSessionFactory"
+	/&gt;
+&lt;/beans&gt;
+		</programlisting>
+		
+       	<table>
+       		<title>Auto Register Beans for Hibernate</title>
+			<tgroup cols="3">
+				<thead>
+					<row>
+						<entry>Bean Name &lt;!-- case 1 --&gt;</entry>
+						<entry>Bean Name &lt;!-- case 2 --&gt;</entry>
+						<entry>Bean Object</entry>
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>yourDataSourceHibernate</entry>
+						<entry>-</entry>
+						<entry>
+							<interfacename>org.springframework.orm.hibernate3.annotation. AnnotationSessionFactoryBean</interfacename>
+						</entry>						
+					</row>
+					<row>
+						<entry>yourDataSourceHibernateTransactionManager</entry>
+						<entry>yourSessionFactoryTransactionManager</entry>
+						<entry>
+							<interfacename>org.springframework.orm.hibernate3. HibernateTransactionManager</interfacename>
+						</entry>						
+					</row>
+					<row>
+						<entry>yourDataSourceHibernateTransactionTemplate</entry>
+						<entry>yourSessionFactoryTransactionTemplate</entry>
+						<entry>
+							<interfacename>org.springframework.transaction.support. TransactionTemplate</interfacename>
+						</entry>						
+					</row>
+				</tbody>
+	       	</tgroup> 
+      	</table>
+		
+	</section>
+
+

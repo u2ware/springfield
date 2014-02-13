@@ -11,19 +11,23 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Springfield {
 
-	Strategy strategy() default Strategy.DEFAULT_STRATEGY; 
+	Strategy strategy() default Strategy.NULL; 
 
 	public enum Strategy{
-		DEFAULT_STRATEGY,
+		NULL,
 		DTO,
-		HIBERNATE,
-		HIBERNATE_REPOSITORY_ONLY,
 		JPA,
 		JPA_REPOSITORY_ONLY,
-		MONGODB,
-		MONGODB_REPOSITORY_ONLY,
+		HIBERNATE,
+		HIBERNATE_REPOSITORY_ONLY,
+		JDBC,
+		JDBC_REPOSITORY_ONLY,
 		SQLSESSION,
 		SQLSESSION_REPOSITORY_ONLY,
+		/*
+		MONGODB,
+		MONGODB_REPOSITORY_ONLY,
+		*/
 	}
 
 	/**
@@ -41,7 +45,6 @@ public @interface Springfield {
 	 * @return Controller method level mapping
 	 */
 	String[] methodLevelMapping() default {"*"};
-	//String[] methodLevelMapping() default {"*","*.json","findForm.xls","read.xls","findForm.xml","read.xml"};
 
 
 	/**
@@ -56,9 +59,3 @@ public @interface Springfield {
 	String attributesCSV() default ""; //Format is: attname0={value1},attname1={value1}
 	
 }
-
-
-
-/*
-@return Controller Type
- */

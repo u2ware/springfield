@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	
+	<section>
+		<title>UserDetails</title>
+
+		<para>
+    		다음은 사용자 계정을 데이터베이스로 관리하는 예제이다.
+		</para>
+		<programlistingco>
+			<areaspec>
+				<area id="x1" coords="6"/>
+				<area id="x2" coords="25"/>
+			</areaspec>
+			<programlisting language="java">
+package com.yourcompany.yourproject.security;
+		
+@Springfield
+@Entity
+public class User implements org.springframework.security.core.userdetails.UserDetails{
+
+	@Id 
+	private String username;
+	private String password;
+	private boolean enabled = true;
+	private boolean accountNonExpired = true;
+	private boolean accountNonLocked = true;
+	private boolean credentialsNonExpired = true;
+	private String salt;
+	private String role;
+	
+	//getter / setter
+
+	@Transient
+	public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
+		return Role.valueOf(role).getAuthorities();
+	}
+	
+	public enum Role {
+
+		USER(new SimpleGrantedAuthority("ROLE_ANONYMOUS"), new SimpleGrantedAuthority("ROLE_USER")),
+		ADMIN(new SimpleGrantedAuthority("ROLE_ANONYMOUS"), new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN"));
+		
+		private Collection&lt;GrantedAuthority&gt; grantedAuthorities = new HashSet&lt;GrantedAuthority&gt;();
+
+		Role(GrantedAuthority... authorities){
+			for(GrantedAuthority authority : authorities){
+				grantedAuthorities.add(authority);
+			}
+		}
+		public Collection&lt;? extends GrantedAuthority&gt; getAuthorities(){
+			return grantedAuthorities;
+		}
+	}
+}
+			</programlisting>		
+			<calloutlist>
+				<callout arearefs="x1">
+					<para>
+						사용자 계정을 데이터베이스로  관리하기 위해 
+						<interfacename>org.springframework.security.core.userdetails.UserDetails</interfacename>
+						를 implements 한 도메인 객체가 필요하다. 
+					</para>
+				</callout>
+				<callout arearefs="x2">
+					<para>
+						권한을 가진 사용자 ROLE 을 필요에 따라 정의한다. 
+					</para>
+				</callout>
+			</calloutlist>
+		</programlistingco>	
+	
+	
+
+    		
+    		
+    		
+
+
+		<programlistingco>
+			<areaspec>
+				<area id="x1" coords="4"/>
+				<area id="x1" coords="37"/>
+			</areaspec>
+			<programlisting language="java">
+package com.yourcompany.yourproject.security;
+	
+@Service("userService")
+public class UserService extends AbstractEntityService&lt;User, User&gt;{
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder; 
+	
+	@Autowired
+	private SaltSource saltSource; 
+
+	@Autowired @Qualifier("userRepository")
+	private EntityRepository&lt;User, String&gt; userRepository;
+
+	@Autowired 
+	private TransactionTemplate transactionTemplate;
+	
+	@Override
+	protected EntityRepository&lt;User, String&gt; getRepository() {
+		return userRepository;
+	}
+
+	@Override
+	protected TransactionTemplate getTransactionTemplate() {
+		return transactionTemplate;
+	}
+	
+	@Override
+	@Transactional
+	public User create(User entity) {
+
+		String salt = ""+System.currentTimeMillis();
+		String password = passwordEncoder.encodePassword("password", salt);
+		
+		entity.setSalt(salt);
+		entity.setPassword(password);
+		entity.setRole("USER");
+		
+		return super.create(entity);
+	}
+}
+			</programlisting>		
+			<calloutlist>
+				<callout arearefs="x1">
+					<para>
+						등록 되는 Service 레이어의 Bean Name 은 <xref linkend="springfield.modules"/> 를 에 따라 
+						"{@Springfield class short name}Service" 가 되어야 한다.
+					</para>
+				</callout>
+				<callout arearefs="x2">
+					<para>
+						암호화된 패스워드와 password salt 를 저장한다.
+					</para>
+				</callout>
+			</calloutlist>
+		</programlistingco>	
+
+
+		<programlistingco>
+			<areaspec>
+				<area id="x1" coords="5"/>
+			</areaspec>
+
+			<programlisting language="xml">
+&lt;beans&gt;
+	&lt;jdbc:embedded-database id="yourDataSource" type="HSQL"/&gt;  	
+
+	&lt;context:component-scan base-package="com.yourcompany.yourproject"/&gt;  
+	
+	&lt;springfield:modules base-package="com.yourcompany.yourproject" 
+			data-source-ref="yourDataSource"
+	/&gt;
+	...
+&lt;/beans&gt;
+			</programlisting>
+			<calloutlist>
+				<callout arearefs="x1">
+					<para>
+						Bean 을 교체하기 위해 
+						&lt;springfield:modules&gt; 보다 앞서
+						&lt;context:component-scan&gt; 으로  UserService 를 등록 하여야 한다.
+					</para>
+				</callout>
+			</calloutlist>			
+		</programlistingco>
+
+	</section>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	
+	<section>
+		<title>JSON</title>
+		<para>
+			<xref linkend="springfield.modules"/> 은 JSON View 를 위해  
+			<ulink url="https://github.com/FasterXML/jackson">jackson</ulink> 및
+			<ulink url="https://github.com/FasterXML/jackson-annotations>">jackson-annotations</ulink> 을 
+			 를 사용하고 있다. property name 을 바꾸기 위해 
+			 <interfacename>@JsonProperty</interfacename>  를 사용하거나 , 
+			 해당 property 를 출력하지 않도록 <interfacename>@JsonIgnore</interfacename>
+			  를 사용할수 있다.
+		</para>
+		<programlisting language="java">
+@Springfield(toplevelMapping="/sample", methodLevelMapping={"*.json"})
+@Entity
+public class Sample {
+
+	@Id
+	private Integer intValue;
+
+	@JsonProperty("newPropertyName")
+	private String stringValue;	
+
+	@JsonIgnore
+	private Float floatValue;	
+
+	private DateTime dateTimeValue;	
+
+	//...	
+}
+		</programlisting>
+		<para>
+			[GET:/sample/{intValue}.json] 요청 일때 , 다음과 같은 JSON Content 를 리턴 한다.
+		</para>
+		<programlisting language="json">
+{
+	"intValue":1,
+	"newPropertyName":"abcd"
+	"dateTimeValue":"2011-01-01T00:00:00.000+09:00",
+}			
+		</programlisting>
+	</section>

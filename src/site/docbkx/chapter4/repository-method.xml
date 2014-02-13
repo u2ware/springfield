@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
+"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+
+	<section id="repository-query-method">
+		<title>Query Keyword</title>
+
+		<para>
+			QueryMethod Argument 란 
+			<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/EntityRepository.html">
+			<interfacename>EntityRepository</interfacename>
+			</ulink>
+			메소드의 argument 를 의미한다.
+		</para>
+		<programlisting language="java">
+public interface EntityRepository&lt;T, ID extends Serializable&gt; {
+
+	...
+		
+	public long deleteAll(Object queryMethod);
+	public long count(Object queryMethod);
+	public List&lt;T&gt; findAll(Object queryMethod);
+	public List&lt;T&gt; findAll(Object queryMethod, Sort sort);
+	public Page&lt;T&gt; findAll(Object queryMethod, Pageable pageable);
+	
+}
+		</programlisting>
+		
+		<para>
+			Query Keyword 는  QueryMethod Argument 의  Class Short Name 을 의미한다.
+			Query Keyword 는  
+			<ulink url="http://u2ware.github.io/springfield/1.5.0/site/apidocs/com/u2ware/springfield/repository/QueryMethod.html">
+			<interfacename>@QueryMethod</interfacename>
+			</ulink> 을 이용하여 변경 할 수 있다. 
+			QueryKeyword 는  "FindBy" 로  시작하며, 
+			<ulink url="http://docs.spring.io/spring-data/jpa/docs/1.4.2.RELEASE/reference/html/jpa.repositories.html#jpa.query-methods.query-creation">
+			Spring-data 의  Query keyword</ulink>
+			 규칙을 따른다.
+		</para>
+
+
+		<programlisting language="java">
+public class FindByNameAndAgeOrderByAgeAsc{
+	private String name;
+	private Integer age;
+}
+
+@QueryMethod("findByNameAndAgeOrderByAgeAsc")
+public class MyQuery{
+	private String name;
+	private Integer age;
+}
+		</programlisting>
+		
+		<para>
+			QueryMethod Argument 는  Query Keyword 에 따라  필여한 property 를 선언하여야 한다.
+			property 값의  null 여부에 따라 동적으로 where 조건을 바꿀수 있다.
+		</para>
+
+		<itemizedlist spacing="compact">
+			<listitem>
+				select * from Person 
+				<programlisting language="java">
+				//Test Code...
+				
+				FindByNameAndAge queryMethod1 = new FindByNameAndAge();
+				//or 
+				//MyQuery queryMethod1 = new MyQuery();
+		
+				List&lt;Person&gt; result1 = fooRepository.findAll(queryMethod1);
+				Assert.assertEquals(result1.size(), 3);
+				</programlisting>
+			</listitem>
+			<listitem>
+				select * from Person where name = 'a'
+				<programlisting language="java">
+				//Test Code...
+
+				FindByNameAndAge queryMethod2 = new FindByNameAndAge();
+				//or 
+				//MyQuery queryMethod2 = new MyQuery();
+				
+				queryMethod2.setName("a");
+		
+				List&lt;Person&gt; result2 = fooRepository.findAll(queryMethod2);
+				Assert.assertEquals(result2.size(), 1);
+				</programlisting>
+			</listitem>
+		
+			<listitem>
+				select * from Person where name = 'a' and age = 1
+				<programlisting language="java">
+				//Test Code...
+
+				FindByNameAndAge queryMethod3 = new FindByNameAndAge();
+				//or 
+				//MyQuery queryMethod3 = new MyQuery();
+
+				queryMethod3.setName("a");
+				queryMethod3.setAge(1);
+		
+				List&lt;Person&gt; result3 = fooRepository.findAll(queryMethod3);
+				Assert.assertEquals(result3.size(), 1);
+				</programlisting>
+			</listitem>
+		</itemizedlist>
+		
+	
+		
+		
+	</section>

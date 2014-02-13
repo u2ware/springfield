@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -13,15 +14,17 @@ import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.FilterInvocation;
 
+
 public class AccessDecisionManager extends AffirmativeBased {
 
-	private static final Logger logger = LoggerFactory.getLogger(AccessDecisionManager.class);
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @SuppressWarnings("rawtypes")
 	public AccessDecisionManager(List<AccessDecisionVoter> decisionVoters) {
         super(decisionVoters);
     }
 	
+    @Autowired
     private NavigationFactory navigationFactory;
 
 	public void setNavigationFactory(NavigationFactory navigationFactory) {
@@ -31,9 +34,8 @@ public class AccessDecisionManager extends AffirmativeBased {
 	@Override
 	public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes)throws AccessDeniedException {
 
-
 		try{
-	        logger.debug("Access Decide Start : "+object);
+	        logger.warn("AccessDecision Request : "+object);
 /*			
 			logger.debug("path : "+authentication);
 			logger.debug("path : "+authentication.getPrincipal());
@@ -49,14 +51,12 @@ public class AccessDecisionManager extends AffirmativeBased {
 			
 			super.decide(authentication, object, newConfigAttributes);
 
-	        logger.debug("Access Decide End : "+newAttribute);
+	        logger.warn("AccessDecision Response : "+newAttribute);
 		}catch(AccessDeniedException e){
-	        logger.debug("Access Decide End : "+e.getMessage());
-			logger.debug(e.getMessage(), e);
+	        logger.warn("AccessDecision Response : ", e);
 			throw e;
 		}catch(Exception e){
-	        logger.debug("Access Decide End : "+e.getMessage());
-			logger.debug(e.getMessage(), e);
+	        logger.warn("AccessDecision Response : ", e);
 		}
 	}
 	
@@ -64,13 +64,18 @@ public class AccessDecisionManager extends AffirmativeBased {
 		
 		try{
 			FilterInvocation fi = (FilterInvocation)object;
+			if(fi.getHttpRequest() == null || fi.getHttpResponse() == null){
+				return NavigationAccessor.DEFAULT_ACCESS;
+			}
+			
+	        Navigation navigation = navigationFactory.resolveNavigation(fi.getHttpRequest());
 			NavigationAccessor accessor = new NavigationAccessor(authentication, fi);
-
-			Navigation navigation = navigationFactory.resolveNavigation(fi.getHttpRequest());
 			navigation.travel(accessor);
+			fi.getHttpRequest().setAttribute(Navigation.OBJECT_NAME, navigation);
 
 			return accessor.getAttribute();
 		}catch(Exception e){
+	        logger.warn("createConfigAttribute : ", e);
 			return NavigationAccessor.DEFAULT_ACCESS;
 		}
 	}
