@@ -3,8 +3,12 @@ package com.u2ware.springfield.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.data.querydsl.EntityPathResolver;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
+
+import com.mysema.query.types.EntityPath;
+import com.mysema.query.types.path.PathBuilderFactory;
 
 public abstract class QueryMethodUtil {
 	
@@ -25,4 +29,16 @@ public abstract class QueryMethodUtil {
 		logger.debug(" quessQueryMethodName is "+queryMethodName);
 		return queryMethodName;
 	}
+
+	public static EntityPathResolver ENTITY_PATH_RESOLVER = new CustomEntityPathResolver();
+	
+	private static class CustomEntityPathResolver implements EntityPathResolver{
+
+		@Override
+		public <T> EntityPath<T> createPath(Class<T> domainClass) {
+			return  new PathBuilderFactory().create(domainClass);
+		}
+	}
+	
+	
 }

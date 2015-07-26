@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<entry key="javax.validation.constraints.AssertFalse.message"><![CDATA[must be false]]></entry>
+	<entry key="javax.validation.constraints.AssertTrue.message"><![CDATA[must be true]]></entry>
+	<entry key="javax.validation.constraints.DecimalMax.message"><![CDATA[must be less than or equal to {0}]]></entry>
+	<entry key="javax.validation.constraints.DecimalMin.message"><![CDATA[must be greater than or equal to {0}]]></entry>
+	<entry key="javax.validation.constraints.Digits.message"><![CDATA[numeric value out of bounds (<{0} digits>.<{1} digits> expected)]]></entry>
+	<entry key="javax.validation.constraints.Future.message"><![CDATA[must be in the future]]></entry>
+	<entry key="javax.validation.constraints.Max.message"><![CDATA[must be less than or equal to {0}]]></entry>
+	<entry key="javax.validation.constraints.Min.message"><![CDATA[must be greater than or equal to {0}]]></entry>
+	<entry key="javax.validation.constraints.NotNull.message"><![CDATA[may not be null]]></entry>
+	<entry key="javax.validation.constraints.Null.message"><![CDATA[must be null]]></entry>
+	<entry key="javax.validation.constraints.Past.message"><![CDATA[must be in the past]]></entry>
+	<entry key="javax.validation.constraints.Pattern.message"><![CDATA[must match "{0}"]]></entry>
+	<entry key="javax.validation.constraints.Size.message"><![CDATA[size must be between {0} and {1}]]></entry>
+
+	<entry key="org.hibernate.validator.constraints.Email.message"><![CDATA[not a well-formed email address]]></entry>
+	<entry key="org.hibernate.validator.constraints.Length.message"><![CDATA[length must be between {0} and {1}]]></entry>
+	<entry key="org.hibernate.validator.constraints.NotBlank.message"><![CDATA[may not be empty]]></entry>
+	<entry key="org.hibernate.validator.constraints.NotEmpty.message"><![CDATA[may not be empty]]></entry>
+	<entry key="org.hibernate.validator.constraints.Range.message"><![CDATA[must be between {0} and {1}]]></entry>
+	<entry key="org.hibernate.validator.constraints.URL.message"><![CDATA[must be a valid URL]]></entry>
+	<entry key="org.hibernate.validator.constraints.CreditCardNumber.message"><![CDATA[invalid credit card number]]></entry>
+	<entry key="org.hibernate.validator.constraints.ScriptAssert.message"><![CDATA[script expression "{0}" didn't evaluate to true]]></entry>
+
+	<entry key="com.u2ware.springfield.validation.DuplicateKey.message"><![CDATA[Duplicate Key.]]></entry>
+	<entry key="com.u2ware.springfield.validation.NoExists.message"><![CDATA[No Exist.]]></entry>
+	<entry key="com.u2ware.springfield.validation.SupportedNotYet.message"><![CDATA[SupportedNotYety.]]></entry>
+	
+</properties>	

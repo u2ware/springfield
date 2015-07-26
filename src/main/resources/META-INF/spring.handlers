@@ -1,1 +1,1 @@
-http\://www.u2ware.com/schema/springfield=com.u2ware.springfield.config.ModulesNameSpaceHandler
+http\://u2ware.github.io/springfield/schema=com.u2ware.springfield.config.SpringfieldNameSpaceHandler

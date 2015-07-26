@@ -1,6 +1,0 @@
-<navigation path="/" name="Springfield">
-	<navigation pattern="/security/test1/**"  path="/security/test1"  name="part1" 
-	
-	
-	/>
- </navigation>

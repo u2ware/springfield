@@ -1,2 +1,2 @@
-http\://www.u2ware.com/schema/springfield/u2ware-springfield-1.0.xsd=com/u2ware/springfield/config/u2ware-springfield-1.0.xsd
-http\://www.u2ware.com/schema/springfield/u2ware-springfield.xsd=com/u2ware/springfield/config/u2ware-springfield-1.0.xsd
+http\://u2ware.github.io/springfield/schema/springfield-1.6.xsd=com/u2ware/springfield/config/springfield-1.6.xsd
+http\://u2ware.github.io/springfield/schema/springfield.xsd=com/u2ware/springfield/config/springfield-1.6.xsd
