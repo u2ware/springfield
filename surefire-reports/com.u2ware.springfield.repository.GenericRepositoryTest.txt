@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.u2ware.springfield.repository.GenericRepositoryTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.5 sec - in com.u2ware.springfield.repository.GenericRepositoryTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.461 sec - in com.u2ware.springfield.repository.GenericRepositoryTest

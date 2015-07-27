@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.u2ware.springfield.service.GenericServiceTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.279 sec - in com.u2ware.springfield.service.GenericServiceTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.193 sec - in com.u2ware.springfield.service.GenericServiceTest
