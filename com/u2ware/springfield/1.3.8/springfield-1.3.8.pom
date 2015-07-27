@@ -71,7 +71,6 @@
 		<org.springframework.data-mongodb-version>1.1.1.RELEASE</org.springframework.data-mongodb-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<github.global.server>github</github.global.server>
-		<maven.test.skip>true</maven.test.skip>
 	</properties>	
 
 	
@@ -87,7 +86,6 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.7</version>
-			<!-- <scope>test</scope> -->
 		</dependency>        
 
 		<!-- 
@@ -511,7 +509,6 @@
 	
 	<build>
 	    <plugins>
-	    	<!--
 			<plugin>
                 <artifactId>maven-eclipse-plugin</artifactId>
                 <version>2.9</version>
@@ -546,7 +543,6 @@
                     <mainClass>org.test.int1.Main</mainClass>
                 </configuration>
             </plugin>
-            -->
 
 	      	<!-- github-deploy-maven-plugin -->
 			<plugin>
