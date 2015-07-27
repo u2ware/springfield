@@ -29,7 +29,7 @@ public class HtmlView implements View{
 
 	@Override
 	public void render(Map<String, ?> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		logger.debug(getClass());
+		logger.debug(getClass()+" "+genericView);
 	}
 
 }

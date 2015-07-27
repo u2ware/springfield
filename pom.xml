@@ -14,7 +14,6 @@
 	<url>http://u2ware.github.io/springfield</url>
 	<description>Springfield is startup-toolkit for java web application development.</description>
 
-	<!--  
 	<inceptionYear>2010</inceptionYear>
 	<organization>
 		<name>U2ware</name>
@@ -49,14 +48,14 @@
 		<system>GitHub</system>
 		<url>https://github.com/u2ware/springfield/issues</url>
 	</issueManagement>
-	-->
+
 	<distributionManagement>
 	    <repository>
 	        <id>internal.repo</id>
 	        <name>Temporary Staging Repository</name>
-	        <url>file://${project.build.directory}/mvn-repo</url>
-	        <!-- <url>file://${github-springfield-repository}</url> -->
-	    </repository>
+	        <!-- <url>file://${project.build.directory}/mvn-repo</url> -->
+			<url>file://${github-springfield-repository}</url>
+		</repository>
 	</distributionManagement>
 	
 	<properties>
@@ -161,14 +160,12 @@
 		    <groupId>commons-fileupload</groupId>
 		    <artifactId>commons-fileupload</artifactId>
 		    <version>1.2.2</version>
-            <scope>test</scope>
 		</dependency>
 
 		<!-- joda-time -->
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-            <scope>test</scope>
 		</dependency>
 
 		<!-- 
@@ -198,18 +195,61 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 		</dependency>
-
 	
 	</dependencies>
 	
 	<build>
 	    <plugins>
-			<!-- mvn:deploy -->
-			<!-- github-deploy-maven-plugin -->
+			<!-- [mvn deploy] 
+		    <plugin>
+		        <artifactId>maven-deploy-plugin</artifactId>
+		        <configuration>
+		            <altDeploymentRepository>internal.repo::default::file://${github-springfield-repository}</altDeploymentRepository>
+		        </configuration>
+		    </plugin>
+		    
+<plugin>
+    <artifactId>maven-deploy-plugin</artifactId>
+    <version>2.5</version>
+    <configuration>
+        <updateReleaseInfo>true</updateReleaseInfo>
+    </configuration>
+</plugin>
+		    
+			-->
+			<!-- [mvn:deploy] source.jar -->
+			<plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-source-plugin</artifactId>
+			  <executions>
+			    <execution>
+			      <id>attach-sources</id>
+			      <goals>
+			        <goal>jar</goal>
+			      </goals>
+			    </execution>
+			  </executions>
+			</plugin>
+			<!-- [mvn:deploy] javadoc.jar -->
+			<plugin>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-javadoc-plugin</artifactId>
+			  <executions>
+			    <execution>
+			      <id>attach-javadocs</id>
+			      <goals>
+			        <goal>jar</goal>
+			      </goals>
+			    </execution>
+			  </executions>
+			</plugin>
+
+
+			<!-- [mvn deploy] github-deploy-maven-plugin -->
 			<plugin>
 			    <groupId>com.github.github</groupId>
 			    <artifactId>site-maven-plugin</artifactId>
-			    <version>0.12</version>
+			    <version>0.11</version>
 			    <configuration>
 			        <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
 			        <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
@@ -228,6 +268,8 @@
 			      </execution>
 			    </executions>
 			</plugin>
+
+	    
 				    
     	</plugins>
 	</build>

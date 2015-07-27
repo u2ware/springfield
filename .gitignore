@@ -11,6 +11,7 @@
 .project
 .springBeans
 
+.DS_Store
 
 target/
 
