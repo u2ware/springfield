@@ -1,1 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.u2ware.springfield.config.GenericMvcAutoConfiguration
