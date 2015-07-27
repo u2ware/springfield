@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.u2ware</groupId>
+	<artifactId>springfield</artifactId>
+	<version>1.6.0</version>
+	<packaging>jar</packaging>
+	
+
+	<name>springfield</name>
+	<url>http://u2ware.github.io/springfield</url>
+	<description>Springfield is startup-toolkit for java web application development.</description>
+
+	<inceptionYear>2010</inceptionYear>
+	<organization>
+		<name>U2ware</name>
+		<url>http://u2ware.github.io</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<id>u2waremanager@gmail.com</id>
+			<name>KwangSik. Lee.</name>
+			<email>u2waremanager@gmail.com</email>
+			<url>http://u2ware.github.io/springfield</url>
+			<organization>U2ware</organization>
+			<organizationUrl>http://u2ware.github.io/</organizationUrl>
+		</developer>
+	</developers>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<scm>
+		<url>https://github.com/u2ware/springfield</url>
+		<connection>scm:git:git://github.com/u2ware/springfield.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/u2ware/springfield.git</developerConnection>
+	</scm>
+	
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/u2ware/springfield/issues</url>
+	</issueManagement>
+
+	<distributionManagement>
+	    <repository>
+	        <id>internal.repo</id>
+	        <name>Temporary Staging Repository</name>
+	        <!-- <url>file://${project.build.directory}/mvn-repo</url> -->
+			<url>file://${github-springfield-repository}</url>
+		</repository>
+	</distributionManagement>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java-version>1.7</java-version>
+		<github.global.server>github</github.global.server>
+	</properties>	
+
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.2.5.RELEASE</version>
+	</parent>
+
+	<dependencies>
+            
+		<!-- 
+		####################################
+		# Spring
+		####################################
+		 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-rest</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+	
+
+		<!-- 
+		####################################
+		# QueryDSL
+		####################################
+		-->
+		<dependency>
+			<groupId>com.mysema.querydsl</groupId>
+			<artifactId>querydsl-core</artifactId>
+			<version>3.6.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.mysema.querydsl</groupId>
+		    <artifactId>querydsl-jpa</artifactId>
+			<version>3.6.3</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!--  
+		<dependency>
+		    <groupId>com.mysema.querydsl</groupId>
+		    <artifactId>querydsl-mongodb</artifactId>
+			<version>3.6.3</version>
+		</dependency>
+		-->
+
+ 		<!-- 
+		####################################
+		# Utilities
+		####################################
+		-->
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+		</dependency>	
+		
+		<!-- modelmapper -->
+		<dependency>
+		  <groupId>org.modelmapper</groupId>
+		  <artifactId>modelmapper</artifactId>
+		  <version>0.7.4</version>
+		</dependency>	
+		
+		<!-- jxls -->
+		<dependency>
+			<groupId>net.sf.jxls</groupId>
+			<artifactId>jxls-core</artifactId>
+			<version>1.0.6</version>
+			<exclusions>
+		    	<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+		    	</exclusion>
+			</exclusions>
+		</dependency>		
+
+		<!-- commons-fileupload -->
+		<dependency>
+		    <groupId>commons-fileupload</groupId>
+		    <artifactId>commons-fileupload</artifactId>
+		    <version>1.2.2</version>
+		</dependency>
+
+		<!-- joda-time -->
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
+
+		<!-- 
+		####################################
+		# binary
+		####################################
+		 -->
+		<dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.4</version>
+        </dependency>
+
+		<!-- 
+		####################################
+		#  jdbc drivers
+		####################################
+		 -->
+    	<!-- hsqldb -->
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+		</dependency>
+
+    	<!-- h2 -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
+	
+	</dependencies>
+	
+	<build>
+	    <plugins>
+			<!-- [mvn deploy] 
+		    <plugin>
+		        <artifactId>maven-deploy-plugin</artifactId>
+		        <configuration>
+		            <altDeploymentRepository>internal.repo::default::file://${github-springfield-repository}</altDeploymentRepository>
+		        </configuration>
+		    </plugin>
+		    
+<plugin>
+    <artifactId>maven-deploy-plugin</artifactId>
+    <version>2.5</version>
+    <configuration>
+        <updateReleaseInfo>true</updateReleaseInfo>
+    </configuration>
+</plugin>
+		    
+			-->
+
+			<!-- [mvn deploy] github-deploy-maven-plugin -->
+			<plugin>
+			    <groupId>com.github.github</groupId>
+			    <artifactId>site-maven-plugin</artifactId>
+			    <version>0.11</version>
+			    <configuration>
+			        <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
+			        <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
+			        <outputDirectory>${github-springfield-repository}</outputDirectory> <!-- matches distribution management repository url above -->
+			        <branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
+			        <includes><include>**/*</include></includes>
+			        <repositoryName>springfield</repositoryName>      <!-- github repo name -->
+			        <repositoryOwner>u2ware</repositoryOwner>    <!-- github username  -->
+			    </configuration>
+			    <executions>
+			      <execution>
+			        <goals>
+			          <goal>site</goal>
+			        </goals>
+			        <phase>deploy</phase>
+			      </execution>
+			    </executions>
+			</plugin>
+
+	    
+				    
+    	</plugins>
+	</build>
+
+</project>
