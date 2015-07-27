@@ -3,10 +3,11 @@
   <groupId>com.u2ware</groupId>
   <artifactId>springfield</artifactId>
   <versioning>
-    <release>1.3.8</release>
+    <release>1.3.9</release>
     <versions>
       <version>1.3.8</version>
+      <version>1.3.9</version>
     </versions>
-    <lastUpdated>20150727033836</lastUpdated>
+    <lastUpdated>20150727034055</lastUpdated>
   </versioning>
 </metadata>
