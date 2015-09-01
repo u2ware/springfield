@@ -50,15 +50,6 @@
 		<url>https://github.com/u2ware/springfield/issues</url>
 	</issueManagement>
     
-	<distributionManagement>
-	    <repository>
-	        <id>internal.repo</id>
-	        <name>Temporary Staging Repository</name>
-	        <url>file://${github-springfield-repository}</url>
-	    </repository>
-	</distributionManagement>
-
-
 	<properties>
 		<java-version>1.6</java-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
@@ -70,6 +61,16 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<github.global.server>github</github.global.server>
 	</properties>	
+
+	<distributionManagement>
+	    <repository>
+	        <id>internal.repo</id>
+	        <name>Temporary Staging Repository</name>
+	        <url>file:///Users/U2ware/Dropbox/Develop/u2ware/springfield-mvn-repo2/</url>
+	    </repository>
+	</distributionManagement>
+
+
 	
 	<dependencies>
 	
@@ -522,6 +523,7 @@
 	
 	<build>
 	    <plugins>
+	    <!--  
 			<plugin>
                 <artifactId>maven-eclipse-plugin</artifactId>
                 <version>2.9</version>
@@ -556,18 +558,16 @@
                     <mainClass>org.test.int1.Main</mainClass>
                 </configuration>
             </plugin>
-
+		-->
 			<!-- Source build -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
-						<phase>verify</phase>
 						<goals>
-							<goal>jar-no-fork</goal>
+							<goal>jar</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -577,11 +577,11 @@
 			<plugin>
 			    <groupId>com.github.github</groupId>
 			    <artifactId>site-maven-plugin</artifactId>
-			    <version>0.11</version>
+			    <version>0.12</version>
 			    <configuration>
 			        <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
 			        <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
-			        <outputDirectory>${github-springfield-repository}</outputDirectory> <!-- matches distribution management repository url above -->
+			        <outputDirectory>/Users/U2ware/Dropbox/Develop/u2ware/springfield-mvn-repo2/</outputDirectory> <!-- matches distribution management repository url above -->
 			        <branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
 			        <includes><include>**/*</include></includes>
 			        <repositoryName>springfield</repositoryName>      <!-- github repo name -->
@@ -599,7 +599,7 @@
 
 
             <!-- build javadoc. javadoc:javadoc javadoc:aggregate-jar -->
-			<plugin>
+<!-- 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.9</version>
@@ -607,20 +607,20 @@
 					<excludePackageNames>com.u2ware.springfield.sample.*</excludePackageNames>
         		</configuration>
         	</plugin>
-
-			<!-- build site. site:site -->
+ -->
+			<!-- build site. site:site 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>3.2</version>
 				<configuration>
 					<locales>en</locales>
-					<!-- <reportPlugins>
-					</reportPlugins> -->
+					<reportPlugins>
+					</reportPlugins> 
 				</configuration>
 			  
 			</plugin>
-            
+            -->
 	      	
 		
 			<!-- Renders reference documentation from Docbook sources. docbkx:generate-pdf docbkx:generate-html-->
