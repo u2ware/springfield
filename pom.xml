@@ -54,7 +54,7 @@
 	    <repository>
 	        <id>internal.repo</id>
 	        <name>Temporary Staging Repository</name>
-	        <url>file://${github-springfield-repository}</url>
+	        <url>file:///Users/U2ware/git/springfield-mvn-repo/</url>
 	    </repository>
 	</distributionManagement>
 
@@ -522,6 +522,7 @@
 	
 	<build>
 	    <plugins>
+	    	<!--  
 			<plugin>
                 <artifactId>maven-eclipse-plugin</artifactId>
                 <version>2.9</version>
@@ -556,6 +557,7 @@
                     <mainClass>org.test.int1.Main</mainClass>
                 </configuration>
             </plugin>
+            -->
 
 			<!-- Source build -->
 			<plugin>
@@ -577,11 +579,11 @@
 			<plugin>
 			    <groupId>com.github.github</groupId>
 			    <artifactId>site-maven-plugin</artifactId>
-			    <version>0.8</version>
+			    <version>0.12</version>
 			    <configuration>
 			        <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
 			        <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
-			        <outputDirectory>${github-springfield-repository}</outputDirectory> <!-- matches distribution management repository url above -->
+			        <outputDirectory>/Users/U2ware/git/springfield-mvn-repo/</outputDirectory> <!-- matches distribution management repository url above -->
 			        <branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
 			        <includes><include>**/*</include></includes>
 			        <repositoryName>springfield</repositoryName>      <!-- github repo name -->
@@ -596,7 +598,6 @@
 			      </execution>
 			    </executions>
 			</plugin>
-
 
             <!-- build javadoc. javadoc:javadoc javadoc:aggregate-jar -->
 			<plugin>
