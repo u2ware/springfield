@@ -1,0 +1,4 @@
+# Tooling related information for the integration MyAdapter namespace
+http\://www.springframework.org/schema/integration/myadapter@name=integration MyAdapter Namespace
+http\://www.springframework.org/schema/integration/myadapter@prefix=int-myadapter
+http\://www.springframework.org/schema/integration/myadapter@icon=org/springframework/integration/config/xml/spring-integration-myadapter.gif

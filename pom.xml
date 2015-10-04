@@ -208,14 +208,6 @@
 		        </configuration>
 		    </plugin>
 		    
-<plugin>
-    <artifactId>maven-deploy-plugin</artifactId>
-    <version>2.5</version>
-    <configuration>
-        <updateReleaseInfo>true</updateReleaseInfo>
-    </configuration>
-</plugin>
-		    
 			-->
 			<!-- [mvn:deploy] source.jar -->
 			<plugin>
@@ -245,19 +237,19 @@
 			</plugin>
 
 
-			<!-- [mvn deploy] github-deploy-maven-plugin -->
+			<!-- [mvn deploy] github-deploy-maven-plugin 
 			<plugin>
 			    <groupId>com.github.github</groupId>
 			    <artifactId>site-maven-plugin</artifactId>
 			    <version>0.11</version>
 			    <configuration>
-			        <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
-			        <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
-			        <outputDirectory>${github-springfield-repository}</outputDirectory> <!-- matches distribution management repository url above -->
-			        <branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
+			        <message>Maven artifacts for ${project.version}</message>
+			        <noJekyll>true</noJekyll>
+			        <outputDirectory>${github-springfield-repository}</outputDirectory>
+			        <branch>refs/heads/mvn-repo</branch>
 			        <includes><include>**/*</include></includes>
-			        <repositoryName>springfield</repositoryName>      <!-- github repo name -->
-			        <repositoryOwner>u2ware</repositoryOwner>    <!-- github username  -->
+			        <repositoryName>springfield</repositoryName>
+			        <repositoryOwner>u2ware</repositoryOwner>
 			    </configuration>
 			    <executions>
 			      <execution>
@@ -268,7 +260,61 @@
 			      </execution>
 			    </executions>
 			</plugin>
+			-->
+			
+			<!-- [mvn docbkx:generate-html] Renders reference documentation from Docbook sources. docbkx:generate-pdf docbkx:generate-html-->
+			<plugin>
+				<groupId>com.agilejava.docbkx</groupId>
+				<artifactId>docbkx-maven-plugin</artifactId>
+				<version>2.0.14</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.docbook</groupId>
+						<artifactId>docbook-xml</artifactId>
+						<version>4.4</version>
+						<scope>runtime</scope>
+					</dependency>
+				</dependencies>
+            
+				<!-- Docbook configuration -->
+				<configuration>
+					<sourceDirectory>${project.basedir}/src/site/docbkx</sourceDirectory>
+					<includes>index.xml</includes>
+					
+					<targetDirectory>${basedir}/target/site/reference</targetDirectory>
+					
+					<xincludeSupported>true</xincludeSupported>
+					<chunkedOutput>false</chunkedOutput>
+					
+					<imgSrcPath>images/</imgSrcPath>
+					
+					<htmlCustomization>${basedir}/src/site/docbkx/resources/xsl/html-multipage.xsl</htmlCustomization>
+					<admonGraphicsPath>${basedir}/src/site/docbkx/resources/images/</admonGraphicsPath>
+					<foCustomization>${basedir}/src/site/docbkx/resources/xsl/pdf.xsl</foCustomization>
+					
+					<useExtensions>1</useExtensions>
+					<highlightSource>1</highlightSource>
 
+					<entities>
+						<entity>
+							<name>version</name>
+							<value>${project.version}</value>
+						</entity>
+					</entities>
+					  
+					<postProcess>
+						<copy todir="${basedir}/target/site/reference">
+							<fileset dir="${basedir}/src/site/docbkx/resources/">
+								<include name="**/*.css" />
+								<include name="**/*.png" />
+								<include name="**/*.gif" />
+								<include name="**/*.jpg" />
+							</fileset>
+						</copy>
+					</postProcess>
+				</configuration>
+				
+			</plugin>
 	    
 				    
     	</plugins>
